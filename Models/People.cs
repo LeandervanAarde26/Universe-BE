@@ -35,7 +35,8 @@ namespace UniVerServer.Models
         public bool person_active { get; set; } = false;
 
         [Required]
-        [ForeignKey("role_id")]
+        [ForeignKey("role")]
+        public int role_id { get; set; }
         public Roles role { get; set; }
 
         [Required]
