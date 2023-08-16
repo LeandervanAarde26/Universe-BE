@@ -13,7 +13,6 @@ namespace UniVerServer
         {
         }
         //public DbSet<Roles> Roles { get; set; }
-        public DbSet<Address> Address { get; set; }
         public DbSet<CourseEnrollments> Courses { get; set; }
         public DbSet<Events> Events { get; set; }
         public DbSet<MadePayments> MadePayments { get; set; }

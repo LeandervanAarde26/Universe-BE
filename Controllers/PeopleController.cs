@@ -38,53 +38,54 @@ namespace UniVerServer.Controllers
         //    return Unauthorized();
         //}
 
-
-
         // I made this a post request so that the password is not visible in the request URL 
+        //[HttpPost("/auth")]
+        //public async Task<ActionResult<PersonDataObject>> AuthenticateUser([FromBody] Authentication request)
+        //{
+        //    var person = await _context.People.Where(p => p.person_email.Equals(request.email)).FirstOrDefaultAsync();
+
+        //    if (person == null || person.person_active == false)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    var isAuthenticated = ValidateUserCredentials(person.person_password, request.password, request.email);
+
+        //    if (!isAuthenticated || person.role != 1)
+        //    {
+        //        return Unauthorized();
+        //    }
+        //    return Ok(true);
+        //}
+
         [HttpPost("/auth")]
         public async Task<ActionResult<PersonDataObject>> AuthenticateUser([FromBody] Authentication request)
         {
-            var person = await _context.People.Include(p => p.role).Where(p => p.person_email.Equals(request.email)).FirstOrDefaultAsync();
-
-            var isAuthenticated = ValidateUserCredentials(person.person_password, person.person_email);
+            var person = await _context.People.Where(p => p.person_email.Equals(request.email)).FirstOrDefaultAsync();
+            var roles = await _context.Roles.Where(p => p.role_id.Equals(person.role)).FirstOrDefaultAsync();
 
             if (person == null || person.person_active == false)
             {
                 return NotFound();
             }
+           
+            var isAuthenticated = ValidateUserCredentials(person.person_password, request.password, request.email);
 
-            if (!isAuthenticated || person.role != 1)
+            if (!isAuthenticated || !roles!.can_access)
             {
                 return Unauthorized();
             }
-            //var personDataObject = new PersonDataObject
-            //{
-            //    person_id = person.person_id,
-            //    person_system_identifier = person.person_system_identifier,
-            //    first_name = person.first_name,
-            //    last_name = person.last_name,
-            //    person_email = person.person_email,
-            //    person_active = person.person_active,
-            //    role = person.role,
-            //};
             return Ok(true);
         }
-        //TODO IN AUTh: 
-        // 1. Decrypt passwords 
-        // 2. When creating an account, passwords should be encrypted 
-        // 3. Create session Tokens for each user.
 
-        // ==== end authentication
-        // GET: api/People
-        // Get all people
 
-        private bool ValidateUserCredentials( string person_password, string person_email)
+        private bool ValidateUserCredentials(string password,  string person_password, string person_email)
         {
             var user = _context.People.FirstOrDefault(p => p.person_email == person_email);
 
             if (user != null)
             {
-                if (Argon2.Verify(user.person_password, person_password))
+                if (Argon2.Verify(password, person_password))
                 {
                     return true;
                 }
@@ -103,7 +104,7 @@ namespace UniVerServer.Controllers
               return NotFound();
           }
           
-          var relationalData = await _context.People.Include(p => p.role).Include(p => p.address).ToListAsync();
+          var relationalData = await _context.People.Include(p => p.role).ToListAsync();
 
           if (relationalData == null)
           {
@@ -134,7 +135,7 @@ namespace UniVerServer.Controllers
         [HttpGet("role/{role}")]
         public async Task<ActionResult<People>> GetPeopleWithRole(int role)
         {
-            IEnumerable<People> people  = await _context.People.Include(p => p.role).Where(p => p.role == role).Include(p => p.address).ToListAsync();
+            IEnumerable<People> people  = await _context.People.Include(p => p.role).Where(p => p.role == role).ToListAsync();
             if (_context.People == null)
             {
                 return NotFound();
@@ -191,6 +192,11 @@ namespace UniVerServer.Controllers
               return Problem("Entity set 'ApplicationDbContext.People'  is null.");
           }
             people.person_password = Argon2.Hash(people.person_password); //Hashing the password before adding the person (Linear programming)
+
+            if(people.role > 3)
+            {
+                people.role = 3;
+            }
 
             _context.People.Add(people);
             await _context.SaveChangesAsync();

@@ -12,8 +12,8 @@ using UniVerServer;
 namespace UniVerServer.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230816085531_Edited")]
-    partial class Edited
+    [Migration("20230816131407_Edit")]
+    partial class Edit
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,49 +24,6 @@ namespace UniVerServer.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
-
-            modelBuilder.Entity("UniVerServer.Models.Address", b =>
-                {
-                    b.Property<int>("address_id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("address_id"));
-
-                    b.Property<string>("address")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
-
-                    b.Property<string>("address_area")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
-
-                    b.Property<string>("address_city")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
-
-                    b.Property<string>("address_phone")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
-
-                    b.Property<string>("address_province")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
-
-                    b.Property<string>("address_zipcode")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
-
-                    b.HasKey("address_id");
-
-                    b.ToTable("people_address");
-                });
 
             modelBuilder.Entity("UniVerServer.Models.CourseEnrollments", b =>
                 {
@@ -177,9 +134,6 @@ namespace UniVerServer.Migrations
 
                     b.Property<DateTime>("added_date")
                         .HasColumnType("timestamp with time zone");
-
-                    b.Property<int>("address")
-                        .HasColumnType("integer");
 
                     b.Property<string>("first_name")
                         .IsRequired()

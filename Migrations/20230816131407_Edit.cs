@@ -7,11 +7,12 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace UniVerServer.Migrations
 {
     /// <inheritdoc />
-    public partial class Edited : Migration
+    public partial class Edit : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            
             migrationBuilder.CreateTable(
                 name: "people",
                 columns: table => new
@@ -25,7 +26,6 @@ namespace UniVerServer.Migrations
                     added_date = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     person_active = table.Column<bool>(type: "boolean", nullable: false),
                     role = table.Column<int>(type: "integer", nullable: false),
-                    address = table.Column<int>(type: "integer", nullable: false),
                     person_credits = table.Column<int>(type: "integer", nullable: false),
                     person_password = table.Column<string>(type: "text", nullable: false)
                 },
@@ -34,23 +34,8 @@ namespace UniVerServer.Migrations
                     table.PrimaryKey("PK_people", x => x.person_id);
                 });
 
-            migrationBuilder.CreateTable(
-                name: "people_address",
-                columns: table => new
-                {
-                    address_id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    address = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
-                    address_province = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
-                    address_city = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
-                    address_area = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
-                    address_zipcode = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
-                    address_phone = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_people_address", x => x.address_id);
-                });
+           
+
 
             migrationBuilder.CreateTable(
                 name: "people_roles",
@@ -210,12 +195,13 @@ namespace UniVerServer.Migrations
                         principalColumn: "subject_id",
                         onDelete: ReferentialAction.Cascade);
                 });
+
             migrationBuilder.AddForeignKey(
-        name: "FK_people_roles_role_id",
-        table: "people",
-        column: "role",
-        principalTable: "people_roles",
-        principalColumn: "role_id");
+                name: "FK_people_roles_role_id",
+                table: "people",
+                column: "role",
+                principalTable: "people_roles",
+                principalColumn: "role_id");
 
             migrationBuilder.CreateIndex(
                 name: "IX_course_enrollments_subject_id",
@@ -269,9 +255,6 @@ namespace UniVerServer.Migrations
 
             migrationBuilder.DropTable(
                 name: "outstanding_student_fees");
-
-            migrationBuilder.DropTable(
-                name: "people_address");
 
             migrationBuilder.DropTable(
                 name: "people_roles");

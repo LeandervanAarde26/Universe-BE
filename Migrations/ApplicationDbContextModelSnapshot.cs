@@ -5,7 +5,6 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using UniVerServer;
-using UniVerServer.Models;
 
 #nullable disable
 
@@ -22,49 +21,6 @@ namespace UniVerServer.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
-
-            modelBuilder.Entity("UniVerServer.Models.Address", b =>
-                {
-                    b.Property<int>("address_id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("address_id"));
-
-                    b.Property<string>("address")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
-
-                    b.Property<string>("address_area")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
-
-                    b.Property<string>("address_city")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
-
-                    b.Property<string>("address_phone")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
-
-                    b.Property<string>("address_province")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
-
-                    b.Property<string>("address_zipcode")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
-
-                    b.HasKey("address_id");
-
-                    b.ToTable("people_address");
-                });
 
             modelBuilder.Entity("UniVerServer.Models.CourseEnrollments", b =>
                 {
@@ -88,7 +44,7 @@ namespace UniVerServer.Migrations
 
                     b.HasIndex("subject_id");
 
-                    b.ToTable("course_enrollments");
+                    b.ToTable("course_enrollments", (string)null);
                 });
 
             modelBuilder.Entity("UniVerServer.Models.Events", b =>
@@ -117,7 +73,7 @@ namespace UniVerServer.Migrations
 
                     b.HasIndex("person_system_identifier");
 
-                    b.ToTable("events");
+                    b.ToTable("events", (string)null);
                 });
 
             modelBuilder.Entity("UniVerServer.Models.MadePayments", b =>
@@ -141,7 +97,7 @@ namespace UniVerServer.Migrations
 
                     b.HasIndex("person_system_identifier");
 
-                    b.ToTable("student_payments");
+                    b.ToTable("student_payments", (string)null);
                 });
 
             modelBuilder.Entity("UniVerServer.Models.OutStandingStudentFees", b =>
@@ -162,7 +118,7 @@ namespace UniVerServer.Migrations
 
                     b.HasIndex("person_system_identifier");
 
-                    b.ToTable("outstanding_student_fees");
+                    b.ToTable("outstanding_student_fees", (string)null);
                 });
 
             modelBuilder.Entity("UniVerServer.Models.People", b =>
@@ -175,9 +131,6 @@ namespace UniVerServer.Migrations
 
                     b.Property<DateTime>("added_date")
                         .HasColumnType("timestamp with time zone");
-
-                    b.Property<int>("address")
-                        .HasColumnType("integer");
 
                     b.Property<string>("first_name")
                         .IsRequired()
@@ -214,8 +167,9 @@ namespace UniVerServer.Migrations
 
                     b.HasKey("person_id");
 
-                    b.ToTable("people");
+                    b.ToTable("people", (string)null);
                 });
+
             modelBuilder.Entity("UniVerServer.Models.Roles", b =>
                 {
                     b.Property<int>("role_id")
@@ -234,7 +188,7 @@ namespace UniVerServer.Migrations
 
                     b.HasKey("role_id");
 
-                    b.ToTable("people_roles");
+                    b.ToTable("people_roles", (string)null);
                 });
 
             modelBuilder.Entity("UniVerServer.Models.StudentCourses", b =>
@@ -263,7 +217,7 @@ namespace UniVerServer.Migrations
 
                     b.HasIndex("subject_id");
 
-                    b.ToTable("student_grades");
+                    b.ToTable("student_grades", (string)null);
                 });
 
             modelBuilder.Entity("UniVerServer.Models.Subjects", b =>
@@ -313,7 +267,7 @@ namespace UniVerServer.Migrations
 
                     b.HasIndex("person_id");
 
-                    b.ToTable("subjects");
+                    b.ToTable("subjects", (string)null);
                 });
 
             modelBuilder.Entity("UniVerServer.Models.CourseEnrollments", b =>

@@ -39,11 +39,6 @@ namespace UniVerServer.Models
         [ForeignKey("role_id")]
         public int role { get; set; } = 3;
 
-        [Required]
-        [ForeignKey("address_id")]
-        public int address { get; set; } = 0;
-
-
         public string person_image = string.Empty;
 
         public int person_credits { get; set; }
