@@ -9,6 +9,6 @@
         public string last_name { get; set; } = string.Empty;
         public string person_email { get; set; } = string.Empty;
         public bool person_active { get; set; }
-        public Roles role { get; set; }  = new Roles();
+        public int role { get; set; }  = 0;
     }
 }

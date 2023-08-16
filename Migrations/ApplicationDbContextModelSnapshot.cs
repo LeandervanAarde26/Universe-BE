@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using UniVerServer;
+using UniVerServer.Models;
 
 #nullable disable
 
@@ -175,7 +176,7 @@ namespace UniVerServer.Migrations
                     b.Property<DateTime>("added_date")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<int>("address_id")
+                    b.Property<int>("address")
                         .HasColumnType("integer");
 
                     b.Property<string>("first_name")
@@ -208,18 +209,13 @@ namespace UniVerServer.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("character varying(20)");
 
-                    b.Property<int>("role_id")
+                    b.Property<int>("role")
                         .HasColumnType("integer");
 
                     b.HasKey("person_id");
 
-                    b.HasIndex("address_id");
-
-                    b.HasIndex("role_id");
-
                     b.ToTable("people");
                 });
-
             modelBuilder.Entity("UniVerServer.Models.Roles", b =>
                 {
                     b.Property<int>("role_id")
@@ -362,25 +358,6 @@ namespace UniVerServer.Migrations
                         .IsRequired();
 
                     b.Navigation("student_id");
-                });
-
-            modelBuilder.Entity("UniVerServer.Models.People", b =>
-                {
-                    b.HasOne("UniVerServer.Models.Address", "Address")
-                        .WithMany()
-                        .HasForeignKey("address_id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("UniVerServer.Models.Roles", "role")
-                        .WithMany()
-                        .HasForeignKey("role_id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Address");
-
-                    b.Navigation("role");
                 });
 
             modelBuilder.Entity("UniVerServer.Models.StudentCourses", b =>

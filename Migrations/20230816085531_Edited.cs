@@ -7,11 +7,33 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace UniVerServer.Migrations
 {
     /// <inheritdoc />
-    public partial class AllItemsAdded : Migration
+    public partial class Edited : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "people",
+                columns: table => new
+                {
+                    person_id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    person_system_identifier = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
+                    first_name = table.Column<string>(type: "character varying(60)", maxLength: 60, nullable: false),
+                    last_name = table.Column<string>(type: "character varying(60)", maxLength: 60, nullable: false),
+                    person_email = table.Column<string>(type: "character varying(80)", maxLength: 80, nullable: false),
+                    added_date = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    person_active = table.Column<bool>(type: "boolean", nullable: false),
+                    role = table.Column<int>(type: "integer", nullable: false),
+                    address = table.Column<int>(type: "integer", nullable: false),
+                    person_credits = table.Column<int>(type: "integer", nullable: false),
+                    person_password = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_people", x => x.person_id);
+                });
+
             migrationBuilder.CreateTable(
                 name: "people_address",
                 columns: table => new
@@ -42,40 +64,6 @@ namespace UniVerServer.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_people_roles", x => x.role_id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "people",
-                columns: table => new
-                {
-                    person_id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    person_system_identifier = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
-                    first_name = table.Column<string>(type: "character varying(60)", maxLength: 60, nullable: false),
-                    last_name = table.Column<string>(type: "character varying(60)", maxLength: 60, nullable: false),
-                    person_email = table.Column<string>(type: "character varying(80)", maxLength: 80, nullable: false),
-                    added_date = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    person_active = table.Column<bool>(type: "boolean", nullable: false),
-                    role_id = table.Column<int>(type: "integer", nullable: false),
-                    address_id = table.Column<int>(type: "integer", nullable: false),
-                    person_credits = table.Column<int>(type: "integer", nullable: false),
-                    person_password = table.Column<string>(type: "text", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_people", x => x.person_id);
-                    table.ForeignKey(
-                        name: "FK_people_people_address_address_id",
-                        column: x => x.address_id,
-                        principalTable: "people_address",
-                        principalColumn: "address_id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_people_people_roles_role_id",
-                        column: x => x.role_id,
-                        principalTable: "people_roles",
-                        principalColumn: "role_id",
-                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -222,6 +210,12 @@ namespace UniVerServer.Migrations
                         principalColumn: "subject_id",
                         onDelete: ReferentialAction.Cascade);
                 });
+            migrationBuilder.AddForeignKey(
+        name: "FK_people_roles_role_id",
+        table: "people",
+        column: "role",
+        principalTable: "people_roles",
+        principalColumn: "role_id");
 
             migrationBuilder.CreateIndex(
                 name: "IX_course_enrollments_subject_id",
@@ -237,16 +231,6 @@ namespace UniVerServer.Migrations
                 name: "IX_outstanding_student_fees_person_system_identifier",
                 table: "outstanding_student_fees",
                 column: "person_system_identifier");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_people_address_id",
-                table: "people",
-                column: "address_id");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_people_role_id",
-                table: "people",
-                column: "role_id");
 
             migrationBuilder.CreateIndex(
                 name: "IX_student_grades_facilitator_id",
@@ -287,6 +271,12 @@ namespace UniVerServer.Migrations
                 name: "outstanding_student_fees");
 
             migrationBuilder.DropTable(
+                name: "people_address");
+
+            migrationBuilder.DropTable(
+                name: "people_roles");
+
+            migrationBuilder.DropTable(
                 name: "student_grades");
 
             migrationBuilder.DropTable(
@@ -297,12 +287,6 @@ namespace UniVerServer.Migrations
 
             migrationBuilder.DropTable(
                 name: "people");
-
-            migrationBuilder.DropTable(
-                name: "people_address");
-
-            migrationBuilder.DropTable(
-                name: "people_roles");
         }
     }
 }
