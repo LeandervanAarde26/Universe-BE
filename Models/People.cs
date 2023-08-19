@@ -43,6 +43,8 @@ namespace UniVerServer.Models
 
         public int person_credits { get; set; }
 
+        public int needed_credits { get; set; }
+
         public string person_password { get; set; }
 
     }

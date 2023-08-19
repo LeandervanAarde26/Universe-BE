@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using UniVerServer;
 using UniVerServer.Models;
+using UniVerServer.Models.CustomDataObjects;
 
 namespace UniVerServer.Controllers
 {
@@ -25,11 +26,22 @@ namespace UniVerServer.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<CourseEnrollments>>> GetCourses()
         {
+            var enrollmentList = await (from enrollment in _context.Courses
+                                        join student in _context.People
+                                        on enrollment.student_id equals student.person_system_identifier
+                                        join course in _context.Subjects 
+                                        on enrollment.Subjects equals course.subject_id 
+                                        select new CourseEnrollmentView
+                                        {
+                                          student = student,
+                                          course = course
+                                        })
+                                        .ToListAsync();
           if (_context.Courses == null)
           {
               return NotFound();
           }
-            return await _context.Courses.ToListAsync();
+            return Ok(enrollmentList);
         }
 
         // GET: api/CourseEnrollments/5

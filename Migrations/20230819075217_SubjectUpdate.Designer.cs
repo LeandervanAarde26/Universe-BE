@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using UniVerServer;
@@ -11,9 +12,11 @@ using UniVerServer;
 namespace UniVerServer.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230819075217_SubjectUpdate")]
+    partial class SubjectUpdate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -30,9 +33,6 @@ namespace UniVerServer.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("enrollment_id"));
 
-                    b.Property<int>("Subjects")
-                        .HasColumnType("integer");
-
                     b.Property<DateTime>("course_start")
                         .HasColumnType("timestamp with time zone");
 
@@ -40,7 +40,12 @@ namespace UniVerServer.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<int>("subject_id")
+                        .HasColumnType("integer");
+
                     b.HasKey("enrollment_id");
+
+                    b.HasIndex("subject_id");
 
                     b.ToTable("course_enrollments");
                 });
@@ -267,6 +272,17 @@ namespace UniVerServer.Migrations
                     b.HasKey("subject_id");
 
                     b.ToTable("subjects");
+                });
+
+            modelBuilder.Entity("UniVerServer.Models.CourseEnrollments", b =>
+                {
+                    b.HasOne("UniVerServer.Models.Subjects", "Subjects")
+                        .WithMany()
+                        .HasForeignKey("subject_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Subjects");
                 });
 
             modelBuilder.Entity("UniVerServer.Models.Events", b =>

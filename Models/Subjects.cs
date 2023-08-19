@@ -28,7 +28,7 @@ namespace UniVerServer.Models
 
         [ForeignKey("person_id")]
         [Required]
-        public People lecturer_id { get; set; }
+        public int lecturer_id { get; set; }
 
         [Required]
         public int subject_credits { get; set; } = 0;

@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
 using UniVerServer;
 using UniVerServer.Models;
+using UniVerServer.Models.CustomDataObjects;
 
 namespace UniVerServer.Controllers
 {
@@ -25,53 +26,20 @@ namespace UniVerServer.Controllers
             _context = context;
         }
 
-        //[HttpPost("login")]
-        //public IActionResult Login(People person)
-        //{
-        //    var isAuthenticated = ValidateUserCredentials(person.role, person.person_password, person.person_email);
-
-        //    if (isAuthenticated)
-        //    {
-        //        return Ok(new  {Token =  "Logged in" });
-        //    }
-
-        //    return Unauthorized();
-        //}
-
-        // I made this a post request so that the password is not visible in the request URL 
-        //[HttpPost("/auth")]
-        //public async Task<ActionResult<PersonDataObject>> AuthenticateUser([FromBody] Authentication request)
-        //{
-        //    var person = await _context.People.Where(p => p.person_email.Equals(request.email)).FirstOrDefaultAsync();
-
-        //    if (person == null || person.person_active == false)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    var isAuthenticated = ValidateUserCredentials(person.person_password, request.password, request.email);
-
-        //    if (!isAuthenticated || person.role != 1)
-        //    {
-        //        return Unauthorized();
-        //    }
-        //    return Ok(true);
-        //}
-
         [HttpPost("/auth")]
         public async Task<ActionResult<PersonDataObject>> AuthenticateUser([FromBody] Authentication request)
         {
             var person = await _context.People.Where(p => p.person_email.Equals(request.email)).FirstOrDefaultAsync();
             var roles = await _context.Roles.Where(p => p.role_id.Equals(person.role)).FirstOrDefaultAsync();
 
-            if (person == null || person.person_active == false)
+            if (person == null || person.person_active == false )
             {
                 return NotFound();
             }
            
             var isAuthenticated = ValidateUserCredentials(person.person_password, request.password, request.email);
 
-            if (!isAuthenticated || !roles!.can_access)
+            if (!isAuthenticated || !roles!.can_access || !person.person_active)
             {
                 return Unauthorized();
             }
@@ -89,7 +57,6 @@ namespace UniVerServer.Controllers
                 {
                     return true;
                 }
-
             }
 
             return false;
@@ -114,13 +81,34 @@ namespace UniVerServer.Controllers
         }
 
         // GET: api/People/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<People>> GetPeople(int id)
+        [HttpGet("student/{id}")]
+        public async Task<ActionResult<People>> GetStudent(string id)
         {
-          if (_context.People == null)
-          {
+            if (_context.People == null)
+             {
               return NotFound();
-          }
+            }
+            var person = await _context.People.Where(p => p.person_system_identifier.Equals(id)).FirstOrDefaultAsync();
+            var enrolledSubjects = await _context.Courses.Where(c => c.student_id == id).ToListAsync();
+
+
+            if (person == null)
+            {
+                return NotFound();
+            }
+
+            return person;
+        }
+
+        [HttpGet("lecturer/{id}")]
+        public async Task<ActionResult<People>> GetLecturer(int id)
+        {
+
+
+            if (_context.People == null)
+            {
+                return NotFound();
+            }
             var people = await _context.People.FindAsync(id);
 
             if (people == null)
@@ -149,7 +137,6 @@ namespace UniVerServer.Controllers
 
             return Ok(people);
         }
-
 
         // PUT: api/People/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
@@ -187,7 +174,14 @@ namespace UniVerServer.Controllers
         [HttpPost]
         public async Task<ActionResult<People>> PostPeople(People people)
         {
-          if (_context.People == null)
+            var person = await _context.People.Where(p => p.person_email.Equals(people.person_email)).FirstOrDefaultAsync();
+
+            if(person != null)
+            {
+                return Conflict();
+            }
+
+            if (_context.People == null)
           {
               return Problem("Entity set 'ApplicationDbContext.People'  is null.");
           }

@@ -2,11 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Azure.Core;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using UniVerServer;
 using UniVerServer.Models;
+using UniVerServer.Models.CustomDataObjects;
 
 namespace UniVerServer.Controllers
 {
@@ -23,13 +26,25 @@ namespace UniVerServer.Controllers
 
         // GET: api/Subjects
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Subjects>>> GetSubjects()
+        public async Task<ActionResult<IEnumerable<SubjectsWithLecturers>>> GetSubjects()
         {
-          if (_context.Subjects == null)
-          {
-              return NotFound();
-          }
-            return await _context.Subjects.ToListAsync();
+            var subjectList = await (from subject in _context.Subjects
+                                     join lecturer in _context.People
+                                     on subject.lecturer_id
+                                     equals lecturer.person_id
+                                     select new SubjectsWithLecturers
+                                     {
+                                         subject = subject,
+                                         lecturerName = lecturer.first_name + " " + lecturer.last_name
+                                     })
+                                     .ToListAsync();
+
+            if (subjectList == null || subjectList.Count == 0)
+            {
+                return NotFound();
+            }
+
+            return Ok(subjectList);
         }
 
         // GET: api/Subjects/5
@@ -61,7 +76,6 @@ namespace UniVerServer.Controllers
             }
 
             _context.Entry(subjects).State = EntityState.Modified;
-
             try
             {
                 await _context.SaveChangesAsync();
@@ -86,10 +100,13 @@ namespace UniVerServer.Controllers
         [HttpPost]
         public async Task<ActionResult<Subjects>> PostSubjects(Subjects subjects)
         {
-          if (_context.Subjects == null)
+          
+
+            if (_context.Subjects == null)
           {
               return Problem("Entity set 'ApplicationDbContext.Subjects'  is null.");
           }
+           
             _context.Subjects.Add(subjects);
             await _context.SaveChangesAsync();
 

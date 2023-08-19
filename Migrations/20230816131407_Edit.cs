@@ -27,6 +27,7 @@ namespace UniVerServer.Migrations
                     person_active = table.Column<bool>(type: "boolean", nullable: false),
                     role = table.Column<int>(type: "integer", nullable: false),
                     person_credits = table.Column<int>(type: "integer", nullable: false),
+                    needed_credits = table.Column<int>(type: "integer", nullable: false),
                     person_password = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
