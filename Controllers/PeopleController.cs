@@ -64,20 +64,38 @@ namespace UniVerServer.Controllers
 
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<People>>> GetPeople()
+        public async Task<ActionResult<IEnumerable<People>>> GetStudents()
         {
-          if (_context.People == null)
+            //var relationalData = await _context.People.Include(p => p.role).ToListAsync();
+            var people = await (from person in _context.People
+                                join role in _context.Roles
+                                on person.role equals role.role_id
+                                select new
+                                {
+                                    person_id = person.person_id,
+                                    system_identifier = person.person_system_identifier,
+                                    name = person.first_name + " " + person.last_name,
+                                    email = person.person_email,
+                                    role = role.role_name,
+                                    credits = person.person_credits,
+                                    neededCredits = person.needed_credits
+
+                                })
+                                .ToListAsync();
+
+
+            if (_context.People == null)
           {
               return NotFound();
           }
           
-          var relationalData = await _context.People.Include(p => p.role).ToListAsync();
+         
 
-          if (relationalData == null)
+          if (people == null)
           {
             return NotFound();
           }
-          return relationalData;
+          return Ok(people);
         }
 
         // GET: api/People/5
@@ -123,7 +141,23 @@ namespace UniVerServer.Controllers
         [HttpGet("role/{role}")]
         public async Task<ActionResult<People>> GetPeopleWithRole(int role)
         {
-            IEnumerable<People> people  = await _context.People.Include(p => p.role).Where(p => p.role == role).ToListAsync();
+            var people = await (from person in _context.People
+                                join personRole in _context.Roles
+                                on person.role equals personRole.role_id
+                                where person.role == role
+                                select new
+                                {
+                                    person_id = person.person_id,
+                                    system_identifier = person.person_system_identifier,
+                                    name = person.first_name + " " + person.last_name,
+                                    email = person.person_email,
+                                    role = personRole.role_name,
+                                    credits = person.person_credits,
+                                    neededCredits = person.needed_credits
+
+                                })
+                      .ToListAsync();
+
             if (_context.People == null)
             {
                 return NotFound();
