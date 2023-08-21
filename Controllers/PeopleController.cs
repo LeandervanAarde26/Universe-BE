@@ -5,13 +5,16 @@ using System.Net;
 using System.Threading.Tasks;
 using Azure.Core;
 using Isopoh.Cryptography.Argon2;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using UniVerServer;
 using UniVerServer.Models;
 using UniVerServer.Models.CustomDataObjects;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace UniVerServer.Controllers
 {
@@ -32,7 +35,9 @@ namespace UniVerServer.Controllers
             var person = await _context.People.Where(p => p.person_email.Equals(request.email)).FirstOrDefaultAsync();
             var roles = await _context.Roles.Where(p => p.role_id.Equals(person.role)).FirstOrDefaultAsync();
 
-            if (person == null || person.person_active == false )
+            var roleTester =  await _context.Roles.FromSql($"SELECT * FROM people_roles;").ToListAsync(); //<-- Works!
+
+            if (person == null || person.person_active == false || roleTester == null )
             {
                 return NotFound();
             }
@@ -62,6 +67,26 @@ namespace UniVerServer.Controllers
             return false;
         }
 
+        [HttpPut("Password/{email}")]
+        public async Task<IActionResult> UpdatePeople(string email, string password)
+        {
+            var existingMember = await _context.People.Where(p => p.person_email.Equals(email)).FirstOrDefaultAsync();
+  
+            if (existingMember == null)
+            {
+                return NotFound($"Employee with {email} does not exist");
+            }
+            var newPasswordHash = Argon2.Hash(password);
+            existingMember.person_password = newPasswordHash;
+           int rowsAffected =  await _context.SaveChangesAsync();
+
+            if(rowsAffected < 1)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Failed to update the employee's password.");
+            }
+    
+            return Ok(true);
+        }
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<People>>> GetStudents()
