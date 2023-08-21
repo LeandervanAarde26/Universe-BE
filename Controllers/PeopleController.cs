@@ -14,6 +14,7 @@ using Microsoft.EntityFrameworkCore;
 using UniVerServer;
 using UniVerServer.Models;
 using UniVerServer.Models.CustomDataObjects;
+using UniVerServer.Models.DTO;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace UniVerServer.Controllers
@@ -32,25 +33,28 @@ namespace UniVerServer.Controllers
         [HttpPost("/auth")]
         public async Task<ActionResult<PersonDataObject>> AuthenticateUser([FromBody] Authentication request)
         {
-            var person = await _context.People.Where(p => p.person_email.Equals(request.email)).FirstOrDefaultAsync();
-            var roles = await _context.Roles.Where(p => p.role_id.Equals(person.role)).FirstOrDefaultAsync();
+            if(string.IsNullOrEmpty(request.email) || string.IsNullOrEmpty(request.password))
+            {
+                return BadRequest("Parameters to request can not be empty or Null");
+            }
 
-            var roleTester =  await _context.Roles.FromSql($"SELECT * FROM people_roles;").ToListAsync(); //<-- Works!
+            var person = await _context.People.SingleOrDefaultAsync(p => p.person_email.Equals(request.email, StringComparison.OrdinalIgnoreCase));
 
-            if (person == null || person.person_active == false || roleTester == null )
+            if (person == null || person.person_active == false)
             {
                 return NotFound();
             }
-           
+
+            var roles = await _context.Roles.SingleOrDefaultAsync(p => p.role_id.Equals(person.role));
+
             var isAuthenticated = ValidateUserCredentials(person.person_password, request.password, request.email);
 
             if (!isAuthenticated || !roles!.can_access || !person.person_active)
             {
                 return Unauthorized();
             }
-            return Ok(true);
+            return Ok(person);
         }
-
 
         private bool ValidateUserCredentials(string password,  string person_password, string person_email)
         {
@@ -67,24 +71,31 @@ namespace UniVerServer.Controllers
             return false;
         }
 
-        [HttpPut("Password/{email}")]
-        public async Task<IActionResult> UpdatePeople(string email, string password)
+        [HttpPut("Password")]
+        public async Task<IActionResult> UpdateUserPassword([FromBody] Authentication request)
         {
-            var existingMember = await _context.People.Where(p => p.person_email.Equals(email)).FirstOrDefaultAsync();
-  
-            if (existingMember == null)
+            if (string.IsNullOrEmpty(request.email) || string.IsNullOrEmpty(request.password))
             {
-                return NotFound($"Employee with {email} does not exist");
+                return BadRequest("Invalid request parameters.");
             }
-            var newPasswordHash = Argon2.Hash(password);
-            existingMember.person_password = newPasswordHash;
-           int rowsAffected =  await _context.SaveChangesAsync();
 
-            if(rowsAffected < 1)
+            var existingUser = await _context.People
+                .SingleOrDefaultAsync(p => p.person_email.Equals(request.email, StringComparison.OrdinalIgnoreCase));
+
+            if (existingUser == null)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Failed to update the employee's password.");
+                return NotFound("Employee not found.");
             }
-    
+
+            existingUser.person_password = Argon2.Hash(request.password);
+
+            int rowsAffected = await _context.SaveChangesAsync();
+
+            if (rowsAffected < 1)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Failed to update the password.");
+            }
+
             return Ok(true);
         }
 
@@ -107,8 +118,6 @@ namespace UniVerServer.Controllers
 
                                 })
                                 .ToListAsync();
-
-
             if (_context.People == null)
           {
               return NotFound();
@@ -146,8 +155,6 @@ namespace UniVerServer.Controllers
         [HttpGet("lecturer/{id}")]
         public async Task<ActionResult<People>> GetLecturer(int id)
         {
-
-
             if (_context.People == null)
             {
                 return NotFound();
@@ -166,6 +173,7 @@ namespace UniVerServer.Controllers
         [HttpGet("role/{role}")]
         public async Task<ActionResult<People>> GetPeopleWithRole(int role)
         {
+            //There are a lot of Secuiry risks in my code in all honesty, please dont use this in industry, I will still try fix this from my end to make it as secure as possible.
             var people = await (from person in _context.People
                                 join personRole in _context.Roles
                                 on person.role equals personRole.role_id
@@ -180,8 +188,8 @@ namespace UniVerServer.Controllers
                                     credits = person.person_credits,
                                     neededCredits = person.needed_credits
 
-                                })
-                      .ToListAsync();
+                                }).ToListAsync();
+
 
             if (_context.People == null)
             {
@@ -233,23 +241,24 @@ namespace UniVerServer.Controllers
         [HttpPost]
         public async Task<ActionResult<People>> PostPeople(People people)
         {
-            var person = await _context.People.Where(p => p.person_email.Equals(people.person_email)).FirstOrDefaultAsync();
-
-            if(person != null)
+            if (people == null)
             {
-                return Conflict();
+                return BadRequest("Provided People object is null.");
             }
 
-            if (_context.People == null)
-          {
-              return Problem("Entity set 'ApplicationDbContext.People'  is null.");
-          }
-            people.person_password = Argon2.Hash(people.person_password); //Hashing the password before adding the person (Linear programming)
+            bool emailExists = await _context.People.AnyAsync(p => p.person_email.Equals(people.person_email));
+            if (emailExists)
+            {
+                return Conflict("A person with the same email already exists.");
+            }
 
-            if(people.role > 3)
+            people.person_password = Argon2.Hash(people.person_password);
+
+            if (people.role > 3)
             {
                 people.role = 3;
             }
+
 
             _context.People.Add(people);
             await _context.SaveChangesAsync();
@@ -257,8 +266,8 @@ namespace UniVerServer.Controllers
             return CreatedAtAction("GetPeople", new { id = people.person_id }, people);
         }
 
-        // DELETE: api/People/5
-        [HttpDelete("{id}")]
+            // DELETE: api/People/5
+            [HttpDelete("{id}")]
         public async Task<IActionResult> DeletePeople(int id)
         {
             if (_context.People == null)

@@ -1,4 +1,4 @@
-﻿namespace UniVerServer.Models
+﻿namespace UniVerServer.Models.DTO
 {
     public class Authentication
     {
