@@ -7,6 +7,7 @@ using Azure.Core;
 using Isopoh.Cryptography.Argon2;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Data.SqlClient;
@@ -67,6 +68,7 @@ namespace UniVerServer.Controllers
             }
             return Ok(formattedPerson);
         }
+
         private bool ValidateUserCredentials(string password,  string person_password, string person_email)
         {
             var user = _context.People.FirstOrDefault(p => p.person_email == person_email);
@@ -141,6 +143,9 @@ namespace UniVerServer.Controllers
           return Ok(people);
         }
 
+
+  
+
         // GET: api/People/5
         [HttpGet("student/{id}")]
         public async Task<ActionResult<People>> GetStudent(string id)
@@ -177,9 +182,37 @@ namespace UniVerServer.Controllers
             return people;
         }
 
+        [HttpGet("Lecturers")]
+        public async Task<ActionResult<People>> GetAllLecturers()
+        {
+            if (_context.People == null)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+
+            var lecturers = await (from lecturer in _context.People
+                                   join lecturerRole in _context.Roles
+                                   on lecturer.role equals lecturerRole.role_id
+                                   where lecturer.role == 2
+                                   select new
+                                   {
+                                       image = "",
+                                       name = lecturer.first_name + " " + lecturer.last_name,
+                                       role = lecturerRole.role_name,
+                                       subject = "N/A"
+                                   }).ToListAsync();
+
+            if(lecturers == null)
+            {
+                return NotFound("No lecturers on the system");
+            }
+
+            return Ok(lecturers);
+        }
+
         //GET: Get person by role 
-        [HttpGet("role/{role}")]
-        public async Task<ActionResult<People>> GetPeopleWithRole(int role)
+        [HttpGet("role")]
+        public async Task<ActionResult<People>> GetPeopleWithRole([FromBody] int role)
         {
             //There are a lot of Secuiry risks in my code in all honesty, please dont use this in industry, I will still try fix this from my end to make it as secure as possible.
             var people = await (from person in _context.People
@@ -198,7 +231,6 @@ namespace UniVerServer.Controllers
 
                                 }).ToListAsync();
 
-
             if (_context.People == null)
             {
                 return NotFound();
@@ -212,6 +244,8 @@ namespace UniVerServer.Controllers
 
             return Ok(people);
         }
+
+
 
         // PUT: api/People/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
