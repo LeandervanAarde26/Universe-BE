@@ -97,7 +97,7 @@ namespace UniVerServer.Controllers
                                 on person.role equals role.role_id
                                 select new
                                 {
-                                    person_id = person.person_id,
+                                    person.person_id,
                                     system_identifier = person.person_system_identifier,
                                     name = person.first_name + " " + person.last_name,
                                     email = person.person_email,
@@ -172,7 +172,7 @@ namespace UniVerServer.Controllers
                                 where person.role == role
                                 select new
                                 {
-                                    person_id = person.person_id,
+                                    person.person_id,
                                     system_identifier = person.person_system_identifier,
                                     name = person.first_name + " " + person.last_name,
                                     email = person.person_email,
