@@ -31,18 +31,30 @@ namespace UniVerServer.Controllers
         }
 
         [HttpPost("/auth")]
-        public async Task<ActionResult<PersonDataObject>> AuthenticateUser([FromBody] Authentication request)
+        public async Task<ActionResult<AuthenticatedUser>> AuthenticateUser([FromBody] Authentication request)
         {
             if(string.IsNullOrEmpty(request.email) || string.IsNullOrEmpty(request.password))
             {
                 return BadRequest("Parameters to request can not be empty or Null");
             }
-
-            var person = await _context.People.SingleOrDefaultAsync(p => p.person_email.Equals(request.email, StringComparison.OrdinalIgnoreCase));
+            // To lower not working now?
+            var person = await _context.People.SingleOrDefaultAsync(p => p.person_email.ToLower().Equals(request.email.ToLower()));
 
             if (person == null || person.person_active == false)
             {
                 return NotFound();
+            }
+
+            AuthenticatedUser formattedPerson = new()
+            {
+                user_id = person.person_id,
+                username = $"{person.first_name} {person.last_name}",
+                userEmail = person.person_email
+            };
+
+            if (formattedPerson == null)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
             }
 
             var roles = await _context.Roles.SingleOrDefaultAsync(p => p.role_id.Equals(person.role));
@@ -53,9 +65,8 @@ namespace UniVerServer.Controllers
             {
                 return Unauthorized();
             }
-            return Ok(person);
+            return Ok(formattedPerson);
         }
-
         private bool ValidateUserCredentials(string password,  string person_password, string person_email)
         {
             var user = _context.People.FirstOrDefault(p => p.person_email == person_email);
@@ -80,7 +91,7 @@ namespace UniVerServer.Controllers
             }
 
             var existingUser = await _context.People
-                .SingleOrDefaultAsync(p => p.person_email.Equals(request.email, StringComparison.OrdinalIgnoreCase));
+                .SingleOrDefaultAsync(p => p.person_email.ToLower().Equals(request.email.ToLower()));
 
             if (existingUser == null)
             {
@@ -123,8 +134,6 @@ namespace UniVerServer.Controllers
               return NotFound();
           }
           
-         
-
           if (people == null)
           {
             return NotFound();
@@ -148,7 +157,6 @@ namespace UniVerServer.Controllers
             {
                 return NotFound();
             }
-
             return person;
         }
 
