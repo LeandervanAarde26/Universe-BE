@@ -12,8 +12,8 @@ using UniVerServer;
 namespace UniVerServer.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230816131407_Edit")]
-    partial class Edit
+    [Migration("20230822161040_Added Item")]
+    partial class AddedItem
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -33,6 +33,9 @@ namespace UniVerServer.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("enrollment_id"));
 
+                    b.Property<int>("Subjects")
+                        .HasColumnType("integer");
+
                     b.Property<DateTime>("course_start")
                         .HasColumnType("timestamp with time zone");
 
@@ -40,12 +43,7 @@ namespace UniVerServer.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("subject_id")
-                        .HasColumnType("integer");
-
                     b.HasKey("enrollment_id");
-
-                    b.HasIndex("subject_id");
 
                     b.ToTable("course_enrollments");
                 });
@@ -145,6 +143,9 @@ namespace UniVerServer.Migrations
                         .HasMaxLength(60)
                         .HasColumnType("character varying(60)");
 
+                    b.Property<int>("needed_credits")
+                        .HasColumnType("integer");
+
                     b.Property<bool>("person_active")
                         .HasColumnType("boolean");
 
@@ -231,7 +232,7 @@ namespace UniVerServer.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("subject_id"));
 
-                    b.Property<int>("person_id")
+                    b.Property<int>("lecturer_id")
                         .HasColumnType("integer");
 
                     b.Property<string>("subjectImage")
@@ -268,20 +269,7 @@ namespace UniVerServer.Migrations
 
                     b.HasKey("subject_id");
 
-                    b.HasIndex("person_id");
-
                     b.ToTable("subjects");
-                });
-
-            modelBuilder.Entity("UniVerServer.Models.CourseEnrollments", b =>
-                {
-                    b.HasOne("UniVerServer.Models.Subjects", "Subjects")
-                        .WithMany()
-                        .HasForeignKey("subject_id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Subjects");
                 });
 
             modelBuilder.Entity("UniVerServer.Models.Events", b =>
@@ -342,17 +330,6 @@ namespace UniVerServer.Migrations
                     b.Navigation("student");
 
                     b.Navigation("subject");
-                });
-
-            modelBuilder.Entity("UniVerServer.Models.Subjects", b =>
-                {
-                    b.HasOne("UniVerServer.Models.People", "lecturer_id")
-                        .WithMany()
-                        .HasForeignKey("person_id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("lecturer_id");
                 });
 #pragma warning restore 612, 618
         }

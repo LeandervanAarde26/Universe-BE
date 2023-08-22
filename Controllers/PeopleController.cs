@@ -39,7 +39,7 @@ namespace UniVerServer.Controllers
                 return BadRequest("Parameters to request can not be empty or Null");
             }
             // To lower not working now?
-            var person = await _context.People.SingleOrDefaultAsync(p => p.person_email.ToLower().Equals(request.email.ToLower()));
+            var person = await _context.People.SingleOrDefaultAsync(p => p.person_email.Equals(request.email));
 
             if (person == null || person.person_active == false)
             {
@@ -112,39 +112,32 @@ namespace UniVerServer.Controllers
             return Ok(true);
         }
 
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<People>>> GetStudents()
+        [HttpGet("Students")]
+        public async Task<ActionResult<People>> GetAllStudents()
         {
-            //var relationalData = await _context.People.Include(p => p.role).ToListAsync();
-            var people = await (from person in _context.People
-                                join role in _context.Roles
-                                on person.role equals role.role_id
-                                select new
-                                {
-                                    person.person_id,
-                                    system_identifier = person.person_system_identifier,
-                                    name = person.first_name + " " + person.last_name,
-                                    email = person.person_email,
-                                    role = role.role_name,
-                                    credits = person.person_credits,
-                                    neededCredits = person.needed_credits
-
-                                })
-                                .ToListAsync();
             if (_context.People == null)
-          {
-              return NotFound();
-          }
-          
-          if (people == null)
-          {
-            return NotFound();
-          }
-          return Ok(people);
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+
+            var students = await (from student in _context.People
+                                   join studentRole in _context.Roles
+                                   on student.role equals studentRole.role_id
+                                   where student.role == 3
+                                   select new
+                                   {
+                                       image = "",
+                                       name = student.first_name + " " + student.last_name,
+                                       role = studentRole.role_name,
+                                       subject = "N/A"
+                                   }).ToListAsync();
+            if (students == null)
+            {
+                return NotFound("No lecturers on the system");
+            }
+
+            return Ok(students);
         }
-
-
-  
 
         // GET: api/People/5
         [HttpGet("student/{id}")]
@@ -209,43 +202,6 @@ namespace UniVerServer.Controllers
 
             return Ok(lecturers);
         }
-
-        //GET: Get person by role 
-        [HttpGet("role")]
-        public async Task<ActionResult<People>> GetPeopleWithRole([FromBody] int role)
-        {
-            //There are a lot of Secuiry risks in my code in all honesty, please dont use this in industry, I will still try fix this from my end to make it as secure as possible.
-            var people = await (from person in _context.People
-                                join personRole in _context.Roles
-                                on person.role equals personRole.role_id
-                                where person.role == role
-                                select new
-                                {
-                                    person.person_id,
-                                    system_identifier = person.person_system_identifier,
-                                    name = person.first_name + " " + person.last_name,
-                                    email = person.person_email,
-                                    role = personRole.role_name,
-                                    credits = person.person_credits,
-                                    neededCredits = person.needed_credits
-
-                                }).ToListAsync();
-
-            if (_context.People == null)
-            {
-                return NotFound();
-            }
-        
-
-            if (people == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(people);
-        }
-
-
 
         // PUT: api/People/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
