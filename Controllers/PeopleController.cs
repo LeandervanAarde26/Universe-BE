@@ -123,12 +123,14 @@ namespace UniVerServer.Controllers
             var students = await (from student in _context.People
                                    join studentRole in _context.Roles
                                    on student.role equals studentRole.role_id
-                                   where student.role == 3
+                                   where student.role > 2
                                    select new
                                    {
                                        image = "",
                                        name = student.first_name + " " + student.last_name,
                                        role = studentRole.role_name,
+                                       credits = student.person_credits,
+                                       creditsNeeded = student.needed_credits,
                                        subject = "N/A"
                                    }).ToListAsync();
             if (students == null)
@@ -252,9 +254,9 @@ namespace UniVerServer.Controllers
 
             people.person_password = Argon2.Hash(people.person_password);
 
-            if (people.role > 3)
+            if (people.role > 4)
             {
-                people.role = 3;
+                people.role = 4;
             }
 
 
