@@ -31,7 +31,7 @@ namespace UniVerServer.Controllers
             _context = context;
         }
 
-        [HttpPost("/auth")]
+        [HttpPost("auth")]
         public async Task<ActionResult<AuthenticatedUser>> AuthenticateUser([FromBody] Authentication request)
         {
             if(string.IsNullOrEmpty(request.email) || string.IsNullOrEmpty(request.password))
@@ -201,6 +201,7 @@ namespace UniVerServer.Controllers
             {
                 return NotFound("No lecturers on the system");
             }
+         
 
             return Ok(lecturers);
         }
@@ -275,6 +276,7 @@ namespace UniVerServer.Controllers
                 return NotFound();
             }
             var people = await _context.People.FindAsync(id);
+        
             if (people == null)
             {
                 return NotFound();
