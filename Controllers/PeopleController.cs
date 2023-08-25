@@ -126,8 +126,10 @@ namespace UniVerServer.Controllers
                                    where student.role > 2
                                    select new
                                    {
+                                       id = student.person_id,
                                        image = "",
                                        name = student.first_name + " " + student.last_name,
+                                       email = student.person_email,
                                        role = studentRole.role_name,
                                        credits = student.person_credits,
                                        creditsNeeded = student.needed_credits,
@@ -191,8 +193,10 @@ namespace UniVerServer.Controllers
                                    where lecturer.role == 2
                                    select new
                                    {
+                                       id = lecturer.person_id,
                                        image = "",
                                        name = lecturer.first_name + " " + lecturer.last_name,
+                                       email = lecturer.person_email,
                                        role = lecturerRole.role_name,
                                        subject = "N/A"
                                    }).ToListAsync();
@@ -201,8 +205,6 @@ namespace UniVerServer.Controllers
             {
                 return NotFound("No lecturers on the system");
             }
-         
-
             return Ok(lecturers);
         }
 
