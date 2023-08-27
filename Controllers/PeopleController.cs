@@ -111,6 +111,30 @@ namespace UniVerServer.Controllers
 
             return Ok(true);
         }
+        [HttpGet()]
+        public async Task<ActionResult<People>> GetLoggedInUser(int userId)
+        {
+            if (_context.People == null)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+
+            if(int.IsNegative(userId) || userId == null)
+            {
+                return BadRequest("Invalid request parameters");
+            }
+
+            var user = await _context.People.SingleOrDefaultAsync(p => p.person_id.Equals(userId));
+
+            if (user == null)
+            {
+                return NotFound("User not found on database");
+            }
+
+            return user;
+        }
+
+
 
         [HttpGet("Students")]
         public async Task<ActionResult<People>> GetAllStudents()
@@ -126,16 +150,19 @@ namespace UniVerServer.Controllers
                                    where student.role > 2
                                    select new
                                    {
+
                                        image = "",
                                        name = student.first_name + " " + student.last_name,
+                                       email = student.person_email,
                                        role = studentRole.role_name,
-                                       credits = student.person_credits,
-                                       creditsNeeded = student.needed_credits,
-                                       subject = "N/A"
+                                       person_credits = student.person_credits,
+                                       needed_credits = student.needed_credits,
+                                       person_system_identifier = student.person_system_identifier,
+                                       //subject = "N/A"
                                    }).ToListAsync();
             if (students == null)
             {
-                return NotFound("No lecturers on the system");
+                return NotFound("No Students on the system");
             }
 
             return Ok(students);
@@ -160,21 +187,33 @@ namespace UniVerServer.Controllers
             return person;
         }
 
-        [HttpGet("lecturer/{id}")]
+        [HttpGet("Lecturer/{id}")]
         public async Task<ActionResult<People>> GetLecturer(int id)
         {
             if (_context.People == null)
             {
                 return NotFound();
             }
-            var people = await _context.People.FindAsync(id);
 
-            if (people == null)
+            var lecturer = await (from lect in _context.People
+                                  join lecturerRole in _context.Roles
+                                  on lect.role equals lecturerRole.role_id
+                                  where lect.person_id == id
+                                  select new
+                                  {
+                                      image = "",
+                                      name = lect.first_name + " " + lect.last_name,
+                                      email = lect.person_email,
+                                      role = lecturerRole.role_name,
+                                      subject = "N/A"
+                                  }).SingleAsync();
+
+            if (lecturer == null)
             {
                 return NotFound();
             }
 
-            return people;
+            return Ok(lecturer);
         }
 
         [HttpGet("Lecturers")]
