@@ -17,8 +17,9 @@ namespace UniVerServer.Models
         [Required]
         public string event_description { get; set; }
 
-        [ForeignKey("person_system_identifier")]
-        public People staff_organiser { get; set; }
+        [ForeignKey("person_id")]
+        [Required]
+        public int staff_organiser { get; set; }
 
         [Required]
         public DateTime event_date { get; set; } = DateTime.UtcNow;

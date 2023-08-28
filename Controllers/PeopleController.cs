@@ -201,13 +201,13 @@ namespace UniVerServer.Controllers
                                   where lect.person_id == id
                                   select new
                                   {
+                                      id = lect.person_id,
                                       image = "",
                                       name = lect.first_name + " " + lect.last_name,
                                       email = lect.person_email,
                                       role = lecturerRole.role_name,
                                       subject = "N/A"
                                   }).SingleAsync();
-
             if (lecturer == null)
             {
                 return NotFound();
@@ -223,13 +223,13 @@ namespace UniVerServer.Controllers
             {
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
-
             var lecturers = await (from lecturer in _context.People
                                    join lecturerRole in _context.Roles
                                    on lecturer.role equals lecturerRole.role_id
                                    where lecturer.role == 2
                                    select new
                                    {
+                                       id = lecturer.person_id,
                                        image = "",
                                        name = lecturer.first_name + " " + lecturer.last_name,
                                        role = lecturerRole.role_name,
