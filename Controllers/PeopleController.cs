@@ -150,7 +150,7 @@ namespace UniVerServer.Controllers
                                    where student.role > 2
                                    select new
                                    {
-
+                                       id = student.person_id,
                                        image = "",
                                        name = student.first_name + " " + student.last_name,
                                        email = student.person_email,
