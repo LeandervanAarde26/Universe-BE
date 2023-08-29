@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using UniVerServer;
 using UniVerServer.Models;
+using UniVerServer.Models.DTO;
 
 namespace UniVerServer.Controllers
 {
@@ -25,11 +26,26 @@ namespace UniVerServer.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Events>>> GetEvents()
         {
+
+
           if (_context.Events == null)
           {
-              return NotFound();
+                return StatusCode(StatusCodes.Status500InternalServerError);
           }
-            return await _context.Events.ToListAsync();
+
+          var events = await (from evs in _context.Events 
+                              join organiser in _context.People
+                              on evs.staff_organiser equals organiser.person_id
+                              select new EventsDTO()
+                              {
+                                  event_id = evs.event_id,
+                                  event_name = evs.event_name,
+                                  event_description = evs.event_description,
+                                  staff_organiser = organiser.first_name + " " + organiser.last_name,
+                                  event_date = evs.event_date.ToString("dddd, dd MMMM yyyy")
+                              }).ToListAsync();
+
+            return Ok(events);
         }
 
         // GET: api/Events/5
