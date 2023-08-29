@@ -223,26 +223,57 @@ namespace UniVerServer.Controllers
             {
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
-            var lecturers = await (from lecturer in _context.People
-                                   join lecturerRole in _context.Roles
-                                   on lecturer.role equals lecturerRole.role_id
-                                   where lecturer.role == 2
-                                   select new
-                                   {
-                                       id = lecturer.person_id,
-                                       image = "",
-                                       name = lecturer.first_name + " " + lecturer.last_name,
-                                       role = lecturerRole.role_name,
-                                       subject = "N/A"
-                                   }).ToListAsync();
 
-            if(lecturers == null)
+            var lecturers = await (from lecturer in _context.People
+                               join lecturerRole in _context.Roles
+                               on lecturer.role equals lecturerRole.role_id
+                               where lecturer.role == 2
+                               select new
+                               {
+                                   id = lecturer.person_id,
+                                   image = "",
+                                   name = lecturer.first_name + " " + lecturer.last_name,
+                                   role = lecturerRole.role_name,
+                                   subject = "N/A"
+                               }).ToListAsync();
+
+            if (lecturers == null)
             {
                 return NotFound("No lecturers on the system");
             }
          
 
             return Ok(lecturers);
+        }
+
+        [HttpGet("Staff")]
+        public async Task<ActionResult<People>> GetStaffMembers()
+        {
+            if (_context.People == null)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError) ;
+            }
+
+
+            var st = await (from staff in _context.People
+                            join staffRole in _context.Roles
+                            on staff.role equals staffRole.role_id
+                            where staff.role < 3
+                            select new
+                            {
+                                id = staff.person_id,
+                                image = "",
+                                name = staff.first_name + " " + staff.last_name,
+                                role = staffRole.role_name,
+                                subject = "N/A"
+                            }).ToListAsync();
+
+            if(st == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(st);
         }
 
         // PUT: api/People/5
