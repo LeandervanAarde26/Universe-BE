@@ -111,10 +111,15 @@ namespace UniVerServer.Controllers
                                 credits = group.ToList()[0].student_credits,
                                 student = group.Key,
                                 //courses = group.ToList(),
-                                studentFee = group.Sum(item =>
+                                studentYearlyFee = group.Sum(item =>
                                 {
                                     return item.subject_cost;
                                 }),
+                                studentMonthlyFee = group.Sum(item =>
+                                {
+                                    return item.subject_cost;
+                                }
+                                ) / 12 ,
                                 aquiredCredits = group.Sum(item =>
                                 {
                                     return item.student_credits;
