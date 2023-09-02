@@ -44,5 +44,9 @@ namespace UniVerServer.Models
         [Required]
         public string subjectImage { get; set; } = String.Empty;
 
+        public bool is_active { get; set; }
+
+        public DateTime course_start { get; set; } = DateTime.Now;
+
     }
 }

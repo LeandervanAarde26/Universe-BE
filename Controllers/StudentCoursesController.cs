@@ -31,7 +31,6 @@ namespace UniVerServer.Controllers
           }
             return await _context.StudentCourses.ToListAsync();
         }
-
         // GET: api/StudentCourses/5
         [HttpGet("{id}")]
         public async Task<ActionResult<StudentCourses>> GetStudentCourses(string id)
@@ -120,5 +119,7 @@ namespace UniVerServer.Controllers
         {
             return (_context.StudentCourses?.Any(e => e.grade_id == id)).GetValueOrDefault();
         }
+
+
     }
 }
