@@ -89,6 +89,7 @@ namespace UniVerServer.Controllers
                               {
                                   student_id = learner.person_id,
                                   student_name = learner.first_name + " " + learner.last_name,
+                                  student_systemIdentifier = learner.person_system_identifier,
                                   student_number = learner.person_cell,
                                   student_email = learner.person_email,
                                   student_credits = learner.person_credits,
@@ -108,8 +109,11 @@ namespace UniVerServer.Controllers
                             .GroupBy(item => item.student_name)
                             .Select(group => new
                             {
-                                credits = group.ToList()[0].student_credits,
+
                                 student = group.Key,
+                                studentId = group.ToList()[0].student_id,
+                                studentNumber = group.ToList()[0].student_systemIdentifier,
+                                credits = group.ToList()[0].student_credits,
                                 //courses = group.ToList(),
                                 studentYearlyFee = group.Sum(item =>
                                 {

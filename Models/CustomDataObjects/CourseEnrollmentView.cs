@@ -5,6 +5,7 @@
         public int student_id { get; set; }
         public string student_name { get; set; }
         public string student_number { get; set; }
+        public string student_systemIdentifier { get; set; }
         public string student_email { get; set;}
         public string student_phone { get; set;}
         public int student_credits { get; set;}
