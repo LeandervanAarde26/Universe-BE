@@ -5,15 +5,15 @@ namespace UniVerServer.Models.DTO
 {
     public class EventsDTO
     {
-        public
-         int event_id { get; set; }
 
-         string event_name { get; set; }
+        public int event_id { get; set; }
 
-         string event_description { get; set; }
+        public string event_name { get; set; }
 
-         string staff_organiser { get; set; }
+        public string event_description { get; set; }
 
-         string event_date { get; set; }
+        public string staff_organiser { get; set; }
+
+        public string event_date { get; set; }
     }
 }

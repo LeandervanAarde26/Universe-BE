@@ -2,9 +2,8 @@
 {
     public class Authentication
     {
-        public
-         string email { get; set; } = string.Empty;
-         string password { get; set; } = string.Empty;
+        public string email { get; set; } = string.Empty;
+        public string password { get; set; } = string.Empty;
 
     }
 }
