@@ -15,5 +15,7 @@ namespace UniVerServer.Models
         public string role_name { get; set; } = string.Empty;
         [Required]
         public bool can_access { get; set; } = false;
+        [Required]
+        public int rate { get; set; }
     }
 }

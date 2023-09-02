@@ -134,8 +134,6 @@ namespace UniVerServer.Controllers
             return user;
         }
 
-
-
         [HttpGet("Students")]
         public async Task<ActionResult<People>> GetAllStudents()
         {
@@ -268,6 +266,7 @@ namespace UniVerServer.Controllers
                                 subject = "N/A"
                             }).ToListAsync();
 
+           
             if(st == null)
             {
                 return NotFound();

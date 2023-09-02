@@ -38,10 +38,13 @@ namespace UniVerServer.Models
         [Required]
         [ForeignKey("role_id")]
         public int role { get; set; } = 3;
-
+        //public Roles? roleData { get; set; }
+     
         public string person_image = string.Empty;
 
         public int person_credits { get; set; }
+        
+        public string person_cell { get; set; }
 
         public int needed_credits { get; set; }
 
