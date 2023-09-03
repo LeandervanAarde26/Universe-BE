@@ -19,6 +19,7 @@
         public string subject_name { get; set;}
         public string subject_code { get; set;}
         public int subject_cost { get; set;}
+        public string subject_description { get; set;}
         public string subject_color { get; set;}
         public int subject_credits { get; set;}
         public int subject_runtime { get; set;}
