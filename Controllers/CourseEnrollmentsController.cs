@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -25,7 +26,7 @@ namespace UniVerServer.Controllers
 
         // GET: api/CourseEnrollments
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<CourseEnrollments>>> GetCourses()
+        public async Task<ActionResult<IEnumerable<SubjectWithEnrollments>>> GetCourses()
         {
 
             var data = await (from enrollment in _context.Courses
@@ -64,20 +65,87 @@ namespace UniVerServer.Controllers
 
                                      }
                                      )
-                                     .GroupBy(subject =>  subject.subject_name)
-                                     .Select(group => 
-                                     new
-                                     {
-                                         subject = group.Key,
-                                         description = group.ToList()[0].subject_description,
-                                         student = group.ToList()
-                                     })
-                                     .ToListAsync();
-          if (_context.Courses == null)
+                                    .GroupBy(e => e.subject_name)
+                                    .Select(group => new SubjectWithEnrollments
+                                    {
+                                        subjectName = group.Key,
+                                        subjectDescription = group.First().subject_description,
+                                        lecturer_id = group.First().lecturer_id,
+                                        lecturer_name = group.First().lecturer_name,
+                                        subjectId = group.First().subject_id,
+                                        subject_id = group.First().subject_id.ToString(),
+                                        subject_color = group.First().subject_color,
+                                        subject_active = group.First().subject_active,
+                                        enrollments = group.Select(e => new Enrollment
+                                        {
+                                            student_id = e.student_id,
+                                            student_name = e.student_name,
+                                            student_email = e.student_email,
+                                        }).ToList()
+                                    })
+                                    .ToListAsync();
+            if (_context.Courses == null)
           {
               return NotFound();
           }
             return Ok(data);
+        }
+
+
+        [HttpGet("subject/{id}")]
+        public async Task<ActionResult<SubjectWithEnrollments>> GetSingleSubjectOverView(int id)
+        {
+            if(_context.Courses == null)
+            {
+                return NotFound();
+            }
+
+            var subjectWithEnrollments = await (from enrollment in _context.Courses
+                                                join learner in _context.People
+                                                on enrollment.student_id equals learner.person_system_identifier
+                                                join subject in _context.Subjects
+                                                on enrollment.Subjects equals subject.subject_id
+                                                join lecturer in _context.People
+                                                on subject.lecturer_id equals lecturer.person_id
+                                                where enrollment.Subjects == id
+                                                select new SingleSubjectView
+                                                {
+                                                    student_id = learner.person_id,
+                                                    student_name = learner.first_name,
+                                                    student_email = learner.person_email,
+                                                    lecturer_id = lecturer.person_id,
+                                                    lecturer_name = lecturer.first_name + " " + lecturer.last_name,
+                                                    subject_id = subject.subject_id,
+                                                    subject_name = subject.subject_name,  
+                                                    subject_color = subject.subject_color,
+                                                    subject_active = subject.is_active,
+                                                    subject_description = subject.subject_description,
+                                                })
+                                               .ToListAsync();
+
+            var groupedData = subjectWithEnrollments
+                .GroupBy(e => e.subject_name)
+                .Select(group => new SubjectWithEnrollments
+                {
+                    subjectName = group.Key,
+                    subjectDescription = group.First().subject_description,
+                    lecturer_id = group.First().lecturer_id,
+                    lecturer_name = group.First().lecturer_name,
+                    subjectId = group.First().subject_id,
+                    subject_id = group.First().subject_id.ToString(),
+                    subject_color = group.First().subject_color,
+                    subject_active = group.First().subject_active,
+                    enrollments = group.Select(e => new Enrollment
+                    {
+                        student_id = e.student_id,
+                        student_name = e.student_name,
+                        student_email = e.student_email,
+                    }).ToList()
+                })
+                .FirstOrDefault();
+
+
+            return Ok(groupedData);
         }
         [HttpGet("studentFees")]
         public async Task<ActionResult<CourseEnrollments>> GetAllLecturerFees()
