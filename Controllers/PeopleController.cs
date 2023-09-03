@@ -261,7 +261,7 @@ namespace UniVerServer.Controllers
             //{
             //    return NotFound();
             //}
-            return Ok(individualStudent);
+            return Ok(personWithSubject);
         }
 
         [HttpGet("Lecturer/{id}")]
@@ -275,22 +275,50 @@ namespace UniVerServer.Controllers
             var lecturer = await (from lect in _context.People
                                   join lecturerRole in _context.Roles
                                   on lect.role equals lecturerRole.role_id
+                                  join subject in _context.Subjects
+                                  on lect.person_id equals subject.lecturer_id
                                   where lect.person_id == id
                                   select new
                                   {
-                                      id = lect.person_id,
+                                      lect_id = lect.person_id,
                                       image = "",
                                       name = lect.first_name + " " + lect.last_name,
                                       email = lect.person_email,
+                                      phone = lect.person_cell,
                                       role = lecturerRole.role_name,
-                                      subject = "N/A"
-                                  }).SingleAsync();
+                                      rate = lecturerRole.rate,
+                                      subject_id = subject.subject_id,
+                                      subject_name = subject.subject_name,  
+                                      subject_code = subject.subject_code,  
+                                      subject_color = subject.subject_color,
+                                  }).ToListAsync();
+
+            var singleLecturerWithCourses = lecturer
+                                    .GroupBy(lecturer => lecturer.name)
+                                    .Select(group => new LecturerWithCourses
+                                    {
+                                        lecturer_id = group.First().lect_id,
+                                        lecturer_name = group.First().name,
+                                        email = group.First().email,
+                                        lecturer_phoneNumber = group.First().phone,
+                                        role = group.First().role,
+                                        lecturer_rate = group.First().rate,
+                                        enrollments = group.Select(e => new SubjectEnrollments
+                                        {
+                                            subject_id = e.subject_id,
+                                            subject_name = e.subject_name,
+                                            subject_code = e.subject_code,
+                                            subject_color = e.subject_color,
+                                        }).ToList()
+
+                                    })
+                                    .FirstOrDefault(); ;
             if (lecturer == null)
             {
                 return NotFound();
             }
 
-            return Ok(lecturer);
+            return Ok(singleLecturerWithCourses);
         }
 
         [HttpGet("Lecturers")]
