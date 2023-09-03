@@ -28,7 +28,6 @@ namespace UniVerServer.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<SubjectWithEnrollments>>> GetCourses()
         {
-
             var data = await (from enrollment in _context.Courses
                                      join learner in _context.People
                                      on enrollment.student_id equals learner.person_system_identifier
@@ -99,7 +98,6 @@ namespace UniVerServer.Controllers
             {
                 return NotFound();
             }
-
             var subjectWithEnrollments = await (from enrollment in _context.Courses
                                                 join learner in _context.People
                                                 on enrollment.student_id equals learner.person_system_identifier
@@ -118,6 +116,7 @@ namespace UniVerServer.Controllers
                                                     subject_id = subject.subject_id,
                                                     subject_name = subject.subject_name,  
                                                     subject_color = subject.subject_color,
+                                                    subject_code = subject.subject_code,
                                                     subject_active = subject.is_active,
                                                     subject_description = subject.subject_description,
                                                 })
@@ -132,7 +131,7 @@ namespace UniVerServer.Controllers
                     lecturer_id = group.First().lecturer_id,
                     lecturer_name = group.First().lecturer_name,
                     subjectId = group.First().subject_id,
-                    subject_id = group.First().subject_id.ToString(),
+                    subject_code = group.First().subject_code,
                     subject_color = group.First().subject_color,
                     subject_active = group.First().subject_active,
                     enrollments = group.Select(e => new Enrollment
@@ -143,8 +142,6 @@ namespace UniVerServer.Controllers
                     }).ToList()
                 })
                 .FirstOrDefault();
-
-
             return Ok(groupedData);
         }
         [HttpGet("studentFees")]
@@ -235,11 +232,9 @@ namespace UniVerServer.Controllers
                                   student_email = learner.person_email,
                                   student_credits = learner.person_credits,
                                   student_needed_credits = learner.needed_credits,
-
                                   lecturer_id = lecturer.person_id,
                                   lecturer_name = lecturer.first_name + " " + lecturer.last_name,
                                   lecturer_rate = role.rate,
-
                                   subject_id = subject.subject_id,
                                   subject_name = subject.subject_name,
                                   subject_code = subject.subject_code,

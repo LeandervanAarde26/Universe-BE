@@ -12,6 +12,7 @@
         public string subject_color { get; set;}
         public bool subject_active { get; set;}
         public string subject_description { get; set;}
+        public string subject_code { get; set;}
     }
 
     public class Enrollment
@@ -28,7 +29,7 @@
         public int lecturer_id { get; set; }
         public string lecturer_name { get; set; }
         public int subjectId { get; set; }
-        public string subject_id { get; set; }
+        public string subject_code { get; set; }
         public string subject_color { get; set; }
         public bool subject_active { get; set; }
         public List<Enrollment> enrollments { get; set; }
