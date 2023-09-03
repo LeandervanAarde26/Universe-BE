@@ -63,14 +63,16 @@ namespace UniVerServer.Controllers
                                      equals lecturer.person_id
                                      join role in _context.Roles
                                      on lecturer.role equals role.role_id                      
-                                     select new LecturerPayment
+                                     select new
                                      {
                                         subject_id = subject.subject_id,
                                         subject_name = subject.subject_name,
+                                        class_amount = subject.subject_class_amount,
+                                        class_time = subject.subject_class_runtiem,
                                         lecturer_id = lecturer.person_id,
                                         lecturer = lecturer.first_name +" " + lecturer.last_name,
-                                        monthlyIncome = Math.Round(subject.subject_class_amount * (((decimal)subject.course_start.Day / new DateTime(subject.course_start.Year, subject.course_start.Month, DateTime.DaysInMonth(subject.course_start.Year, subject.course_start.Month)).Day) * role.rate), 2),
-                                        hoursWorked = Math.Round(subject.subject_class_amount * (((decimal)subject.course_start.Day / new DateTime(subject.course_start.Year, subject.course_start.Month, DateTime.DaysInMonth(subject.course_start.Year, subject.course_start.Month)).Day)))
+                                        monthlyIncome = Math.Round((subject.subject_class_amount * (subject.subject_class_runtiem/60)) * (((decimal)subject.course_start.Day / new DateTime(subject.course_start.Year, subject.course_start.Month, DateTime.DaysInMonth(subject.course_start.Year, subject.course_start.Month)).Day) * role.rate), 2),
+                                        hoursWorked = Math.Round((subject.subject_class_amount * (subject.subject_class_runtiem / 60)) * (((decimal)subject.course_start.Day / new DateTime(subject.course_start.Year, subject.course_start.Month, DateTime.DaysInMonth(subject.course_start.Year, subject.course_start.Month)).Day)))
                                      })
                                       .ToListAsync();
 
@@ -79,7 +81,7 @@ namespace UniVerServer.Controllers
                              .Select(group => new
                               {
                                 lecturer = group.Key,
-                                //subjects = group.ToList(),
+                                subjects = group.ToList(),
                                 totalHoursWorked = group.Sum(item =>
                                 {
                                     return item.hoursWorked;
@@ -91,7 +93,7 @@ namespace UniVerServer.Controllers
                             })
                              .ToList();
 
-            return Ok(result);
+            return Ok(lecturersPayment);
         }
 
 

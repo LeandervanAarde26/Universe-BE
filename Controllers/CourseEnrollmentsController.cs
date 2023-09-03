@@ -104,7 +104,6 @@ namespace UniVerServer.Controllers
                               }
                          ).ToListAsync();
 
-
             var result = data
                             .GroupBy(item => item.student_name)
                             .Select(group => new
