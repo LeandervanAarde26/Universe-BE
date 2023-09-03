@@ -38,7 +38,6 @@ namespace UniVerServer.Models
         [Required]
         public int subject_class_amount { get; set; } = 0;
 
-        [Required]
         public string subjectImage { get; set; } = String.Empty;
 
         public bool is_active { get; set; }
