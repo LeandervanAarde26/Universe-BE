@@ -26,5 +26,6 @@
         public int class_amount { get; set; }
         public bool subject_active { get; set; }
         public DateTime subject_start { get; set; }
+        public int enrollment_id { get; set; }
     }
 }

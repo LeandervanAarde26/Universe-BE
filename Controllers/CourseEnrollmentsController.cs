@@ -60,7 +60,9 @@ namespace UniVerServer.Controllers
                                   subject_runtime = subject.subject_class_runtiem,
                                   class_amount = subject.subject_class_amount,
                                   subject_active = subject.is_active,
-                                  subject_start = subject.course_start
+                                  subject_start = subject.course_start,
+                                  enrollment_id = enrollment != null ? enrollment.enrollment_id : 0
+
                               }
                             )
                             .GroupBy(e => e.subject_name)
@@ -79,6 +81,7 @@ namespace UniVerServer.Controllers
                                     student_id = e.student_id,
                                     student_name = e.student_name,
                                     student_email = e.student_email,
+                                    enrollment_id=e.enrollment_id,
                                 }).ToList()
                             })
                             .ToListAsync();
