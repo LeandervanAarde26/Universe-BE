@@ -55,7 +55,8 @@ namespace UniVerServer.Controllers
                                        subject_name = subject.subject_name,
                                        subject_code = subject.subject_code, 
                                        subject_cost = subject.subject_cost, 
-                                       subject_color = subject.subject_color,   
+                                       subject_color = subject.subject_color,  
+                                       
                                        subject_credits = subject.subject_credits,
                                        subject_runtime = subject.subject_class_runtiem,
                                        class_amount = subject.subject_class_amount,
@@ -72,7 +73,7 @@ namespace UniVerServer.Controllers
                                         lecturer_id = group.First().lecturer_id,
                                         lecturer_name = group.First().lecturer_name,
                                         subjectId = group.First().subject_id,
-                                        subject_id = group.First().subject_id.ToString(),
+                                        subject_code = group.First().subject_code,
                                         subject_color = group.First().subject_color,
                                         subject_active = group.First().subject_active,
                                         enrollments = group.Select(e => new Enrollment
