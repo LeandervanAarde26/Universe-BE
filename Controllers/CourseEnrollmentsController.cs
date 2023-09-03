@@ -45,6 +45,7 @@ namespace UniVerServer.Controllers
                                        student_email = learner.person_email,
                                        student_credits = learner.person_credits,
                                        student_needed_credits = learner.needed_credits,
+                                       subject_description = subject.subject_description,
 
                                        lecturer_id = lecturer.person_id,
                                        lecturer_name = lecturer.first_name + " " + lecturer.last_name,
@@ -68,6 +69,7 @@ namespace UniVerServer.Controllers
                                      new
                                      {
                                          subject = group.Key,
+                                         description = group.ToList()[0].subject_description,
                                          student = group.ToList()
                                      })
                                      .ToListAsync();
@@ -102,6 +104,7 @@ namespace UniVerServer.Controllers
                                   student_email = learner.person_email,
                                   student_credits = learner.person_credits,
                                   student_needed_credits = learner.needed_credits,
+                                  subject_description = subject.subject_description,
 
                                   subject_id = subject.subject_id,
                                   subject_name = subject.subject_name,

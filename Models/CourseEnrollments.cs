@@ -18,8 +18,5 @@ namespace UniVerServer.Models
         [ForeignKey("subject_id")]
         [Required]
         public int Subjects { get; set; }
-
-        
-
     }
 }
