@@ -50,7 +50,7 @@ namespace UniVerServer.Controllers
         }
 
         [HttpGet("lecturerfees")]
-        public async Task<ActionResult<CourseEnrollments>> GetAllLecturerFees()
+        public async Task<ActionResult<CollectiveLecturerSalary>> GetAllLecturerFees()
         {
             if (_context.Subjects == null)
             {
@@ -63,14 +63,15 @@ namespace UniVerServer.Controllers
                                      equals lecturer.person_id
                                      join role in _context.Roles
                                      on lecturer.role equals role.role_id                      
-                                     select new
+                                     select new LecturerPayment
                                      {
                                         subject_id = subject.subject_id,
                                         subject_name = subject.subject_name,
-                                        class_amount = subject.subject_class_amount,
-                                        class_time = subject.subject_class_runtiem,
                                         lecturer_id = lecturer.person_id,
-                                        lecturer = lecturer.first_name +" " + lecturer.last_name,
+                                        lecturer = lecturer.first_name + " " + lecturer.last_name,
+                                        subject_class_amount = subject.subject_class_amount,
+                                        course_start = subject.course_start,
+                                        class_time = subject.subject_class_runtiem,
                                         monthlyIncome = Math.Round((subject.subject_class_amount * (subject.subject_class_runtiem/60)) * (((decimal)subject.course_start.Day / new DateTime(subject.course_start.Year, subject.course_start.Month, DateTime.DaysInMonth(subject.course_start.Year, subject.course_start.Month)).Day) * role.rate), 2),
                                         hoursWorked = Math.Round((subject.subject_class_amount * (subject.subject_class_runtiem / 60)) * (((decimal)subject.course_start.Day / new DateTime(subject.course_start.Year, subject.course_start.Month, DateTime.DaysInMonth(subject.course_start.Year, subject.course_start.Month)).Day)))
                                      })
@@ -78,10 +79,11 @@ namespace UniVerServer.Controllers
 
                 var result = lecturersPayment
                              .GroupBy(item => item.lecturer)
-                             .Select(group => new
-                              {
+                             .Select(group => new CollectiveLecturerSalary
+                             {
+                                lecturerId = group.ToList()[0].lecturer_id,
                                 lecturer = group.Key,
-                                subjects = group.ToList(),
+                                //subjects = group.ToList(),
                                 totalHoursWorked = group.Sum(item =>
                                 {
                                     return item.hoursWorked;
@@ -93,7 +95,7 @@ namespace UniVerServer.Controllers
                             })
                              .ToList();
 
-            return Ok(lecturersPayment);
+            return Ok(result);
         }
 
 

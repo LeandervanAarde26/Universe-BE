@@ -10,7 +10,16 @@
         public DateTime course_start { get; set; }
         public decimal rate { get; set; }
         public decimal monthlyIncome { get; set; }
-
+        public int class_time { get; set; }
         public decimal hoursWorked { get; set; }    
+    }
+
+
+    public class CollectiveLecturerSalary
+    {
+        public int lecturerId { get; set; }
+        public string lecturer { get; set; }
+        public decimal totalHoursWorked { get; set; }
+        public decimal monthlyIncome { get; set; }
     }
 }
