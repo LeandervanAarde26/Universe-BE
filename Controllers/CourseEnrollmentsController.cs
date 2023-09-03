@@ -118,6 +118,7 @@ namespace UniVerServer.Controllers
                                                     subject_code = subject.subject_code,
                                                     subject_active = subject.is_active,
                                                     subject_description = subject.subject_description,
+                                                    enrollment_id = enrollment.enrollment_id
                                                 })
                                                .ToListAsync();
 
@@ -138,6 +139,7 @@ namespace UniVerServer.Controllers
                         student_id = e.student_id,
                         student_name = e.student_name,
                         student_email = e.student_email,
+                        enrollment_id=e.enrollment_id,
                     }).ToList()
                 })
                 .FirstOrDefault();
@@ -161,6 +163,7 @@ namespace UniVerServer.Controllers
                               on lecturer.role equals role.role_id
                               select new CourseEnrollmentView
                               {
+                                
                                   student_id = learner.person_id,
                                   student_name = learner.first_name + " " + learner.last_name,
                                   student_systemIdentifier = learner.person_system_identifier,
@@ -268,6 +271,8 @@ namespace UniVerServer.Controllers
 
             _context.Entry(courseEnrollments).State = EntityState.Modified;
 
+
+            
             try
             {
                 await _context.SaveChangesAsync();
@@ -313,12 +318,17 @@ namespace UniVerServer.Controllers
                 return NotFound();
             }
             var courseEnrollments = await _context.Courses.FindAsync(id);
-            if (courseEnrollments == null)
+            //var person = await _context.People.Where(p => p.person_system_identifier.Equals(id)).FirstOrDefaultAsync();
+
+            var studentToBeRemoved = await _context.Courses.Where(p => p.enrollment_id.Equals(id)).FirstOrDefaultAsync();
+
+
+            if (courseEnrollments == null || studentToBeRemoved == null)
             {
                 return NotFound();
             }
 
-            _context.Courses.Remove(courseEnrollments);
+            _context.Courses.Remove(studentToBeRemoved);
             await _context.SaveChangesAsync();
 
             return NoContent();
