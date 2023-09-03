@@ -183,6 +183,7 @@ namespace UniVerServer.Controllers
                                        name = student.first_name + " " + student.last_name,
                                        email = student.person_email,
                                        role = studentRole.role_name,
+                                       
                                        person_credits = student.person_credits,
                                        needed_credits = student.needed_credits,
                                        person_system_identifier = student.person_system_identifier,
@@ -204,15 +205,63 @@ namespace UniVerServer.Controllers
              {
               return NotFound();
             }
-            var person = await _context.People.Where(p => p.person_system_identifier.Equals(id)).FirstOrDefaultAsync();
-            var enrolledSubjects = await _context.Courses.Where(c => c.student_id == id).ToListAsync();
+            //var person = await _context.People.Where(p => p.person_system_identifier.Equals(id)).FirstOrDefaultAsync();
+            //var enrolledSubjects = await _context.Courses.Where(c => c.student_id == id).ToListAsync();
+
+            var personWithSubject = await (from student in _context.People
+                                           join course in _context.Courses
+                                           on student.person_system_identifier equals course.student_id
+                                           join subject in _context.Subjects
+                                           on course.Subjects equals subject.subject_id
+                                           join role in _context.Roles
+                                           on student.role equals role.role_id  
+                                           where student.person_system_identifier == id
+                                           select new
+                                           {
+                                               student_id = student.person_id,
+                                               student_Stnumber = student.person_system_identifier,
+                                               student_name = student.first_name +" "+ student.last_name,
+                                               student_email = student.person_email,
+                                               student_Cell = student.person_cell,
+                                               student_role = role.role_name,
+                                               student_credits = student.person_credits,
+                                               outstanding_credits = student.needed_credits,
+                                               subject_id = subject.subject_id,
+                                               subject_name = subject.subject_name,
+                                               subject_code = subject.subject_code,
+                                               subject_color = subject.subject_color,
+                                           })
+                                           .ToListAsync();
+
+            var individualStudent = personWithSubject
+                                    .GroupBy(student => student.student_name)
+                                    .Select(group => new SingleStudentWithCourses
+                                    {
+                                        student_id = group.First().student_id,
+                                        person_system_identifier = group.First().student_Stnumber,
+                                        student_name = group.First().student_name,
+                                        email = group.First().student_email,
+                                        student_phoneNumber = group.First().student_Cell,
+                                        role = group.First().student_role,
+                                        person_credits = group.First().student_credits,
+                                        needed_credits = group.First().outstanding_credits,
+                                        enrollments = group.Select(e => new SubjectEnrollments
+                                        {
+                                            subject_id = e.subject_id,
+                                            subject_name = e.subject_name,
+                                            subject_code=e.subject_code,
+                                            subject_color = e.subject_color,    
+                                        }).ToList()
+
+                                    })
+                                    .FirstOrDefault();
 
 
-            if (person == null)
-            {
-                return NotFound();
-            }
-            return person;
+            //if (person == null)
+            //{
+            //    return NotFound();
+            //}
+            return Ok(individualStudent);
         }
 
         [HttpGet("Lecturer/{id}")]
