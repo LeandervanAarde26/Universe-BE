@@ -98,62 +98,62 @@ namespace UniVerServer.Controllers
         [HttpGet("subject/{id}")]
         public async Task<ActionResult<SubjectWithEnrollments>> GetSingleSubjectOverView(int id)
         {
-            if(_context.Courses == null)
-            {
-                return NotFound();
-            }
-            var subjectWithEnrollments = await (from enrollment in _context.Courses
-                                                join learner in _context.People
-                                                on enrollment.student_id equals learner.person_system_identifier
-                                                join subject in _context.Subjects
-                                                on enrollment.Subjects equals subject.subject_id
+            var subjectWithEnrollments = await (from subject in _context.Subjects
                                                 join lecturer in _context.People
                                                 on subject.lecturer_id equals lecturer.person_id
-                                                where enrollment.Subjects == id
+                                                where subject.subject_id == id
                                                 select new SingleSubjectView
                                                 {
-                                                    student_id = learner.person_id,
-                                                    student_name = learner.first_name,
-                                                    student_email = learner.person_email,
-                                                    student_credits = learner.person_credits,
                                                     lecturer_id = lecturer.person_id,
                                                     lecturer_name = lecturer.first_name + " " + lecturer.last_name,
+                                                    lecturer_email = lecturer.person_email,
                                                     subject_id = subject.subject_id,
-                                                    subject_name = subject.subject_name,  
+                                                    subject_name = subject.subject_name,
                                                     subject_color = subject.subject_color,
                                                     subject_code = subject.subject_code,
                                                     subject_credits = subject.subject_credits,
                                                     subject_active = subject.is_active,
                                                     subject_description = subject.subject_description,
-                                                    enrollment_id = enrollment.enrollment_id
                                                 })
-                                               .ToListAsync();
+                                               .FirstOrDefaultAsync();
 
-            var groupedData = subjectWithEnrollments
-                .GroupBy(e => e.subject_name)
-                .Select(group => new SubjectWithEnrollments
-                {
-                    subjectName = group.Key,
-                    subjectDescription = group.First().subject_description,
-                    lecturer_id = group.First().lecturer_id,
-                    lecturer_name = group.First().lecturer_name,
-                    subjectId = group.First().subject_id,
-                    subject_code = group.First().subject_code,
-                    subject_color = group.First().subject_color,
-                    subject_active = group.First().subject_active,
-                    subject_credits= group.First().subject_credits,
-                    enrollments = group.Select(e => new Enrollment
-                    {
-                        student_id = e.student_id,
-                        student_name = e.student_name,
-                        student_email = e.student_email,
-                        enrollment_id=e.enrollment_id,
-                        student_credits=e.student_credits,
-                    }).ToList()
-                })
-                .FirstOrDefault();
-            return Ok(groupedData);
+            if (subjectWithEnrollments == null)
+            {
+                return NotFound();
+            }
+
+            var enrollments = await (from enrollment in _context.Courses
+                                     join learner in _context.People
+                                     on enrollment.student_id equals learner.person_system_identifier
+                                     where enrollment.Subjects == id
+                                     select new Enrollment
+                                     {
+                                         student_id = learner.person_id,
+                                         student_name = learner.first_name,
+                                         student_email = learner.person_email,
+                                         student_credits = learner.person_credits,
+                                         enrollment_id = enrollment.enrollment_id
+                                     })
+                                   .ToListAsync();
+
+            var sub = new SubjectWithEnrollments
+            {
+                subjectName = subjectWithEnrollments.subject_name,
+                subjectDescription = subjectWithEnrollments.subject_description,
+                lecturer_id = subjectWithEnrollments.lecturer_id,
+                lecturer_name = subjectWithEnrollments.lecturer_name,
+                lecturer_email = subjectWithEnrollments.lecturer_email,
+                subjectId = subjectWithEnrollments.subject_id,
+                subject_code = subjectWithEnrollments.subject_code,
+                subject_color = subjectWithEnrollments.subject_color,
+                subject_active = subjectWithEnrollments.subject_active,
+                subject_credits = subjectWithEnrollments.subject_credits,
+                enrollments = enrollments
+            };
+
+            return Ok(sub);
         }
+
         [HttpGet("studentFees")]
         public async Task<ActionResult<CourseEnrollments>> GetAllLecturerFees()
         {

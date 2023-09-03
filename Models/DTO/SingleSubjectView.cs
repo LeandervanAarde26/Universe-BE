@@ -7,6 +7,7 @@
         public string student_email { get; set; }
         public int student_credits { get; set; }
         public int lecturer_id { get; set; }
+        public string lecturer_email { get; set; }
         public string lecturer_name { get; set; }
         public int subject_id { get; set; }
         public int subject_credits {get; set;}
@@ -33,7 +34,7 @@
         public string subjectName { get; set; }
         public string subjectDescription { get; set; }
         public int lecturer_id { get; set; }
-
+        public string lecturer_email { get; set; }
         public string lecturer_name { get; set; }
         public int subjectId { get; set; }
         public string subject_code { get; set; }
