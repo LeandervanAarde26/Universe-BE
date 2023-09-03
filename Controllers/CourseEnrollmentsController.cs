@@ -76,12 +76,14 @@ namespace UniVerServer.Controllers
                                 subject_code = group.First().subject_code,
                                 subject_color = group.First().subject_color,
                                 subject_active = group.First().subject_active,
-                                enrollments = group.Where(e => e.student_id != null).Select(e => new Enrollment
+                                subject_credits = group.First().subject_credits,
+                                enrollments = group.Where(e => e.student_id != 0).Select(e => new Enrollment
                                 {
                                     student_id = e.student_id,
                                     student_name = e.student_name,
                                     student_email = e.student_email,
                                     enrollment_id=e.enrollment_id,
+                                    student_credits = e.student_credits,
                                 }).ToList()
                             })
                             .ToListAsync();
@@ -113,12 +115,14 @@ namespace UniVerServer.Controllers
                                                     student_id = learner.person_id,
                                                     student_name = learner.first_name,
                                                     student_email = learner.person_email,
+                                                    student_credits = learner.person_credits,
                                                     lecturer_id = lecturer.person_id,
                                                     lecturer_name = lecturer.first_name + " " + lecturer.last_name,
                                                     subject_id = subject.subject_id,
                                                     subject_name = subject.subject_name,  
                                                     subject_color = subject.subject_color,
                                                     subject_code = subject.subject_code,
+                                                    subject_credits = subject.subject_credits,
                                                     subject_active = subject.is_active,
                                                     subject_description = subject.subject_description,
                                                     enrollment_id = enrollment.enrollment_id
@@ -137,12 +141,14 @@ namespace UniVerServer.Controllers
                     subject_code = group.First().subject_code,
                     subject_color = group.First().subject_color,
                     subject_active = group.First().subject_active,
+                    subject_credits= group.First().subject_credits,
                     enrollments = group.Select(e => new Enrollment
                     {
                         student_id = e.student_id,
                         student_name = e.student_name,
                         student_email = e.student_email,
                         enrollment_id=e.enrollment_id,
+                        student_credits=e.student_credits,
                     }).ToList()
                 })
                 .FirstOrDefault();

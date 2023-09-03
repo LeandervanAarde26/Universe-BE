@@ -73,7 +73,7 @@ namespace UniVerServer.Controllers
                                         course_start = subject.course_start,
                                         class_time = subject.subject_class_runtiem,
                                         monthlyIncome = Math.Round((subject.subject_class_amount * (subject.subject_class_runtiem/60)) * (((decimal)subject.course_start.Day / new DateTime(subject.course_start.Year, subject.course_start.Month, DateTime.DaysInMonth(subject.course_start.Year, subject.course_start.Month)).Day) * role.rate), 2),
-                                        hoursWorked = Math.Round((subject.subject_class_amount * (subject.subject_class_runtiem / 60)) * (((decimal)subject.course_start.Day / new DateTime(subject.course_start.Year, subject.course_start.Month, DateTime.DaysInMonth(subject.course_start.Year, subject.course_start.Month)).Day)))
+                                        hoursWorked = Math.Round((subject.subject_class_amount * (subject.subject_class_runtiem / 60)) * (((decimal)subject.course_start.Day / new DateTime(subject.course_start.Year, subject.course_start.Month, DateTime.DaysInMonth(subject.course_start.Year, subject.course_start.Month)).Day)), 2)
                                      })
                                       .ToListAsync();
 
@@ -147,6 +147,43 @@ namespace UniVerServer.Controllers
             return NoContent();
         }
 
+        [HttpPut("ChangeLecturer")]
+        public async Task<IActionResult> ChangeSubjectlecturer(int SubjectId, int newLecturerId)
+        {
+            if(SubjectId == 0 || newLecturerId == 0)
+            {
+                return BadRequest("Id's can not be null.");
+            }
+
+            bool personExists = await _context.People.AnyAsync(p => p.person_id.Equals(newLecturerId));
+            bool subjectExists = await _context.Subjects.AnyAsync(p => p.subject_id.Equals(SubjectId));
+
+            if(!personExists || !subjectExists)
+            {
+                return BadRequest("Subject or lecturer does not exist.");
+            }
+
+            try
+            {
+                var subject = await _context.Subjects.FindAsync(SubjectId);
+
+                if(subject == null)
+                {
+                    return NotFound();
+                }
+
+                subject.lecturer_id = newLecturerId;
+                 await _context.SaveChangesAsync();
+
+                return NoContent();
+
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex);
+            }
+        }
+
         // POST: api/Subjects
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
@@ -169,6 +206,9 @@ namespace UniVerServer.Controllers
 
             return CreatedAtAction("GetSubjects", new {id = subjects.subject_id}, subjects);
         }
+
+
+   
 
         // DELETE: api/Subjects/5
         [HttpDelete("{id}")]
