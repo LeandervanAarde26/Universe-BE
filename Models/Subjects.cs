@@ -9,7 +9,6 @@ namespace UniVerServer.Models
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int subject_id { get; set; }
-
         [Required]
         public string subject_name { get; set; } = String.Empty;
 
@@ -32,8 +31,6 @@ namespace UniVerServer.Models
 
         [Required]
         public int subject_credits { get; set; } = 0;
-
-
         [Required]
         public int subject_class_runtiem { get; set; } = 0;
 

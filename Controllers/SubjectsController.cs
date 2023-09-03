@@ -152,17 +152,22 @@ namespace UniVerServer.Controllers
         [HttpPost]
         public async Task<ActionResult<Subjects>> PostSubjects(Subjects subjects)
         {
-          
+          if(subjects == null)
+            {
+                return BadRequest("Please provide all required details");
+            }
 
-            if (_context.Subjects == null)
-          {
-              return Problem("Entity set 'ApplicationDbContext.Subjects'  is null.");
-          }
-           
+          bool subjectExists = await _context.Subjects.AnyAsync(p => p.subject_name == subjects.subject_name);
+
+            if (subjectExists)
+            {
+                return Conflict("Subject name already in use");
+            }
+
             _context.Subjects.Add(subjects);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetSubjects", new { id = subjects.subject_id }, subjects);
+            return CreatedAtAction("GetSubjects", new {id = subjects.subject_id}, subjects);
         }
 
         // DELETE: api/Subjects/5

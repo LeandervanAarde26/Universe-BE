@@ -39,7 +39,7 @@ namespace UniVerServer.Migrations
 
                     b.HasKey("enrollment_id");
 
-                    b.ToTable("course_enrollments");
+                    b.ToTable("course_enrollments", (string)null);
                 });
 
             modelBuilder.Entity("UniVerServer.Models.Events", b =>
@@ -66,7 +66,7 @@ namespace UniVerServer.Migrations
 
                     b.HasKey("event_id");
 
-                    b.ToTable("events");
+                    b.ToTable("events", (string)null);
                 });
 
             modelBuilder.Entity("UniVerServer.Models.MadePayments", b =>
@@ -90,7 +90,7 @@ namespace UniVerServer.Migrations
 
                     b.HasIndex("person_system_identifier");
 
-                    b.ToTable("student_payments");
+                    b.ToTable("student_payments", (string)null);
                 });
 
             modelBuilder.Entity("UniVerServer.Models.OutStandingStudentFees", b =>
@@ -111,7 +111,7 @@ namespace UniVerServer.Migrations
 
                     b.HasIndex("person_system_identifier");
 
-                    b.ToTable("outstanding_student_fees");
+                    b.ToTable("outstanding_student_fees", (string)null);
                 });
 
             modelBuilder.Entity("UniVerServer.Models.People", b =>
@@ -167,7 +167,7 @@ namespace UniVerServer.Migrations
 
                     b.HasKey("person_id");
 
-                    b.ToTable("people");
+                    b.ToTable("people", (string)null);
                 });
 
             modelBuilder.Entity("UniVerServer.Models.Roles", b =>
@@ -191,7 +191,7 @@ namespace UniVerServer.Migrations
 
                     b.HasKey("role_id");
 
-                    b.ToTable("people_roles");
+                    b.ToTable("people_roles", (string)null);
                 });
 
             modelBuilder.Entity("UniVerServer.Models.StudentCourses", b =>
@@ -220,7 +220,7 @@ namespace UniVerServer.Migrations
 
                     b.HasIndex("subject_id");
 
-                    b.ToTable("student_grades");
+                    b.ToTable("student_grades", (string)null);
                 });
 
             modelBuilder.Entity("UniVerServer.Models.Subjects", b =>
@@ -274,7 +274,7 @@ namespace UniVerServer.Migrations
 
                     b.HasKey("subject_id");
 
-                    b.ToTable("subjects");
+                    b.ToTable("subjects", (string)null);
                 });
 
             modelBuilder.Entity("UniVerServer.Models.MadePayments", b =>
