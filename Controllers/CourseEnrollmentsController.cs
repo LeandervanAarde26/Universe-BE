@@ -62,7 +62,15 @@ namespace UniVerServer.Controllers
                                        subject_start = subject.course_start
 
                                      }
-                                     ).ToListAsync();
+                                     )
+                                     .GroupBy(subject =>  subject.subject_name)
+                                     .Select(group => 
+                                     new
+                                     {
+                                         subject = group.Key,
+                                         student = group.ToList()
+                                     })
+                                     .ToListAsync();
           if (_context.Courses == null)
           {
               return NotFound();

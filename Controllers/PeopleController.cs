@@ -134,6 +134,36 @@ namespace UniVerServer.Controllers
             return user;
         }
 
+        [HttpGet("AdminFees")] 
+        public async Task<ActionResult<People>> GetAdminSalary()
+        {
+            if(_context.People == null)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+
+            var adminFees = await (from admin in _context.People
+                                   join role in _context.Roles
+                                   on admin.role equals role.role_id
+                                   where admin.role == 1
+                                   select new
+                                   {
+                                       admin_id = admin.person_id,
+                                       admin_name = admin.first_name + " " + admin.last_name,
+                                       admin_payment = role.rate,
+
+                                   }).ToListAsync();
+
+
+            if(adminFees ==  null)
+            {
+                return NotFound();
+            }
+
+
+            return Ok(adminFees);
+        }
+
         [HttpGet("Students")]
         public async Task<ActionResult<People>> GetAllStudents()
         {
