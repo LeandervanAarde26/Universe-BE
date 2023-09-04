@@ -199,12 +199,12 @@ namespace UniVerServer.Controllers
 
         // GET: api/People/5
         [HttpGet("student/{id}")]
-        public async Task<ActionResult<SingleStudentWithCourses>> GetStudent(string id)
+        public async Task<ActionResult<SingleStudentWithCourses>> GetStudent(int id)
         {
             var personWithSubject = await (from student in _context.People
                                            join role in _context.Roles
                                            on student.role equals role.role_id
-                                           where student.person_system_identifier == id
+                                           where student.person_id== id
                                            select new
                                            {
                                                student_id = student.person_id,
@@ -233,7 +233,7 @@ namespace UniVerServer.Controllers
             var enrollments = await (from course in _context.Courses
                                      join subject in _context.Subjects
                                      on course.Subjects equals subject.subject_id
-                                     where course.student_id == id
+                                     where course.student_id == personWithSubject.student_Stnumber
                                      select new SubjectEnrollments
                                      {
                                          subject_id = subject.subject_id,
