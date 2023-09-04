@@ -193,7 +193,7 @@ namespace UniVerServer.Controllers
 
             var result = data
                             .GroupBy(item => item.student_name)
-                            .Select(group => new
+                            .Select(group => new StudentPayment
                             {
 
                                 student = group.Key,
