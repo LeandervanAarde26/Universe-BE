@@ -271,8 +271,9 @@ namespace UniVerServer.Controllers
             var lecturer = await (from lect in _context.People
                                   join lecturerRole in _context.Roles
                                   on lect.role equals lecturerRole.role_id
-                                  join subject in _context.Subjects
-                                  on lect.person_id equals subject.lecturer_id
+                                  join subject in _context.Subjects 
+                                  on lect.person_id equals subject.lecturer_id into subjectGroup
+                                  from subject in subjectGroup.DefaultIfEmpty()
                                   where lect.person_id == id
                                   select new
                                   {
@@ -283,10 +284,10 @@ namespace UniVerServer.Controllers
                                       phone = lect.person_cell,
                                       role = lecturerRole.role_name,
                                       rate = lecturerRole.rate,
-                                      subject_id = subject.subject_id,
-                                      subject_name = subject.subject_name,  
-                                      subject_code = subject.subject_code,  
-                                      subject_color = subject.subject_color,
+                                      subject_id = subject.subject_id != null ? subject.subject_id : 0,
+                                      subject_name = subject.subject_name != null ? subject.subject_name : null,  
+                                      subject_code = subject.subject_code != null ? subject.subject_code : null,  
+                                      subject_color = subject.subject_color != null ? subject.subject_color : null,
                                   }).ToListAsync();
 
             var singleLecturerWithCourses = lecturer
@@ -314,7 +315,7 @@ namespace UniVerServer.Controllers
                 return NotFound();
             }
 
-            if(singleLecturerWithCourses == null || singleLecturerWithCourses.role != "Lecturer")
+            if (singleLecturerWithCourses == null || (singleLecturerWithCourses.role != "Lecturer" && singleLecturerWithCourses.role != "Admin"))
             {
                 return BadRequest("Please enter valid details");
             }
