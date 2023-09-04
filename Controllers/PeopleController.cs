@@ -212,16 +212,22 @@ namespace UniVerServer.Controllers
                                                student_name = student.first_name + " " + student.last_name,
                                                student_email = student.person_email,
                                                student_Cell = student.person_cell,
+                                               studentRole_nr = student.role,
                                                student_role = role.role_name,
                                                student_credits = student.person_credits,
                                                outstanding_credits = student.needed_credits
                                            })
                                            .FirstOrDefaultAsync();
 
-
             if (personWithSubject == null)
             {
                 return NotFound();
+            }
+
+
+            if (personWithSubject.studentRole_nr < 3)
+            {
+                return BadRequest("Please enter Student id");
             }
 
             var enrollments = await (from course in _context.Courses
@@ -308,6 +314,10 @@ namespace UniVerServer.Controllers
                 return NotFound();
             }
 
+            if(singleLecturerWithCourses == null || singleLecturerWithCourses.role != "Lecturer")
+            {
+                return BadRequest("Please enter valid details");
+            }
             return Ok(singleLecturerWithCourses);
         }
 
