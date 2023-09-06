@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using UniVerServer;
@@ -11,9 +12,11 @@ using UniVerServer;
 namespace UniVerServer.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230906131447_Changed Payments")]
+    partial class ChangedPayments
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -83,10 +86,12 @@ namespace UniVerServer.Migrations
                     b.Property<DateTime>("payment_date")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<int>("person_id")
+                    b.Property<int>("person_system_identifier")
                         .HasColumnType("integer");
 
                     b.HasKey("payment_id");
+
+                    b.HasIndex("person_system_identifier");
 
                     b.ToTable("student_payments");
                 });
@@ -297,6 +302,17 @@ namespace UniVerServer.Migrations
                     b.HasKey("subject_id");
 
                     b.ToTable("subjects");
+                });
+
+            modelBuilder.Entity("UniVerServer.Models.MadePayments", b =>
+                {
+                    b.HasOne("UniVerServer.Models.People", "person_id")
+                        .WithMany()
+                        .HasForeignKey("person_system_identifier")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("person_id");
                 });
 
             modelBuilder.Entity("UniVerServer.Models.OutStandingStudentFees", b =>

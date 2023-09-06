@@ -7,27 +7,46 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace UniVerServer.Migrations
 {
     /// <inheritdoc />
-    public partial class AllItemsAdded : Migration
+    public partial class AddedItem : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "people_address",
+                name: "course_enrollments",
                 columns: table => new
                 {
-                    address_id = table.Column<int>(type: "integer", nullable: false)
+                    enrollment_id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    address = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
-                    address_province = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
-                    address_city = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
-                    address_area = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
-                    address_zipcode = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
-                    address_phone = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false)
+                    student_id = table.Column<string>(type: "text", nullable: false),
+                    course_start = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    Subjects = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_people_address", x => x.address_id);
+                    table.PrimaryKey("PK_course_enrollments", x => x.enrollment_id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "people",
+                columns: table => new
+                {
+                    person_id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    person_system_identifier = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
+                    first_name = table.Column<string>(type: "character varying(60)", maxLength: 60, nullable: false),
+                    last_name = table.Column<string>(type: "character varying(60)", maxLength: 60, nullable: false),
+                    person_email = table.Column<string>(type: "character varying(80)", maxLength: 80, nullable: false),
+                    added_date = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    person_active = table.Column<bool>(type: "boolean", nullable: false),
+                    role = table.Column<int>(type: "integer", nullable: false),
+                    person_credits = table.Column<int>(type: "integer", nullable: false),
+                    needed_credits = table.Column<int>(type: "integer", nullable: false),
+                    person_password = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_people", x => x.person_id);
                 });
 
             migrationBuilder.CreateTable(
@@ -45,37 +64,25 @@ namespace UniVerServer.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "people",
+                name: "subjects",
                 columns: table => new
                 {
-                    person_id = table.Column<int>(type: "integer", nullable: false)
+                    subject_id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    person_system_identifier = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
-                    first_name = table.Column<string>(type: "character varying(60)", maxLength: 60, nullable: false),
-                    last_name = table.Column<string>(type: "character varying(60)", maxLength: 60, nullable: false),
-                    person_email = table.Column<string>(type: "character varying(80)", maxLength: 80, nullable: false),
-                    added_date = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    person_active = table.Column<bool>(type: "boolean", nullable: false),
-                    role_id = table.Column<int>(type: "integer", nullable: false),
-                    address_id = table.Column<int>(type: "integer", nullable: false),
-                    person_credits = table.Column<int>(type: "integer", nullable: false),
-                    person_password = table.Column<string>(type: "text", nullable: false)
+                    subject_name = table.Column<string>(type: "text", nullable: false),
+                    subject_code = table.Column<string>(type: "text", nullable: false),
+                    subject_description = table.Column<string>(type: "text", nullable: false),
+                    subject_cost = table.Column<int>(type: "integer", nullable: false),
+                    subject_color = table.Column<string>(type: "text", nullable: false),
+                    lecturer_id = table.Column<int>(type: "integer", nullable: false),
+                    subject_credits = table.Column<int>(type: "integer", nullable: false),
+                    subject_class_runtiem = table.Column<int>(type: "integer", nullable: false),
+                    subject_class_amount = table.Column<int>(type: "integer", nullable: false),
+                    subjectImage = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_people", x => x.person_id);
-                    table.ForeignKey(
-                        name: "FK_people_people_address_address_id",
-                        column: x => x.address_id,
-                        principalTable: "people_address",
-                        principalColumn: "address_id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_people_people_roles_role_id",
-                        column: x => x.role_id,
-                        principalTable: "people_roles",
-                        principalColumn: "role_id",
-                        onDelete: ReferentialAction.Cascade);
+                    table.PrimaryKey("PK_subjects", x => x.subject_id);
                 });
 
             migrationBuilder.CreateTable(
@@ -142,55 +149,6 @@ namespace UniVerServer.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "subjects",
-                columns: table => new
-                {
-                    subject_id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    subject_name = table.Column<string>(type: "text", nullable: false),
-                    subject_code = table.Column<string>(type: "text", nullable: false),
-                    subject_description = table.Column<string>(type: "text", nullable: false),
-                    subject_cost = table.Column<int>(type: "integer", nullable: false),
-                    subject_color = table.Column<string>(type: "text", nullable: false),
-                    person_id = table.Column<int>(type: "integer", nullable: false),
-                    subject_credits = table.Column<int>(type: "integer", nullable: false),
-                    subject_class_runtiem = table.Column<int>(type: "integer", nullable: false),
-                    subject_class_amount = table.Column<int>(type: "integer", nullable: false),
-                    subjectImage = table.Column<string>(type: "text", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_subjects", x => x.subject_id);
-                    table.ForeignKey(
-                        name: "FK_subjects_people_person_id",
-                        column: x => x.person_id,
-                        principalTable: "people",
-                        principalColumn: "person_id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "course_enrollments",
-                columns: table => new
-                {
-                    enrollment_id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    student_id = table.Column<string>(type: "text", nullable: false),
-                    course_start = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    subject_id = table.Column<int>(type: "integer", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_course_enrollments", x => x.enrollment_id);
-                    table.ForeignKey(
-                        name: "FK_course_enrollments_subjects_subject_id",
-                        column: x => x.subject_id,
-                        principalTable: "subjects",
-                        principalColumn: "subject_id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "student_grades",
                 columns: table => new
                 {
@@ -224,11 +182,6 @@ namespace UniVerServer.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_course_enrollments_subject_id",
-                table: "course_enrollments",
-                column: "subject_id");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_events_person_system_identifier",
                 table: "events",
                 column: "person_system_identifier");
@@ -237,16 +190,6 @@ namespace UniVerServer.Migrations
                 name: "IX_outstanding_student_fees_person_system_identifier",
                 table: "outstanding_student_fees",
                 column: "person_system_identifier");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_people_address_id",
-                table: "people",
-                column: "address_id");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_people_role_id",
-                table: "people",
-                column: "role_id");
 
             migrationBuilder.CreateIndex(
                 name: "IX_student_grades_facilitator_id",
@@ -267,11 +210,6 @@ namespace UniVerServer.Migrations
                 name: "IX_student_payments_person_system_identifier",
                 table: "student_payments",
                 column: "person_system_identifier");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_subjects_person_id",
-                table: "subjects",
-                column: "person_id");
         }
 
         /// <inheritdoc />
@@ -287,6 +225,9 @@ namespace UniVerServer.Migrations
                 name: "outstanding_student_fees");
 
             migrationBuilder.DropTable(
+                name: "people_roles");
+
+            migrationBuilder.DropTable(
                 name: "student_grades");
 
             migrationBuilder.DropTable(
@@ -297,12 +238,6 @@ namespace UniVerServer.Migrations
 
             migrationBuilder.DropTable(
                 name: "people");
-
-            migrationBuilder.DropTable(
-                name: "people_address");
-
-            migrationBuilder.DropTable(
-                name: "people_roles");
         }
     }
 }

@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using UniVerServer;
@@ -11,9 +12,11 @@ using UniVerServer;
 namespace UniVerServer.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230827225534_Update")]
+    partial class Update
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -32,6 +35,9 @@ namespace UniVerServer.Migrations
 
                     b.Property<int>("Subjects")
                         .HasColumnType("integer");
+
+                    b.Property<DateTime>("course_start")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("student_id")
                         .IsRequired()
@@ -83,10 +89,12 @@ namespace UniVerServer.Migrations
                     b.Property<DateTime>("payment_date")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<int>("person_id")
+                    b.Property<int>("person_system_identifier")
                         .HasColumnType("integer");
 
                     b.HasKey("payment_id");
+
+                    b.HasIndex("person_system_identifier");
 
                     b.ToTable("student_payments");
                 });
@@ -110,30 +118,6 @@ namespace UniVerServer.Migrations
                     b.HasIndex("person_system_identifier");
 
                     b.ToTable("outstanding_student_fees");
-                });
-
-            modelBuilder.Entity("UniVerServer.Models.PaymentSummary", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<decimal>("AmountToBePaid")
-                        .HasColumnType("numeric");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Role")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("PaymentSummary");
                 });
 
             modelBuilder.Entity("UniVerServer.Models.People", b =>
@@ -162,10 +146,6 @@ namespace UniVerServer.Migrations
 
                     b.Property<bool>("person_active")
                         .HasColumnType("boolean");
-
-                    b.Property<string>("person_cell")
-                        .IsRequired()
-                        .HasColumnType("text");
 
                     b.Property<int>("person_credits")
                         .HasColumnType("integer");
@@ -202,9 +182,6 @@ namespace UniVerServer.Migrations
 
                     b.Property<bool>("can_access")
                         .HasColumnType("boolean");
-
-                    b.Property<int>("rate")
-                        .HasColumnType("integer");
 
                     b.Property<string>("role_name")
                         .IsRequired()
@@ -253,12 +230,6 @@ namespace UniVerServer.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("subject_id"));
 
-                    b.Property<DateTime>("course_start")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<bool>("is_active")
-                        .HasColumnType("boolean");
-
                     b.Property<int>("lecturer_id")
                         .HasColumnType("integer");
 
@@ -297,6 +268,17 @@ namespace UniVerServer.Migrations
                     b.HasKey("subject_id");
 
                     b.ToTable("subjects");
+                });
+
+            modelBuilder.Entity("UniVerServer.Models.MadePayments", b =>
+                {
+                    b.HasOne("UniVerServer.Models.People", "student_id")
+                        .WithMany()
+                        .HasForeignKey("person_system_identifier")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("student_id");
                 });
 
             modelBuilder.Entity("UniVerServer.Models.OutStandingStudentFees", b =>

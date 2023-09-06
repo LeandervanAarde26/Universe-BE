@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 using System.Drawing;
+using UniVerServer.Models;
 
 namespace UniVerServer.Models
 {
@@ -36,16 +37,16 @@ namespace UniVerServer.Models
 
         [Required]
         [ForeignKey("role_id")]
-        public Roles role { get; set; }
-
-        [Required]
-        [ForeignKey("address_id")]
-        public Address Address { get; set; }
-
-
+        public int role { get; set; } = 3;
+        //public Roles? roleData { get; set; }
+     
         public string person_image = string.Empty;
 
         public int person_credits { get; set; }
+        
+        public string person_cell { get; set; }
+
+        public int needed_credits { get; set; }
 
         public string person_password { get; set; }
 
