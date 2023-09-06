@@ -416,9 +416,13 @@ namespace UniVerServer.Controllers
 
         // POST: api/People
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<People>> PostPeople(People people)
+        [HttpPost("PostPeople")]
+        public async Task<ActionResult<People>> PostPeople([FromBody] People people)
         {
+            if(_context.People == null)
+            {
+                return Problem("Entity set 'ApplicationDbContext.people'  is null.");
+            }
             if (people == null)
             {
                 return BadRequest("Provided People object is null.");
@@ -441,7 +445,7 @@ namespace UniVerServer.Controllers
             _context.People.Add(people);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetPeople", new { id = people.person_id }, people);
+            return Ok(people);
         }
 
             // DELETE: api/People/5
