@@ -144,6 +144,10 @@ namespace UniVerServer.Controllers
                               }
                          ).ToListAsync();
 
+            var studentPayments = await _context.MadePayments
+            .Where(payment => payment.payment_date.Month == currentMonth) 
+            .ToListAsync();
+
             var result = data
                             .GroupBy(item => item.student_name)
                             .Select(group => new StudentPayment
@@ -166,8 +170,19 @@ namespace UniVerServer.Controllers
                                 aquiredCredits = group.Sum(item =>
                                 {
                                     return item.student_credits;
-                                })
+                                }),
+
                             });
+
+            var paidStudentIds = await _context.MadePayments
+                    .Where(payment => payment.payment_date.Month == currentMonth)
+                    .Select(payment => payment.person_id)
+                    .Distinct()
+                    .ToListAsync();
+
+
+            result = result.Where(student => !paidStudentIds.Contains(student.studentId));
+
             return Ok(result);
         }
 
@@ -183,6 +198,7 @@ namespace UniVerServer.Controllers
             int currentMonth = DateTime.Now.Month;
 
             int monthsLeftInYear = 12 - currentMonth;
+
 
             try
             {
