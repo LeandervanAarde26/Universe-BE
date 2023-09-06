@@ -182,7 +182,7 @@ namespace UniVerServer.Controllers
                                        name = student.first_name + " " + student.last_name,
                                        email = student.person_email,
                                        role = studentRole.role_name,
-                                       
+                                       is_active = student.person_active,
                                        person_credits = student.person_credits,
                                        needed_credits = student.needed_credits,
                                        person_system_identifier = student.person_system_identifier,
@@ -370,7 +370,8 @@ namespace UniVerServer.Controllers
                                 image = "",
                                 name = staff.first_name + " " + staff.last_name,
                                 role = staffRole.role_name,
-                                subject = "N/A"
+                                subject = "N/A",
+                                is_active = staff.person_active
                             }).ToListAsync();
 
            
@@ -411,6 +412,38 @@ namespace UniVerServer.Controllers
             }
 
             return NoContent();
+        }
+
+
+        [HttpPut("SetActive")]
+        public async Task<IActionResult> SetActiveState([FromBody] int Id)
+        {
+         
+            if(_context.People == null)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+ 
+
+
+            var existingUser = await _context.People
+                .SingleOrDefaultAsync(p => p.person_id.Equals(Id));
+
+            if (existingUser == null)
+            {
+                return NotFound("Person not found.");
+            }
+
+            existingUser.person_active = !existingUser.person_active;
+
+            int rowsAffected = await _context.SaveChangesAsync();
+
+            if (rowsAffected < 1)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Failed to update the user.");
+            }
+
+            return Ok(true);
         }
 
         // POST: api/People

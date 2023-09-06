@@ -16,7 +16,7 @@ namespace UniVerServer.Models
 
         [Required]
   
-        public int payment_amount { get; set; } = 0;
+        public decimal payment_amount { get; set; } = 0;
 
         [Required]
      

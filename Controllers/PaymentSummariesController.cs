@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using UniVerServer;
 using UniVerServer.Models;
 using UniVerServer.Models.DTO;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace UniVerServer.Controllers
 {
@@ -26,6 +27,10 @@ namespace UniVerServer.Controllers
         [HttpGet("lecturerfees")]
         public async Task<ActionResult<CollectiveLecturerSalary>> GetAllLecturerFees()
         {
+
+            int currentMonth = DateTime.Now.Month;
+
+            int monthsLeftInYear = 12 - currentMonth;
             if (_context.Subjects == null)
             {
                 return NotFound();
@@ -51,11 +56,16 @@ namespace UniVerServer.Controllers
                                           })
                                       .ToListAsync();
 
+
+            var lectPayments = await _context.MadePayments
+            .Where(payment => payment.payment_date.Month == currentMonth)
+            .ToListAsync();
+
             var result = lecturersPayment
                          .GroupBy(item => item.lecturer)
                          .Select(group => new CollectiveLecturerSalary
                          {
-                             lecturerId = group.ToList()[0].lecturer_id,
+                             lecturerId = group.First().lecturer_id,
                              lecturer = group.Key,
                              //subjects = group.ToList(),
                              totalHoursWorked = group.Sum(item =>
@@ -69,12 +79,23 @@ namespace UniVerServer.Controllers
                          })
                          .ToList();
 
+          var paidLecturersId = await _context.MadePayments
+          .Where(payment => payment.payment_date.Month == currentMonth)
+          .Select(payment => payment.person_id)
+          .Distinct()
+          .ToListAsync();
+
+            result = result.Where(lect => !paidLecturersId.Contains(lect.lecturerId)).ToList();
+
             return Ok(result);
         }
 
         [HttpGet("AdminFees")]
         public async Task<ActionResult<People>> GetAdminSalary()
         {
+            int currentMonth = DateTime.Now.Month;
+
+            int monthsLeftInYear = 12 - currentMonth;
             if (_context.People == null)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError);
@@ -92,14 +113,72 @@ namespace UniVerServer.Controllers
 
                                    }).ToListAsync();
 
+            var adminPayments = await _context.MadePayments
+             .Where(payment => payment.payment_date.Month == currentMonth)
+             .ToListAsync();
 
             if (adminFees == null)
             {
                 return NotFound();
             }
 
+            var paidLecturersId = await _context.MadePayments
+                        .Where(payment => payment.payment_date.Month == currentMonth)
+                        .Select(payment => payment.person_id)
+                        .Distinct()
+                        .ToListAsync();
+
+            adminFees = adminFees.Where(lect => !paidLecturersId.Contains(lect.admin_id)).ToList();
+
 
             return Ok(adminFees);
+        }
+
+        [HttpPost("AdminFees")]
+        public async Task<ActionResult<People>> PayAdminSalary()
+        {
+
+            int currentMonth = DateTime.Now.Month;
+            int monthsLeftInYear = 12 - currentMonth;
+
+            try
+            {
+                var adminFees = await (from admin in _context.People
+                                       join role in _context.Roles
+                                       on admin.role equals role.role_id
+                                       where admin.role == 1
+                                       select new
+                                       {
+                                           admin_id = admin.person_id,
+                                           admin_name = admin.first_name + " " + admin.last_name,
+                                           admin_payment = role.rate,
+
+                                       }).ToListAsync();
+
+
+
+                var data = adminFees
+                    .GroupBy(item => item.admin_name)
+                    .Select(group => new MadePayments
+                    {
+                        payment_id = 0,
+                        person_id = group.First().admin_id,
+                        payment_amount = group.First().admin_payment,
+                        payment_date = DateTime.UtcNow
+                    });
+
+                _context.MadePayments.AddRange(data);
+                await _context.SaveChangesAsync();
+
+                return Ok("Admins have been paid and added to the database.");
+
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+            }
+
+            return Ok();
         }
 
 
@@ -183,6 +262,78 @@ namespace UniVerServer.Controllers
             result = result.Where(student => !paidStudentIds.Contains(student.studentId));
 
             return Ok(result);
+        }
+
+        [HttpPost("PayLecturerFees")]
+        public async Task<ActionResult<MadePayments>> PayLecturers()
+        {
+
+            int currentMonth = DateTime.Now.Month;
+            int monthsLeftInYear = 12 - currentMonth;
+
+            try
+            {
+                var lecturersPayment = await (from subject in _context.Subjects
+                                              join lecturer in _context.People
+                                              on subject.lecturer_id
+                                              equals lecturer.person_id
+                                              join role in _context.Roles
+                                              on lecturer.role equals role.role_id
+                                              select new LecturerPayment
+                                              {
+                                                  subject_id = subject.subject_id,
+                                                  subject_name = subject.subject_name,
+                                                  lecturer_id = lecturer.person_id,
+                                                  lecturer = lecturer.first_name + " " + lecturer.last_name,
+                                                  subject_class_amount = subject.subject_class_amount,
+                                                  course_start = subject.course_start,
+                                                  class_time = subject.subject_class_runtiem,
+                                                  monthlyIncome = Math.Round((subject.subject_class_amount * (subject.subject_class_runtiem / 60)) * (((decimal)subject.course_start.Day / new DateTime(subject.course_start.Year, subject.course_start.Month, DateTime.DaysInMonth(subject.course_start.Year, subject.course_start.Month)).Day) * role.rate), 2),
+                                                  hoursWorked = Math.Round((subject.subject_class_amount * (subject.subject_class_runtiem / 60)) * (((decimal)subject.course_start.Day / new DateTime(subject.course_start.Year, subject.course_start.Month, DateTime.DaysInMonth(subject.course_start.Year, subject.course_start.Month)).Day)), 2)
+                                              })
+                          .ToListAsync();
+
+                var result = lecturersPayment
+                             .GroupBy(item => item.lecturer)
+                             .Select(group => new CollectiveLecturerSalary
+                             {
+                                 lecturerId = group.ToList()[0].lecturer_id,
+                                 lecturer = group.Key,
+                                 //subjects = group.ToList(),
+                                 totalHoursWorked = group.Sum(item =>
+                                 {
+                                     return item.hoursWorked;
+                                 }),
+                                 monthlyIncome = group.Sum(item =>
+                                 {
+                                     return item.monthlyIncome;
+                                 })
+                             })
+                             .ToList();
+
+                var data = result
+                    .GroupBy(item => item.lecturer)
+                    .Select(group => new MadePayments
+                     {
+
+                     payment_id = 0,
+                     person_id = group.First().lecturerId,
+                     payment_amount = group.First().monthlyIncome,
+                     payment_date = DateTime.UtcNow
+                    });
+
+                _context.MadePayments.AddRange(data);
+                await _context.SaveChangesAsync();
+
+                return Ok("Lecturers have been paid and added to the database.");
+
+            }
+            catch(Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+            }
+
+            return Ok();
         }
 
 
