@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using UniVerServer;
 using UniVerServer.Models;
-using UniVerServer.Models.CustomDataObjects;
 using UniVerServer.Models.DTO;
 
 namespace UniVerServer.Controllers

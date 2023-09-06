@@ -1,4 +1,4 @@
-﻿namespace UniVerServer.Models.CustomDataObjects
+﻿namespace UniVerServer.Models.DTO
 {
     public class SubjectsWithLecturers
     {

@@ -14,7 +14,6 @@ using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using UniVerServer;
 using UniVerServer.Models;
-using UniVerServer.Models.CustomDataObjects;
 using UniVerServer.Models.DTO;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 

@@ -1,4 +1,4 @@
-﻿namespace UniVerServer.Models.CustomDataObjects
+﻿namespace UniVerServer.Models.DTO
 {
     //This is a model that hides the password from the response on a request
     public class PersonDataObject

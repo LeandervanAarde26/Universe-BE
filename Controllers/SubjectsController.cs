@@ -10,7 +10,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using UniVerServer;
 using UniVerServer.Models;
-using UniVerServer.Models.CustomDataObjects;
 using UniVerServer.Models.DTO;
 
 namespace UniVerServer.Controllers
