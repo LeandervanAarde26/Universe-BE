@@ -146,6 +146,35 @@ namespace UniVerServer.Controllers
             return NoContent();
         }
 
+
+        [HttpPut("SetActive")]
+        public async Task<IActionResult> SubjectActive(int id)
+        {
+            if(_context.Subjects == null) {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+
+
+            var subject = await _context.Subjects
+                .SingleOrDefaultAsync(p => p.subject_id.Equals(id));
+
+            if(subject == null)
+            {
+                return NotFound("Subject does not exist");
+            }
+
+            subject.is_active = !subject.is_active;
+
+            int rowsAffected = await _context.SaveChangesAsync();
+
+            if (rowsAffected < 1)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Failed to update the user.");
+            }
+
+            return Ok(true);
+        }
+
         [HttpPut("ChangeLecturer")]
         public async Task<IActionResult> ChangeSubjectlecturer(int SubjectId, int newLecturerId)
         {
