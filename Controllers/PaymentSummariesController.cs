@@ -13,6 +13,8 @@ using UniVerServer.Models.DTO;
 
 namespace UniVerServer.Controllers
 {
+    [Route("api/[controller]")]
+    [ApiController]
     public class PaymentSummariesController : Controller
     {
         private readonly ApplicationDbContext _context;
