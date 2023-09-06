@@ -21,5 +21,6 @@ namespace UniVerServer
         public DbSet<Roles> Roles { get; set; }
         public DbSet<StudentCourses> StudentCourses { get; set; }
         public DbSet<Subjects> Subjects { get; set; }
+        public DbSet<UniVerServer.Models.PaymentSummary> PaymentSummary { get; set; } = default!;
     }
 }

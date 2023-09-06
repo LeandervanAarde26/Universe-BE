@@ -155,7 +155,7 @@ namespace UniVerServer.Controllers
         }
 
         [HttpGet("studentFees")]
-        public async Task<ActionResult<CourseEnrollments>> GetAllLecturerFees()
+        public async Task<ActionResult<CourseEnrollments>> GetAllStudentFees()
         {
             if (_context.Courses == null)
             {

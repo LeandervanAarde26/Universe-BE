@@ -18,5 +18,10 @@ namespace UniVerServer.Models
         [ForeignKey("subject_id")]
         [Required]
         public int Subjects { get; set; }
+
+        public static explicit operator List<object>(CourseEnrollments? v)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
