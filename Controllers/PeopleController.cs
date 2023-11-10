@@ -423,8 +423,6 @@ namespace UniVerServer.Controllers
             {
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
- 
-
 
             var existingUser = await _context.People
                 .SingleOrDefaultAsync(p => p.person_id.Equals(Id));
@@ -445,6 +443,36 @@ namespace UniVerServer.Controllers
 
             return Ok(true);
         }
+
+
+        [HttpPut("UpdateNumber")]
+        public async Task<IActionResult> ChangePhoneNumber([FromBody] PhoneNumberUpdateModel model)
+        {
+            if (_context.People == null)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+
+            var existingUser = await _context.People
+                .SingleOrDefaultAsync(p => p.person_id.Equals(model.Id));
+
+            if (existingUser == null)
+            {
+                return NotFound("Person not found.");
+            }
+
+            existingUser.person_cell = model.PhoneNumber;
+
+            int rowsAffected = await _context.SaveChangesAsync();
+
+            if (rowsAffected < 1)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Failed to update the user.");
+            }
+
+            return Ok(true);
+        }
+
 
         // POST: api/People
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
