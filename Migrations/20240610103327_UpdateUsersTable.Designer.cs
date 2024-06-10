@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using UniVerServer;
@@ -11,9 +12,11 @@ using UniVerServer;
 namespace UniVerServer.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240610103327_UpdateUsersTable")]
+    partial class UpdateUsersTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -102,8 +105,8 @@ namespace UniVerServer.Migrations
                     b.Property<int>("outstanding_amount")
                         .HasColumnType("integer");
 
-                    b.Property<Guid>("person_system_identifier")
-                        .HasColumnType("uuid");
+                    b.Property<int>("person_system_identifier")
+                        .HasColumnType("integer");
 
                     b.HasKey("fee_id");
 
@@ -134,6 +137,62 @@ namespace UniVerServer.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("PaymentSummary");
+                });
+
+            modelBuilder.Entity("UniVerServer.Models.People", b =>
+                {
+                    b.Property<int>("person_id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("person_id"));
+
+                    b.Property<DateTime>("added_date")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("first_name")
+                        .IsRequired()
+                        .HasMaxLength(60)
+                        .HasColumnType("character varying(60)");
+
+                    b.Property<string>("last_name")
+                        .IsRequired()
+                        .HasMaxLength(60)
+                        .HasColumnType("character varying(60)");
+
+                    b.Property<int>("needed_credits")
+                        .HasColumnType("integer");
+
+                    b.Property<bool>("person_active")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("person_cell")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("person_credits")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("person_email")
+                        .IsRequired()
+                        .HasMaxLength(80)
+                        .HasColumnType("character varying(80)");
+
+                    b.Property<string>("person_password")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("person_system_identifier")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.Property<int>("role")
+                        .HasColumnType("integer");
+
+                    b.HasKey("person_id");
+
+                    b.ToTable("people");
                 });
 
             modelBuilder.Entity("UniVerServer.Models.Roles", b =>
@@ -174,14 +233,14 @@ namespace UniVerServer.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("text");
 
-                    b.Property<Guid>("facilitator_id")
-                        .HasColumnType("uuid");
+                    b.Property<int>("facilitator_id")
+                        .HasColumnType("integer");
 
                     b.Property<int>("grade")
                         .HasColumnType("integer");
 
-                    b.Property<Guid>("student_id")
-                        .HasColumnType("uuid");
+                    b.Property<int>("student_id")
+                        .HasColumnType("integer");
 
                     b.Property<int>("subject_id")
                         .HasColumnType("integer");
@@ -318,12 +377,12 @@ namespace UniVerServer.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("people");
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("UniVerServer.Models.OutStandingStudentFees", b =>
                 {
-                    b.HasOne("UniVerServer.Users.Models.Users", "student_id")
+                    b.HasOne("UniVerServer.Models.People", "student_id")
                         .WithMany()
                         .HasForeignKey("person_system_identifier")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -334,13 +393,13 @@ namespace UniVerServer.Migrations
 
             modelBuilder.Entity("UniVerServer.Models.StudentCourses", b =>
                 {
-                    b.HasOne("UniVerServer.Users.Models.Users", "facilitator")
+                    b.HasOne("UniVerServer.Models.People", "facilitator")
                         .WithMany()
                         .HasForeignKey("facilitator_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("UniVerServer.Users.Models.Users", "student")
+                    b.HasOne("UniVerServer.Models.People", "student")
                         .WithMany()
                         .HasForeignKey("student_id")
                         .OnDelete(DeleteBehavior.Cascade)

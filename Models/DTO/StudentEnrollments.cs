@@ -2,7 +2,7 @@
 {
     public class StudentEnrollments
     {
-        public People Student { get; set; }
+        public Users.Models.Users Student { get; set; }
         public CourseEnrollments Course { get; set; }
     }
 }

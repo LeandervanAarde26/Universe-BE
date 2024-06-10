@@ -1,21 +1,19 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using UniVerServer.Abstractions;
 
 namespace UniVerServer.Models
 {
     [Table("people_roles")]
-    public class Roles
+    public class Roles : BaseModel
     {
-        [Key]
-        [Required]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int role_id { get; set; } = 0;
         [Required]
         [StringLength(30)]
-        public string role_name { get; set; } = string.Empty;
+        public string Name { get; set; }
         [Required]
-        public bool can_access { get; set; } = false;
+        public bool CanAccess { get; set; } = false;
         [Required]
-        public int rate { get; set; }
+        public bool PaidRole { get; set; }
+        public decimal HourlyRate { get; set; }
     }
 }

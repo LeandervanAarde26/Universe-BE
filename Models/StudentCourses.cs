@@ -16,11 +16,11 @@ namespace UniVerServer.Models
 
         [Required]
         [ForeignKey("student_id")]
-        public People student { get; set; }
+        public Users.Models.Users student { get; set; }
 
         [Required]
         [ForeignKey("facilitator_id")]
-        public People facilitator { get; set; }
+        public Users.Models.Users facilitator { get; set; }
 
         [Required]
         public int grade { get; set; } = 0;
