@@ -25,7 +25,6 @@
 
   <ItemGroup>
     <Folder Include="Models\CustomDataObjects\" />
-    <Folder Include="Users\Queries\" />
   </ItemGroup>
 
 </Project>

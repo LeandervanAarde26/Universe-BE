@@ -18,7 +18,10 @@ using UniVerServer.Abstractions;
 using UniVerServer.Models;
 using UniVerServer.Models.DTO;
 using UniVerServer.Users.Commands.CreateUser;
+using UniVerServer.Users.Commands.DeleteUser;
+using UniVerServer.Users.Commands.PurgeUser;
 using UniVerServer.Users.DTO;
+using UniVerServer.Users.Queries.GetAllStaffMembers;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace UniVerServer.Controllers
@@ -33,37 +36,68 @@ namespace UniVerServer.Controllers
     [ApiController]
     public class People(IMediator mediator) : BaseController(mediator)
     {
-        
         private HttpResponseService response = new HttpResponseService();
         //Replaces the postPeople endpoint with a CQRS endpoint
         // Reffer to Users/command/create user command and the DTO -> createUserDTO
+        
+        // CREATE
         [HttpPost("")]
         public async Task<ActionResult<ResponseDto>> CreateUser([FromBody] CreateUserDto user) =>
             response.HandleResponse(await mediator.Send(new CreateUserCommand(user)));
         
-        
-        
-        // DELETE: api/People/5
-        // [HttpDelete("{id}")]
-        // public async Task<IActionResult> DeletePeople(int id)
+        // READ
+        [HttpGet("Staff")]
+        public async Task<ActionResult<IEnumerable<GetStaffMembersDto>>> ReadStaffMembers() =>
+            Ok(await mediator.Send(new GetStaffMemberQuery()));
+        //[HttpGet("Staff")]
+        // public async Task<ActionResult<People>> GetStaffMembers()
         // {
         //     if (_context.People == null)
         //     {
-        //         return NotFound();
+        //         return StatusCode(StatusCodes.Status500InternalServerError) ;
         //     }
-        //     var people = await _context.People.FindAsync(id);
         //
-        //     if (people == null)
+        //
+        //     var st = await (from staff in _context.People
+        //                     join staffRole in _context.Roles
+        //                     on staff.role equals staffRole.role_id
+        //                     where staff.role < 3
+        //                     select new
+        //                     {
+        //                         id = staff.person_id,
+        //                         image = "",
+        //                         name = staff.first_name + " " + staff.last_name,
+        //                         role = staffRole.role_name,
+        //                         subject = "N/A",
+        //                         is_active = staff.person_active
+        //                     }).ToListAsync();
+        //
+        //    
+        //     if(st == null)
         //     {
         //         return NotFound();
         //     }
         //
-        //     _context.People.Remove(people);
-        //     await _context.SaveChangesAsync();
-        //
-        //     return NoContent();
+        //     return Ok(st);
         // }
+        //
+        
+        
+        
+        // UPDATE
+        
+        
+        //DELETE
 
+        [HttpDelete("{Id}")]
+        public async Task<ActionResult<ResponseDto>> DeleteUser(string Id) =>
+            response.HandleResponse(await mediator.Send(new DeleteUserCommand(Guid.Parse(Id))));
+        
+        //purge user
+        [HttpDelete("purge/{Id}")]
+        public async Task<ActionResult<ResponseDto>> PurgeUser(string Id) =>
+            response.HandleResponse(await mediator.Send(new PurgeUserCommand(Guid.Parse(Id))));
+        
         // [HttpPost("auth")]
         // public async Task<ActionResult<AuthenticatedUser>> AuthenticateUser([FromBody] Authentication request)
         // {
@@ -385,38 +419,7 @@ namespace UniVerServer.Controllers
         //     return Ok(lecturers);
         // }
         //
-        // [HttpGet("Staff")]
-        // public async Task<ActionResult<People>> GetStaffMembers()
-        // {
-        //     if (_context.People == null)
-        //     {
-        //         return StatusCode(StatusCodes.Status500InternalServerError) ;
-        //     }
-        //
-        //
-        //     var st = await (from staff in _context.People
-        //                     join staffRole in _context.Roles
-        //                     on staff.role equals staffRole.role_id
-        //                     where staff.role < 3
-        //                     select new
-        //                     {
-        //                         id = staff.person_id,
-        //                         image = "",
-        //                         name = staff.first_name + " " + staff.last_name,
-        //                         role = staffRole.role_name,
-        //                         subject = "N/A",
-        //                         is_active = staff.person_active
-        //                     }).ToListAsync();
-        //
-        //    
-        //     if(st == null)
-        //     {
-        //         return NotFound();
-        //     }
-        //
-        //     return Ok(st);
-        // }
-        //
+       
         // // PUT: api/People/5
         // // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         // [HttpPut("{id}")]
@@ -512,7 +515,7 @@ namespace UniVerServer.Controllers
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
 
 
-    
+
 
     }
 }

@@ -9,5 +9,12 @@ public class UserMapping : Profile
    {
       CreateMap<CreateUserDto, Models.Users>();
       CreateMap< Models.Users, CreateUserDto>();
+      CreateMap<Models.Users, GetStaffMembersDto>()
+         .ConstructUsing(src => new GetStaffMembersDto(
+            src.DateCreated,
+            src.role.Name,
+            src.role.HourlyRate,
+            src.role.CanAccess
+         ));
    }
 }
