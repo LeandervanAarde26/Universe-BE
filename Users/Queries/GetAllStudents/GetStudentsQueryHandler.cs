@@ -1,3 +1,4 @@
+using System.Collections;
 using AutoMapper;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -7,11 +8,11 @@ using UniVerServer.Exceptions;
 using UniVerServer.Users.DTO;
 using UniVerServer.Users.Mapping;
 
-namespace UniVerServer.Users.Queries.GetAllStaffMembers;
+namespace UniVerServer.Users.Queries.GetAllStudents;
 
-public class GetStaffMemberCommandHandler(ApplicationDbContext context): BaseHandler(context), IRequestHandler<GetStaffMemberQuery, IEnumerable<GetStaffMembersDto>>
-{   
-    public async Task<IEnumerable<GetStaffMembersDto>> Handle(GetStaffMemberQuery request,
+public class GetStudentsQueryHandler(ApplicationDbContext context): BaseHandler(context), IRequestHandler<GetStudentsQuery, IEnumerable<GetstudentsDto>>
+{
+    public async Task<IEnumerable<GetstudentsDto>> Handle(GetStudentsQuery request,
         CancellationToken cancellationToken)
     {
         
@@ -23,8 +24,12 @@ public class GetStaffMemberCommandHandler(ApplicationDbContext context): BaseHan
             var users = await _context.Users
                 .Include(x => x.Role)
                 .Where(y => request.RoleName.Equals("*")
-                    ? y.Role.Name != "Degree" && y.Role.Name != "Certificate"
-                    : y.Role.Name.Equals(request.RoleName) && y.Role.Name != "Degree" && y.Role.Name != "Certificate"
+                    ? y.Role.Name != "Staff" && y.Role.Name != "Admin" && y.Role.Name != "Lecturer"
+                    : y.Role.Name.Equals(request.RoleName) 
+                      && y.Role.Name != "Staff" 
+                      && y.Role.Name != "Admin"
+                      && y.Role.Name != "Lecturer"
+                      
                 )
                 .ToListAsync(cancellationToken);
             
@@ -33,7 +38,7 @@ public class GetStaffMemberCommandHandler(ApplicationDbContext context): BaseHan
                 throw new NotFoundException(new Guid());
             }
             
-            var userDtos = mapper.Map<IEnumerable<GetStaffMembersDto>>(users);
+            var userDtos = mapper.Map<IEnumerable<GetstudentsDto>>(users);
             return userDtos;
         }
         catch (NotFoundException e)
@@ -46,5 +51,4 @@ public class GetStaffMemberCommandHandler(ApplicationDbContext context): BaseHan
             throw;
         }
     }
- 
 }

@@ -1,28 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Threading.Tasks;
-using Azure.Core;
-using Isopoh.Cryptography.Argon2;
-using MediatR;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.HttpResults;
+﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.WebUtilities;
-using Microsoft.Data.SqlClient;
-using Microsoft.EntityFrameworkCore;
-using UniVerServer;
 using UniVerServer.Abstractions;
-using UniVerServer.Models;
-using UniVerServer.Models.DTO;
 using UniVerServer.Users.Commands.CreateUser;
 using UniVerServer.Users.Commands.DeleteUser;
 using UniVerServer.Users.Commands.PurgeUser;
 using UniVerServer.Users.DTO;
 using UniVerServer.Users.Queries.GetAllStaffMembers;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+using UniVerServer.Users.Queries.GetAllStudents;
 
 namespace UniVerServer.Controllers
 {
@@ -37,8 +21,6 @@ namespace UniVerServer.Controllers
     public class People(IMediator mediator) : BaseController(mediator)
     {
         private HttpResponseService response = new HttpResponseService();
-        //Replaces the postPeople endpoint with a CQRS endpoint
-        // Reffer to Users/command/create user command and the DTO -> createUserDTO
         
         // CREATE
         [HttpPost("")]
@@ -46,43 +28,17 @@ namespace UniVerServer.Controllers
             response.HandleResponse(await mediator.Send(new CreateUserCommand(user)));
         
         // READ
-        [HttpGet("Staff")]
-        public async Task<ActionResult<IEnumerable<GetStaffMembersDto>>> ReadStaffMembers() =>
-            Ok(await mediator.Send(new GetStaffMemberQuery()));
-        //[HttpGet("Staff")]
-        // public async Task<ActionResult<People>> GetStaffMembers()
-        // {
-        //     if (_context.People == null)
-        //     {
-        //         return StatusCode(StatusCodes.Status500InternalServerError) ;
-        //     }
-        //
-        //
-        //     var st = await (from staff in _context.People
-        //                     join staffRole in _context.Roles
-        //                     on staff.role equals staffRole.role_id
-        //                     where staff.role < 3
-        //                     select new
-        //                     {
-        //                         id = staff.person_id,
-        //                         image = "",
-        //                         name = staff.first_name + " " + staff.last_name,
-        //                         role = staffRole.role_name,
-        //                         subject = "N/A",
-        //                         is_active = staff.person_active
-        //                     }).ToListAsync();
-        //
-        //    
-        //     if(st == null)
-        //     {
-        //         return NotFound();
-        //     }
-        //
-        //     return Ok(st);
-        // }
-        //
+        // Get all staff (optional, use parameter * for all)
+        //Get all staff by their role
+        [HttpGet("staff/{role}")]
+        public async Task<ActionResult<IEnumerable<GetStaffMembersDto>>> ReadStaffMembers(string role = "*") =>
+            Ok(await mediator.Send(new GetStaffMemberQuery(role)));
         
-        
+        // Get all students (optional, use parameter * for all)
+        // Get all students by their role
+        [HttpGet("Students/{role}")]
+        public async Task<ActionResult<IEnumerable<GetStaffMembersDto>>> ReadStudents(string role = "*") =>
+            Ok(await mediator.Send(new GetStudentsQuery(role)));
         
         // UPDATE
         
@@ -97,6 +53,8 @@ namespace UniVerServer.Controllers
         [HttpDelete("purge/{Id}")]
         public async Task<ActionResult<ResponseDto>> PurgeUser(string Id) =>
             response.HandleResponse(await mediator.Send(new PurgeUserCommand(Guid.Parse(Id))));
+        
+        
         
         // [HttpPost("auth")]
         // public async Task<ActionResult<AuthenticatedUser>> AuthenticateUser([FromBody] Authentication request)
@@ -231,38 +189,7 @@ namespace UniVerServer.Controllers
         //     return Ok(adminFees);
         // }
         //
-        // [HttpGet("Students")]
-        // public async Task<ActionResult<People>> GetAllStudents()
-        // {
-        //     if (_context.People == null)
-        //     {
-        //         return StatusCode(StatusCodes.Status500InternalServerError);
-        //     }
-        //
-        //     var students = await (from student in _context.People
-        //                            join studentRole in _context.Roles
-        //                            on student.role equals studentRole.role_id
-        //                            where student.role > 2
-        //                            select new
-        //                            {
-        //                                id = student.person_id,
-        //                                image = "",
-        //                                name = student.first_name + " " + student.last_name,
-        //                                email = student.person_email,
-        //                                role = studentRole.role_name,
-        //                                is_active = student.person_active,
-        //                                person_credits = student.person_credits,
-        //                                needed_credits = student.needed_credits,
-        //                                person_system_identifier = student.person_system_identifier,
-        //                                //subject = "N/A"
-        //                            }).ToListAsync();
-        //     if (students == null)
-        //     {
-        //         return NotFound("No Students on the system");
-        //     }
-        //
-        //     return Ok(students);
-        // }
+     
         //
         // // GET: api/People/5
         // [HttpGet("student/{id}")]
@@ -389,36 +316,7 @@ namespace UniVerServer.Controllers
         //     return Ok(singleLecturerWithCourses);
         // }
         //
-        // [HttpGet("Lecturers")]
-        // public async Task<ActionResult<People>> GetAllLecturers()
-        // {
-        //     if (_context.People == null)
-        //     {
-        //         return StatusCode(StatusCodes.Status500InternalServerError);
-        //     }
-        //
-        //     var lecturers = await (from lecturer in _context.People
-        //                        join lecturerRole in _context.Roles
-        //                        on lecturer.role equals lecturerRole.role_id
-        //                        where lecturer.role == 2
-        //                        select new
-        //                        {
-        //                            id = lecturer.person_id,
-        //                            image = "",
-        //                            name = lecturer.first_name + " " + lecturer.last_name,
-        //                            role = lecturerRole.role_name,
-        //                            subject = "N/A"
-        //                        }).ToListAsync();
-        //
-        //     if (lecturers == null)
-        //     {
-        //         return NotFound("No lecturers on the system");
-        //     }
-        //  
-        //
-        //     return Ok(lecturers);
-        // }
-        //
+      
        
         // // PUT: api/People/5
         // // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
@@ -509,13 +407,5 @@ namespace UniVerServer.Controllers
         //
         //     return Ok(true);
         // }
-
-
-        // POST: api/People
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-
-
-
-
     }
 }

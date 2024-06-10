@@ -35,22 +35,24 @@ public class CreateUserDto{
         string identityNumber,
         string personalEmail,
         string contactNumber ,
-        string roleId,
-        int requiredCredits)
+        string roleId)
     {
         FirstNames = firstNames;
         LastNames = lastNames;
         IdentityNumber = identityNumber;
         PersonalEmail = personalEmail;
         ContactNumber = contactNumber;
-        RequiredCredits = requiredCredits;
-
         RoleId = roleId;
         //Privately set fields
         Identifier = GenerateStudentNumber();
         IssuedEmail = GenerateStudentEmail(Identifier);
         Password = HashPassword("Op3nW1nd0w@dm1n");
         ModifiedDate = DateTime.UtcNow;
+    }
+    
+    public void SetRequiredCredits(int requiredCredits)
+    {
+        RequiredCredits = requiredCredits;
     }
 
     private string GenerateStudentNumber()

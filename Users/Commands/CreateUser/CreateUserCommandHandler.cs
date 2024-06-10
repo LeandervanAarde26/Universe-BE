@@ -63,9 +63,10 @@ public class CreateUserCommandHandler(ApplicationDbContext context): BaseHandler
                 request.user.IdentityNumber,
                 request.user.PersonalEmail,
                 request.user.ContactNumber,
-                foundRole.Id.ToString(),
-                requiredCredits
+                foundRole.Id.ToString()
             );
+            newUser.SetRequiredCredits(requiredCredits);
+            
             _context.Users.Add(mapper.Map<Models.Users>(newUser));
             await _context.SaveChangesAsync(cancellationToken);
             response = new ResponseDto(default, "User Added", StatusCodes.Accepted);

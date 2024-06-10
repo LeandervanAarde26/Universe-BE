@@ -30,7 +30,7 @@ public class Users : BaseModel
     public int RequiredCredits { get; set; }
     
     // Auth information
-    public Roles role { get; set; }
+    public Roles Role { get; set; }
     public Guid RoleId { get; set; }
     [Required] 
     public bool Active { get; set; } = true;
