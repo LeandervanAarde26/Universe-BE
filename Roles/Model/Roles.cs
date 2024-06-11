@@ -2,8 +2,8 @@
 using System.ComponentModel.DataAnnotations;
 using UniVerServer.Abstractions;
 
-namespace UniVerServer.Models
-{
+namespace UniVerServer.Roles.Models;
+
     [Table("people_roles")]
     public class Roles : BaseModel
     {
@@ -16,4 +16,3 @@ namespace UniVerServer.Models
         public bool PaidRole { get; set; }
         public decimal HourlyRate { get; set; }
     }
-}

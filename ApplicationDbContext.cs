@@ -23,7 +23,19 @@ namespace UniVerServer
         // public DbSet<UniVerServer.Models.PaymentSummary> PaymentSummary { get; set; } = default!;
         // // Redone tables
         public DbSet<Users.Models.Users> Users { get; set; }
-        public DbSet<Roles> Roles { get; set; }
+        public DbSet<Roles.Models.Roles> Roles { get; set; }
+        
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            // Define unique constraint for the Identifier property of the Role entity
+            modelBuilder.Entity<Roles.Models.Roles>()
+                .HasIndex(r => r.Identifier)
+                .IsUnique();
+        
+            // Other entity configurations...
+
+            base.OnModelCreating(modelBuilder);
+        }
     }
 
 }

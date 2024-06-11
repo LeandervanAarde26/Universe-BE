@@ -36,7 +36,7 @@ public class CreateUserCommandHandler(ApplicationDbContext context): BaseHandler
                 return response;
             }
 
-            Roles foundRole = await _context.Roles.FirstOrDefaultAsync(x => x.Identifier.Equals(request.user.RoleId));
+            Roles.Models.Roles foundRole = await _context.Roles.FirstOrDefaultAsync(x => x.Identifier.Equals(request.user.RoleId));
             if (foundRole == null)
             {
                 response = new ResponseDto(default, $"{request.user.Identifier}, not found", StatusCodes.NotFound);
