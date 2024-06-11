@@ -1,5 +1,6 @@
 using Isopoh.Cryptography.Argon2;
 using Microsoft.Build.Framework;
+using UniVerServer.Extensions;
 using UniVerServer.Models;
 
 namespace UniVerServer.Users.DTO;
@@ -46,7 +47,7 @@ public class CreateUserDto{
         //Privately set fields
         Identifier = GenerateStudentNumber();
         IssuedEmail = GenerateStudentEmail(Identifier);
-        Password = HashPassword("Op3nW1nd0w@dm1n");
+        Password = "Op3nW1nd0w@dm1n".HashPassword();
         ModifiedDate = DateTime.UtcNow;
     }
     
@@ -67,7 +68,4 @@ public class CreateUserDto{
     
     private string GenerateStudentEmail(string studentNumber) =>
         $"{studentNumber}@virtualwindow.co.za";
-
-    private string HashPassword(string password) =>
-        Argon2.Hash(password);
 }

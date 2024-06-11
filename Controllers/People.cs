@@ -1,12 +1,18 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using UniVerServer.Abstractions;
 using UniVerServer.Users.Commands.CreateUser;
 using UniVerServer.Users.Commands.DeleteUser;
 using UniVerServer.Users.Commands.PurgeUser;
+using UniVerServer.Users.Commands.SetUserActive;
+using UniVerServer.Users.Commands.UpdatePassword;
+using UniVerServer.Users.Commands.UpdatePhoneNumber;
+using UniVerServer.Users.Commands.UpdateUser;
 using UniVerServer.Users.DTO;
 using UniVerServer.Users.Queries.GetAllStaffMembers;
 using UniVerServer.Users.Queries.GetAllStudents;
+using UniVerServer.Users.Queries.GetById;
 
 namespace UniVerServer.Controllers
 {
@@ -21,12 +27,10 @@ namespace UniVerServer.Controllers
     public class People(IMediator mediator) : BaseController(mediator)
     {
         private HttpResponseService response = new HttpResponseService();
-        
         // CREATE
         [HttpPost("")]
         public async Task<ActionResult<ResponseDto>> CreateUser([FromBody] CreateUserDto user) =>
             response.HandleResponse(await mediator.Send(new CreateUserCommand(user)));
-        
         // READ
         // Get all staff (optional, use parameter * for all)
         //Get all staff by their role
@@ -39,12 +43,30 @@ namespace UniVerServer.Controllers
         [HttpGet("Students/{role}")]
         public async Task<ActionResult<IEnumerable<GetStaffMembersDto>>> ReadStudents(string role = "*") =>
             Ok(await mediator.Send(new GetStudentsQuery(role)));
+
+        [HttpGet("{Id}")]
+        public async Task<ActionResult<GetUserByIdDto>> ReadUserById(string Id) =>
+            Ok(await mediator.Send(new GetUserByIdQuery(Guid.Parse(Id))));
         
         // UPDATE
+        [HttpPatch("PhoneNumber/{id}")]
+        public async Task<ActionResult<ResponseDto>> UpdatePhoneNumber(string id, [FromBody] string phoneNumber) =>
+            response.HandleResponse(await mediator.Send(new UpdateUserPhoneNumberCommand(new UpdatePhoneNumberDto(Guid.Parse(id), phoneNumber))));
+
+        [HttpPatch("SetActive/{id}")]
+        public async Task<ActionResult<ResponseDto>> UpdateUserToActive(string id) =>
+            response.HandleResponse(await mediator.Send(new SetUserActiveCommand(Guid.Parse(id))));
         
+        // Needs middleware to ensure only logged in user and superadmin can do it.
+        [HttpPatch("Password/{id}")]
+        public async Task<ActionResult<ResponseDto>> UpdateUserPassword(string id, [FromBody] string password) =>
+            response.HandleResponse(await mediator.Send(new UpdateUserPasswordCommand(Guid.Parse(id), password)));
+
+        [HttpPut("{id}")]
+        public async Task<ActionResult<ResponseDto>> UpdateUser(string id, [FromBody] UpdateUserDto user) =>
+            response.HandleResponse(await mediator.Send(new UpdateUserCommand(Guid.Parse(id), user)));
         
         //DELETE
-
         [HttpDelete("{Id}")]
         public async Task<ActionResult<ResponseDto>> DeleteUser(string Id) =>
             response.HandleResponse(await mediator.Send(new DeleteUserCommand(Guid.Parse(Id))));
@@ -53,8 +75,6 @@ namespace UniVerServer.Controllers
         [HttpDelete("purge/{Id}")]
         public async Task<ActionResult<ResponseDto>> PurgeUser(string Id) =>
             response.HandleResponse(await mediator.Send(new PurgeUserCommand(Guid.Parse(Id))));
-        
-        
         
         // [HttpPost("auth")]
         // public async Task<ActionResult<AuthenticatedUser>> AuthenticateUser([FromBody] Authentication request)
@@ -94,48 +114,8 @@ namespace UniVerServer.Controllers
         //     return Ok(formattedPerson);
         // }
         //
-        // private bool ValidateUserCredentials(string password,  string person_password, string person_email)
-        // {
-        //     var user = _context.People.FirstOrDefault(p => p.person_email == person_email);
-        //
-        //     if (user != null)
-        //     {
-        //         if (Argon2.Verify(password, person_password))
-        //         {
-        //             return true;
-        //         }
-        //     }
-        //
-        //     return false;
-        // }
-        //
-        // [HttpPut("Password")]
-        // public async Task<IActionResult> UpdateUserPassword([FromBody] Authentication request)
-        // {
-        //     if (string.IsNullOrEmpty(request.email) || string.IsNullOrEmpty(request.password))
-        //     {
-        //         return BadRequest("Invalid request parameters.");
-        //     }
-        //
-        //     var existingUser = await _context.People
-        //         .SingleOrDefaultAsync(p => p.person_email.ToLower().Equals(request.email.ToLower()));
-        //
-        //     if (existingUser == null)
-        //     {
-        //         return NotFound("Employee not found.");
-        //     }
-        //
-        //     existingUser.person_password = Argon2.Hash(request.password);
-        //
-        //     int rowsAffected = await _context.SaveChangesAsync();
-        //
-        //     if (rowsAffected < 1)
-        //     {
-        //         return StatusCode(StatusCodes.Status500InternalServerError, "Failed to update the password.");
-        //     }
-        //
-        //     return Ok(true);
-        // }
+
+       
         // [HttpGet()]
         // public async Task<ActionResult<People>> GetLoggedInUser(int userId)
         // {
@@ -316,96 +296,6 @@ namespace UniVerServer.Controllers
         //     return Ok(singleLecturerWithCourses);
         // }
         //
-      
-       
-        // // PUT: api/People/5
-        // // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        // [HttpPut("{id}")]
-        // public async Task<IActionResult> PutPeople(int id, People people)
-        // {
-        //     if (id != people.person_id)
-        //     {
-        //         return BadRequest();
-        //     }
-        //
-        //     _context.Entry(people).State = EntityState.Modified;
-        //
-        //     try
-        //     {
-        //         await _context.SaveChangesAsync();
-        //     }
-        //     catch (DbUpdateConcurrencyException)
-        //     {
-        //         if (!PeopleExists(id))
-        //         {
-        //             return NotFound();
-        //         }
-        //         else
-        //         {
-        //             throw;
-        //         }
-        //     }
-        //
-        //     return NoContent();
-        // }
-        //
-        //
-        // [HttpPut("SetActive")]
-        // public async Task<IActionResult> SetActiveState([FromBody] int Id)
-        // {
-        //  
-        //     if(_context.People == null)
-        //     {
-        //         return StatusCode(StatusCodes.Status500InternalServerError);
-        //     }
-        //
-        //     var existingUser = await _context.People
-        //         .SingleOrDefaultAsync(p => p.person_id.Equals(Id));
-        //
-        //     if (existingUser == null)
-        //     {
-        //         return NotFound("Person not found.");
-        //     }
-        //
-        //     existingUser.person_active = !existingUser.person_active;
-        //
-        //     int rowsAffected = await _context.SaveChangesAsync();
-        //
-        //     if (rowsAffected < 1)
-        //     {
-        //         return StatusCode(StatusCodes.Status500InternalServerError, "Failed to update the user.");
-        //     }
-        //
-        //     return Ok(true);
-        // }
-        //
-        //
-        // [HttpPut("UpdateNumber")]
-        // public async Task<IActionResult> ChangePhoneNumber([FromBody] PhoneNumberUpdateModel model)
-        // {
-        //     if (_context.People == null)
-        //     {
-        //         return StatusCode(StatusCodes.Status500InternalServerError);
-        //     }
-        //
-        //     var existingUser = await _context.People
-        //         .SingleOrDefaultAsync(p => p.person_id.Equals(model.Id));
-        //
-        //     if (existingUser == null)
-        //     {
-        //         return NotFound("Person not found.");
-        //     }
-        //
-        //     existingUser.person_cell = model.PhoneNumber;
-        //
-        //     int rowsAffected = await _context.SaveChangesAsync();
-        //
-        //     if (rowsAffected < 1)
-        //     {
-        //         return StatusCode(StatusCodes.Status500InternalServerError, "Failed to update the user.");
-        //     }
-        //
-        //     return Ok(true);
-        // }
+        
     }
 }
