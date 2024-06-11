@@ -4,7 +4,7 @@ using UniVerServer.Abstractions;
 
 namespace UniVerServer.Roles.Models;
 
-    [Table("people_roles")]
+    [Table("Roles")]
     public class Roles : BaseModel
     {
         [Required]

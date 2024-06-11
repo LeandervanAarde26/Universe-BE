@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using UniVerServer.Subjects.Models;
 
 namespace UniVerServer.Models
 {
@@ -12,7 +13,7 @@ namespace UniVerServer.Models
 
         [Required]
         [ForeignKey("subject_id")]
-        public Subjects subject { get; set; }
+        public Subject subject { get; set; }
 
         [Required]
         [ForeignKey("student_id")]

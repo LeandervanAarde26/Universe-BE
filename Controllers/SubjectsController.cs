@@ -1,53 +1,58 @@
-﻿// using System;
-// using System.Collections.Generic;
-// using System.Data;
-// using System.Linq;
-// using System.Threading.Tasks;
-// using Azure.Core;
-// using Microsoft.AspNetCore.Http;
-// using Microsoft.AspNetCore.Mvc;
-// using Microsoft.EntityFrameworkCore;
-// using Microsoft.EntityFrameworkCore.Infrastructure;
-// using UniVerServer;
-// using UniVerServer.Models;
-// using UniVerServer.Models.DTO;
-//
-// namespace UniVerServer.Controllers
-// {
-//     [Route("api/[controller]")]
-//     [ApiController]
-//     public class SubjectsController : ControllerBase
-//     {
-//         private readonly ApplicationDbContext _context;
-//
-//         public SubjectsController(ApplicationDbContext context)
+﻿using MediatR;
+using Microsoft.AspNetCore.Mvc;
+using UniVerServer.Abstractions;
+
+namespace UniVerServer.Controllers;
+[Route("api/[controller]")]
+[ApiController]
+public class SubjectsController(IMediator mediator) : BaseController(mediator)
+{
+    
+    // CREATE 
+    
+    //         // POST: api/Subjects
+//         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+//         [HttpPost]
+//         public async Task<ActionResult<Subjects>> PostSubjects(Subjects subjects)
 //         {
-//             _context = context;
+//           if(subjects == null)
+//             {
+//                 return BadRequest("Please provide all required details");
+//             }
+//
+//           bool subjectExists = await _context.Subjects.AnyAsync(p => p.subject_name == subjects.subject_name);
+//
+//             if (subjectExists)
+//             {
+//                 return Conflict("Subject name already in use");
+//             }
+//
+//             _context.Subjects.Add(subjects);
+//             await _context.SaveChangesAsync();
+//
+//             return CreatedAtAction("GetSubjects", new {id = subjects.subject_id}, subjects);
 //         }
-//
-//         // GET: api/Subjects
-//         [HttpGet]
-//         public async Task<ActionResult<IEnumerable<SubjectsWithLecturers>>> GetSubjects()
+    
+    // READ 
+    
+    //         // GET: api/Subjects/5
+//         [HttpGet("{id}")]
+//         public async Task<ActionResult<Subjects>> GetSubjects(int id)
 //         {
-//             var subjectList = await (from subject in _context.Subjects
-//                                      join lecturer in _context.People
-//                                      on subject.lecturer_id
-//                                      equals lecturer.person_id
-//                                      select new SubjectsWithLecturers
-//                                      {
-//                                          subject = subject,
-//                                          lecturerName = lecturer.first_name + " " + lecturer.last_name
-//                                      })
-//                                      .ToListAsync();
+//           if (_context.Subjects == null)
+//           {
+//               return NotFound();
+//           }
+//             var subjects = await _context.Subjects.FindAsync(id);
 //
-//             if (subjectList == null || subjectList.Count == 0)
+//             if (subjects == null)
 //             {
 //                 return NotFound();
 //             }
 //
-//             return Ok(subjectList);
+//             return subjects;
 //         }
-//
+
 //         [HttpGet("lecturerfees")]
 //         public async Task<ActionResult<CollectiveLecturerSalary>> GetAllLecturerFees()
 //         {
@@ -96,86 +101,32 @@
 //
 //             return Ok(result);
 //         }
-//
-//
-//         // GET: api/Subjects/5
-//         [HttpGet("{id}")]
-//         public async Task<ActionResult<Subjects>> GetSubjects(int id)
+
+//         // GET: api/Subjects
+//         [HttpGet]
+//         public async Task<ActionResult<IEnumerable<SubjectsWithLecturers>>> GetSubjects()
 //         {
-//           if (_context.Subjects == null)
-//           {
-//               return NotFound();
-//           }
-//             var subjects = await _context.Subjects.FindAsync(id);
+//             var subjectList = await (from subject in _context.Subjects
+//                                      join lecturer in _context.People
+//                                      on subject.lecturer_id
+//                                      equals lecturer.person_id
+//                                      select new SubjectsWithLecturers
+//                                      {
+//                                          subject = subject,
+//                                          lecturerName = lecturer.first_name + " " + lecturer.last_name
+//                                      })
+//                                      .ToListAsync();
 //
-//             if (subjects == null)
+//             if (subjectList == null || subjectList.Count == 0)
 //             {
 //                 return NotFound();
 //             }
 //
-//             return subjects;
+//             return Ok(subjectList);
 //         }
-//
-//         // PUT: api/Subjects/5
-//         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-//         [HttpPut("{id}")]
-//         public async Task<IActionResult> PutSubjects(int id, Subjects subjects)
-//         {
-//             if (id != subjects.subject_id)
-//             {
-//                 return BadRequest();
-//             }
-//
-//             _context.Entry(subjects).State = EntityState.Modified;
-//             try
-//             {
-//                 await _context.SaveChangesAsync();
-//             }
-//             catch (DbUpdateConcurrencyException)
-//             {
-//                 if (!SubjectsExists(id))
-//                 {
-//                     return NotFound();
-//                 }
-//                 else
-//                 {
-//                     throw;
-//                 }
-//             }
-//
-//             return NoContent();
-//         }
-//
-//
-//         [HttpPut("SetActive")]
-//         public async Task<IActionResult> SubjectActive(int id)
-//         {
-//             if(_context.Subjects == null) {
-//                 return StatusCode(StatusCodes.Status500InternalServerError);
-//             }
-//
-//
-//             var subject = await _context.Subjects
-//                 .SingleOrDefaultAsync(p => p.subject_id.Equals(id));
-//
-//             if(subject == null)
-//             {
-//                 return NotFound("Subject does not exist");
-//             }
-//
-//             subject.is_active = !subject.is_active;
-//
-//             int rowsAffected = await _context.SaveChangesAsync();
-//
-//             if (rowsAffected < 1)
-//             {
-//                 return StatusCode(StatusCodes.Status500InternalServerError, "Failed to update the user.");
-//             }
-//
-//             return Ok(true);
-//         }
-//
-//         [HttpPut("ChangeLecturer")]
+    
+    // UPDATE
+    //         [HttpPut("ChangeLecturer")]
 //         public async Task<IActionResult> ChangeSubjectlecturer(int SubjectId, int newLecturerId)
 //         {
 //             if(SubjectId == 0 || newLecturerId == 0)
@@ -211,34 +162,68 @@
 //                 return StatusCode(StatusCodes.Status500InternalServerError, ex);
 //             }
 //         }
-//
-//         // POST: api/Subjects
-//         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-//         [HttpPost]
-//         public async Task<ActionResult<Subjects>> PostSubjects(Subjects subjects)
+
+//         [HttpPut("SetActive")]
+//         public async Task<IActionResult> SubjectActive(int id)
 //         {
-//           if(subjects == null)
-//             {
-//                 return BadRequest("Please provide all required details");
+//             if(_context.Subjects == null) {
+//                 return StatusCode(StatusCodes.Status500InternalServerError);
 //             }
 //
-//           bool subjectExists = await _context.Subjects.AnyAsync(p => p.subject_name == subjects.subject_name);
 //
-//             if (subjectExists)
+//             var subject = await _context.Subjects
+//                 .SingleOrDefaultAsync(p => p.subject_id.Equals(id));
+//
+//             if(subject == null)
 //             {
-//                 return Conflict("Subject name already in use");
+//                 return NotFound("Subject does not exist");
 //             }
 //
-//             _context.Subjects.Add(subjects);
-//             await _context.SaveChangesAsync();
+//             subject.is_active = !subject.is_active;
 //
-//             return CreatedAtAction("GetSubjects", new {id = subjects.subject_id}, subjects);
+//             int rowsAffected = await _context.SaveChangesAsync();
+//
+//             if (rowsAffected < 1)
+//             {
+//                 return StatusCode(StatusCodes.Status500InternalServerError, "Failed to update the user.");
+//             }
+//
+//             return Ok(true);
 //         }
+
+//         // PUT: api/Subjects/5
+//         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+//         [HttpPut("{id}")]
+//         public async Task<IActionResult> PutSubjects(int id, Subjects subjects)
+//         {
+//             if (id != subjects.subject_id)
+//             {
+//                 return BadRequest();
+//             }
 //
+//             _context.Entry(subjects).State = EntityState.Modified;
+//             try
+//             {
+//                 await _context.SaveChangesAsync();
+//             }
+//             catch (DbUpdateConcurrencyException)
+//             {
+//                 if (!SubjectsExists(id))
+//                 {
+//                     return NotFound();
+//                 }
+//                 else
+//                 {
+//                     throw;
+//                 }
+//             }
 //
-//    
-//
-//         // DELETE: api/Subjects/5
+//             return NoContent();
+//         }
+    
+    // DELETE
+    
+    //         // DELETE: api/Subjects/5
 //         [HttpDelete("{id}")]
 //         public async Task<IActionResult> DeleteSubjects(int id)
 //         {
@@ -258,9 +243,13 @@
 //             return NoContent();
 //         }
 //
+
+// EXTENSIONS
 //         private bool SubjectsExists(int id)
 //         {
 //             return (_context.Subjects?.Any(e => e.subject_id == id)).GetValueOrDefault();
 //         }
-//     }
-// }
+
+
+}
+
