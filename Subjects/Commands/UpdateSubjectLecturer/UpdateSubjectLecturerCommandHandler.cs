@@ -27,6 +27,7 @@ public class UpdateSubjectLecturerCommandHandler(ApplicationDbContext context): 
                 throw new LecturerIdMismatchException("Cannot re-assign the same lecturer");
 
             subject.LecturerId = request.lecturerId;
+            subject.DateModified = DateTime.UtcNow;
             await _context.SaveChangesAsync(cancellationToken);
 
             response = new ResponseDto(request.id, "Subject lecturer updated", StatusCodes.Accepted);

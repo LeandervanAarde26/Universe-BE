@@ -16,6 +16,7 @@ public class UpdateSubjectActiveStateCommandHandler(ApplicationDbContext context
                 throw new NotFoundException("Can not find subject with specified details");
             
             subject.Active = !subject.Active ;
+            subject.DateModified = DateTime.UtcNow;
             await _context.SaveChangesAsync(cancellationToken);
 
             response = new ResponseDto(request.id, "Subject  updated", UniVerServer.Enums.StatusCodes.Accepted);

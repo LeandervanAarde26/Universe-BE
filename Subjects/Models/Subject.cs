@@ -28,4 +28,5 @@ public class Subject : BaseModel
  public int ClassRuntime { get; set; } = 120;
  public int ClassRepitions { get; set; } = 8;
  public SubjectTypes Type { get; set; }
+ public DateTime DateModified { get; set; }
 }

@@ -19,6 +19,7 @@ public class UpdateSubjectCommandHandler(ApplicationDbContext context): BaseHand
             var subjectToUpdate = await _context.Subjects.FindAsync(request.id);
             if (subjectToUpdate is null)
                 throw new NotFoundException($"{request.id}: Subject could not be found");
+            subjectToUpdate.DateModified = DateTime.UtcNow;
             mapper.Map(request.subject, subjectToUpdate);
             await _context.SaveChangesAsync(cancellationToken);
 

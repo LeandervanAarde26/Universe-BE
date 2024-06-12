@@ -3,6 +3,7 @@ using System.Data;
 using System.Net;
 using System;
 using Microsoft.EntityFrameworkCore;
+using UniVerServer.Events.Models;
 using UniVerServer.Models;
 using UniVerServer.Subjects.Models;
 
@@ -25,6 +26,7 @@ namespace UniVerServer
         public DbSet<Users.Models.Users> Users { get; set; }
         public DbSet<Roles.Models.Roles> Roles { get; set; }
         public DbSet<Subject> Subjects { get; set; }
+        public DbSet<Event> Events { get; set; }
         
     }
 
