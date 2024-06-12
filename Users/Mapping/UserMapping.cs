@@ -1,4 +1,5 @@
 using AutoMapper;
+using UniVerServer.Subjects.DTO;
 using UniVerServer.Users.DTO;
 
 namespace UniVerServer.Users.Mapping;
@@ -11,6 +12,7 @@ public class UserMapping : Profile
       CreateMap< Models.Users, CreateUserDto>();
       CreateMap<Models.Users, UpdateUserDto>();
       CreateMap<UpdateUserDto, Models.Users>();
+      CreateMap<Models.Users, LecturerInformation>();
       CreateMap<Models.Users, GetStaffMembersDto>()
          .ForMember(dest => dest.Role, opt => opt.MapFrom(src => src.Role.Name))
          .ForMember(dest => dest.HourlyRate, opt => opt.MapFrom(src => src.Role.HourlyRate))

@@ -3,4 +3,4 @@ using UniVerServer.Subjects.DTO;
 
 namespace UniVerServer.Subjects.Queries.GetSubject.GetSubjectbyId;
 
-public record GetSubjectById(Guid id): IRequest<GetSubjectDto>;
+public record GetSubjectByIdQuery(Guid id): IRequest<GetSingleSubjectDto>;

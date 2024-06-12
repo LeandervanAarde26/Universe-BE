@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.Build.Framework;
 using UniVerServer.Abstractions;
+using UniVerServer.Subjects.Enums;
 
 namespace UniVerServer.Subjects.Models;
 
@@ -12,18 +13,19 @@ public class Subject : BaseModel
  public string Name { get; set; }
  public string Description { get; set; }
  public decimal Cost { get; set; }
- public int Credits { get; set; }
+ public int Credits { get; set; } = 20;
+ public int Year { get; set; }
  
  public Users.Models.Users Lecturer { get; set; }
- public Guid LecturerId { get; set; }
+ public Guid LecturerId { get; set; } 
  
  //Extras (nice to have)
- public string ColorHex { get; set; }
+ public string ColorHex { get; set; } = "#000000";
  public string Image { get; set; } = "http";
  
  // running information
- public DateTime StartDate { get; set; }
- public bool Active { get; set; }
- public int ClassRuntime { get; set; }
- public int ClassRepitions { get; set; }
+ public bool Active { get; set; } = false;
+ public int ClassRuntime { get; set; } = 120;
+ public int ClassRepitions { get; set; } = 8;
+ public SubjectTypes Type { get; set; }
 }

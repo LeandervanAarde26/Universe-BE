@@ -1,6 +1,6 @@
+using MediatR;
+using UniVerServer.Abstractions;
+
 namespace UniVerServer.Subjects.Commands.UpdateSubjectLecturer;
 
-public class UpdateSubjectLecturerCommand
-{
-    
-}
+public record UpdateSubjectLecturerCommand(Guid id, Guid lecturerId): IRequest<ResponseDto>;

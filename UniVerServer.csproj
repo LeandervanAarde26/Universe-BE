@@ -25,10 +25,6 @@
 
   <ItemGroup>
     <Folder Include="Migrations\" />
-    <Folder Include="Subjects\Commands\" />
-    <Folder Include="Subjects\DTO\" />
-    <Folder Include="Subjects\Mapping\" />
-    <Folder Include="Subjects\Queries\" />
   </ItemGroup>
 
 </Project>
