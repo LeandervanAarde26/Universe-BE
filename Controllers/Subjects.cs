@@ -5,7 +5,7 @@ using UniVerServer.Abstractions;
 namespace UniVerServer.Controllers;
 [Route("api/[controller]")]
 [ApiController]
-public class SubjectsController(IMediator mediator) : BaseController(mediator)
+public class Subjects(IMediator mediator) : BaseController(mediator)
 {
     
     // CREATE 
