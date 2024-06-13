@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using UniVerServer.Abstractions;
 using UniVerServer.Events.Commands.CreateEvent;
+using UniVerServer.Events.Commands.DeleteEvent;
+using UniVerServer.Events.Commands.UpdateDate;
 using UniVerServer.Events.Dto;
 using UniVerServer.Events.Queries.GetEventById;
 using UniVerServer.Events.Queries.GetEvents;
@@ -32,8 +34,14 @@ public class Events(IMediator mediator) : BaseController(mediator)
     //UPDATE 
     // Re-assign organiser
     // Update date
+    //body string format - YYYY-MM-DDTHH:MM:SSZ -> "2024-06-15T13:00:00Z"  ;
+    [HttpPatch("Date/{id}")]
+    public async Task<ActionResult<ResponseDto>> UpdateEventDate(string id, [FromBody] string date) =>
+        responseService.HandleResponse(
+            await mediator.Send(new UpdateEventDateCommand(Guid.Parse(id), DateTime.Parse(date).ToUniversalTime())));
     // general update
-
+    
+ 
     //    // PUT: api/Events/5
     //    // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     //    [HttpPut("{id}")]
@@ -66,25 +74,9 @@ public class Events(IMediator mediator) : BaseController(mediator)
     //    }
 
     //DELETE
-
-    //    // DELETE: api/Events/5
-    //    [HttpDelete("{id}")]
-    //    public async Task<IActionResult> DeleteEvents(int id)
-    //    {
-    //        if (_context.Events == null)
-    //        {
-    //            return NotFound();
-    //        }
-    //        var events = await _context.Events.FindAsync(id);
-    //        if (events == null)
-    //        {
-    //            return NotFound();
-    //        }
-
-    //        _context.Events.Remove(events);
-    //        await _context.SaveChangesAsync();
-
-    //        return NoContent();
-    //    }
+    [HttpDelete("{id}")]
+    public async Task<ActionResult<ResponseDto>> PurgeEvent(string id) =>
+        responseService.HandleResponse(await mediator.Send(new DeleteEventCommand(Guid.Parse(id))));
+    
 }
 
