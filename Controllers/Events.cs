@@ -43,51 +43,20 @@ public class Events(IMediator mediator) : BaseController(mediator)
             { EventId = Guid.Parse(eventId), NewHost = Guid.Parse(organiserId) };
         return responseService.HandleResponse(await mediator.Send(new UpdateHostCommand(data)));
     }
+    
     // Update date
     //body string format - YYYY-MM-DDTHH:MM:SSZ -> "2024-06-15T13:00:00Z"  ;
     [HttpPatch("Date/{id}")]
     public async Task<ActionResult<ResponseDto>> UpdateEventDate(string id, [FromBody] string date) =>
         responseService.HandleResponse(
             await mediator.Send(new UpdateEventDateCommand(Guid.Parse(id), DateTime.Parse(date).ToUniversalTime())));
+    
     // general update
-
+    // See UpdateEventDto for updatable fields.
     [HttpPut("{id}")]
     public async Task<ActionResult<ResponseDto>> UpdateEvent(string id, [FromBody] UpdateEventDto eventDetails) =>
         responseService.HandleResponse(await mediator.Send(new UpdateEventCommand(eventDetails, Guid.Parse(id))));
     
-    
- 
-    //    // PUT: api/Events/5
-    //    // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-    
-    //    [HttpPut("{id}")]
-    //    public async Task<IActionResult> PutEvents(int id, Events events)
-    //    {
-    //        if (id != events.event_id)
-    //        {
-    //            return BadRequest();
-    //        }
-
-    //        _context.Entry(events).State = EntityState.Modified;
-
-    //        try
-    //        {
-    //            await _context.SaveChangesAsync();
-    //        }
-    //        catch (DbUpdateConcurrencyException)
-    //        {
-    //            if (!EventsExists(id))
-    //            {
-    //                return NotFound();
-    //            }
-    //            else
-    //            {
-    //                throw;
-    //            }
-    //        }
-
-    //        return NoContent();
-    //    }
 
     //DELETE
     [HttpDelete("{id}")]

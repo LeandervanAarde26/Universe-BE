@@ -22,5 +22,6 @@ public class EventsMapping : Profile
             .ForMember(dest => dest.Lecturer, opt => opt.MapFrom(src => src.Organiser));
 
         CreateMap<Event, UpdateEventDto>();
+        CreateMap<UpdateEventDto, Event>();
     }
 }
