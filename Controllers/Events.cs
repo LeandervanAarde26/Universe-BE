@@ -4,6 +4,8 @@ using UniVerServer.Abstractions;
 using UniVerServer.Events.Commands.CreateEvent;
 using UniVerServer.Events.Commands.DeleteEvent;
 using UniVerServer.Events.Commands.UpdateDate;
+using UniVerServer.Events.Commands.UpdateEvent;
+using UniVerServer.Events.Commands.UpdateHost;
 using UniVerServer.Events.Dto;
 using UniVerServer.Events.Queries.GetEventById;
 using UniVerServer.Events.Queries.GetEvents;
@@ -33,6 +35,14 @@ public class Events(IMediator mediator) : BaseController(mediator)
     
     //UPDATE 
     // Re-assign organiser
+    [HttpPatch("Organiser/{eventId}")]
+    public async Task<ActionResult<ResponseDto>> UpdateEventOrganiser( string eventId,
+        [FromBody] string organiserId)
+    {
+        UpdateEventHostDto data = new UpdateEventHostDto
+            { EventId = Guid.Parse(eventId), NewHost = Guid.Parse(organiserId) };
+        return responseService.HandleResponse(await mediator.Send(new UpdateHostCommand(data)));
+    }
     // Update date
     //body string format - YYYY-MM-DDTHH:MM:SSZ -> "2024-06-15T13:00:00Z"  ;
     [HttpPatch("Date/{id}")]
@@ -40,10 +50,16 @@ public class Events(IMediator mediator) : BaseController(mediator)
         responseService.HandleResponse(
             await mediator.Send(new UpdateEventDateCommand(Guid.Parse(id), DateTime.Parse(date).ToUniversalTime())));
     // general update
+
+    [HttpPut("{id}")]
+    public async Task<ActionResult<ResponseDto>> UpdateEvent(string id, [FromBody] UpdateEventDto eventDetails) =>
+        responseService.HandleResponse(await mediator.Send(new UpdateEventCommand(eventDetails, Guid.Parse(id))));
+    
     
  
     //    // PUT: api/Events/5
     //    // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+    
     //    [HttpPut("{id}")]
     //    public async Task<IActionResult> PutEvents(int id, Events events)
     //    {
