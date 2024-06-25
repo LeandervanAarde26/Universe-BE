@@ -9,6 +9,7 @@ using UniVerServer.Events.Commands.UpdateHost;
 using UniVerServer.Events.Dto;
 using UniVerServer.Events.Queries.GetEventById;
 using UniVerServer.Events.Queries.GetEvents;
+using UniVerServer.Events.Queries.GetEventsInMonth;
 using UniVerServer.Subjects.DTO;
 
 namespace UniVerServer.Controllers;
@@ -26,13 +27,17 @@ public class Events(IMediator mediator) : BaseController(mediator)
     
     //READ 
     [HttpGet()]
-    public async Task<ActionResult<IEnumerable<GetSubjectDto>>> GetEvents() =>
+    public async Task<ActionResult<IEnumerable<GetEventsDto>>> GetEvents() =>
         Ok(await mediator.Send(new GetEventsQuery()));
 
     [HttpGet("{id}")]
     public async Task<ActionResult<GetSingleEventDto>> GetEvent(string id) =>
         Ok(await mediator.Send(new GetEventByIdQuery(Guid.Parse(id))));
     
+    //string format - YYYY-MM-DD -> "2024-06-15"  ;
+    [HttpGet("Month/{date}")]
+    public async Task<ActionResult<IEnumerable<GetEventsDto>>> GetEventsInMonth(string date) =>
+        Ok(await mediator.Send(new GetEventsInMonthQuery(DateTime.Parse(date).ToUniversalTime())));
     //UPDATE 
     // Re-assign organiser
     [HttpPatch("Organiser/{eventId}")]
