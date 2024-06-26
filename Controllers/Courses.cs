@@ -2,7 +2,11 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using UniVerServer.Abstractions;
 using UniVerServer.Courses.Commands.CreateCourse;
+using UniVerServer.Courses.Commands.DeleteCourse;
+using UniVerServer.Courses.Commands.UpdateAcceptingStudents;
+using UniVerServer.Courses.Commands.UpdateActiveCourse;
 using UniVerServer.Courses.DTO;
+using UniVerServer.Courses.Queries.GetCourseById;
 using UniVerServer.Courses.Queries.GetCourses;
 using UniVerServer.Subjects.DTO;
 
@@ -13,49 +17,39 @@ namespace UniVerServer.Controllers;
 public class Courses(IMediator mediator) : BaseController(mediator)
 {
     private HttpResponseService response = new HttpResponseService();
-    
-    
+
     // CREATE 
     [HttpPost]
     public async Task<ActionResult<ResponseDto>> CreateCourse([FromBody] CreateCourseRequestDto course) =>
         response.HandleResponse(await mediator.Send(new CreateCourseCommand(course.ConvertCourseDto())));
 
     // READ 
-
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<GetSubjectDto>>> GetCourses() =>
+    public async Task<ActionResult<IEnumerable<GetCoursesDto>>> GetCourses() =>
         Ok(await mediator.Send(new GetCoursesQuery()));
+
+    [HttpGet("{id}")]
+    public async Task<ActionResult<GetCoursesDto>> GetCourse(string id) =>
+        Ok(await mediator.Send(new GetCourseByIdQuery(Guid.Parse(id))));
     
-    //     // GET: api/StudentCourses
-    //     [HttpGet]
-    //     public async Task<ActionResult<IEnumerable<StudentCourses>>> GetStudentCourses()
-    //     {
-    //       if (_context.StudentCourses == null)
-    //       {
-    //           return NotFound();
-    //       }
-    //         return await _context.StudentCourses.ToListAsync();
-    //     }
-
-    //     // GET: api/StudentCourses/5
-    //     [HttpGet("{id}")]
-    //     public async Task<ActionResult<StudentCourses>> GetStudentCourses(string id)
-    //     {
-    //       if (_context.StudentCourses == null)
-    //       {
-    //           return NotFound();
-    //       }
-    //         var studentCourses = await _context.StudentCourses.FindAsync(id);
-    //
-    //         if (studentCourses == null)
-    //         {
-    //             return NotFound();
-    //         }
-    //
-    //         return studentCourses;
-    //     }
-
     // UPDATE 
+    
+    // Udate starting date 
+    // Means to recalculate EndingDate
+    [HttpPatch("Active/{id}")]
+    public async Task<ActionResult<ResponseDto>> UpdateActiveFlag(string id, bool flag) =>
+        response.HandleResponse(await mediator.Send(new UpdateActiveCourseFlagCommand(Guid.Parse(id), flag)));
+    
+    // Update active flag
+    // NOTE: Setting this flag to false will also update the accepting students flag to false.
+    [HttpPatch("AcceptStudents/{id}")]
+    public async Task<ActionResult<ResponseDto>> UpdateAcceptingStudentsFlag(string id, [FromBody] bool flag) =>
+        response.HandleResponse(await mediator.Send(new UpdateAcceptingStudentsCommand(Guid.Parse(id), flag)));
+    
+
+    // General update
+
+
 
     //     // PUT: api/StudentCourses/5
     //     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
@@ -89,24 +83,17 @@ public class Courses(IMediator mediator) : BaseController(mediator)
     //     }
 
     //DELETE
-
-    //     // DELETE: api/StudentCourses/5
-    //     [HttpDelete("{id}")]
-    //     public async Task<IActionResult> DeleteStudentCourses(string id)
-    //     {
-    //         if (_context.StudentCourses == null)
-    //         {
-    //             return NotFound();
-    //         }
-    //         var studentCourses = await _context.StudentCourses.FindAsync(id);
-    //         if (studentCourses == null)
-    //         {
-    //             return NotFound();
-    //         }
-    //
-    //         _context.StudentCourses.Remove(studentCourses);
-    //         await _context.SaveChangesAsync();
-    //
-    //         return NoContent();
-    //     }
+    [HttpDelete("Purge/{id}")]
+    public async Task<ActionResult<ResponseDto>> PurgeCourse(string id) =>
+        response.HandleResponse(await mediator.Send(new PurgeCourseCommand(Guid.Parse(id))));
 }
+
+/*
+ TODO:
+ Get courses by lecturer -> id
+ Get active courses
+ Get courses that are accepting students
+ Get courses starting in a certain month
+ Get courses ending in a certain month
+ Get courses with certain subject type
+ */

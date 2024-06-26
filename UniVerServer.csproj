@@ -24,6 +24,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Courses\Commands\UpdateCourse\" />
+    <Folder Include="Courses\Commands\UpdateStartDate\" />
     <Folder Include="Migrations\" />
   </ItemGroup>
 
