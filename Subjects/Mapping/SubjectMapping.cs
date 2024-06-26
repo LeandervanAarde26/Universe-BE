@@ -1,6 +1,7 @@
 using AutoMapper;
 using UniVerServer.Subjects.DTO;
 using UniVerServer.Subjects.Models;
+using UniVerServer.Users.DTO;
 
 namespace UniVerServer.Subjects.Mapping;
 

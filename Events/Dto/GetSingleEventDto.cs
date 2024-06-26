@@ -1,4 +1,5 @@
 using UniVerServer.Subjects.DTO;
+using UniVerServer.Users.DTO;
 
 namespace UniVerServer.Events.Dto;
 

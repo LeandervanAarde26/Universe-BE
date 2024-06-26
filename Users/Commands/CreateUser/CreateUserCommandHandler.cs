@@ -69,7 +69,7 @@ public class CreateUserCommandHandler(ApplicationDbContext context): BaseHandler
             
             _context.Users.Add(mapper.Map<Models.Users>(newUser));
             await _context.SaveChangesAsync(cancellationToken);
-            response = new ResponseDto(default, "User Added", StatusCodes.Accepted);
+            response = new ResponseDto(default, "User Added", StatusCodes.Created);
             return response;
         }
         catch (Exception e)

@@ -18,6 +18,7 @@ public class CreateSubjectDto
     public bool Active { get; set; } = false;
     public int ClassRuntime { get; set; } = 120;
     public int ClassRepitions { get; set; } = 8;
+    public int ClassDayIntervals { get; set; } = 7;
     public SubjectTypes Type { get; set; }
     public int Year { get; set; }
 

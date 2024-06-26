@@ -15,6 +15,7 @@ public class GetSubjectQueryHandler(ApplicationDbContext context): BaseHandler(c
         var mapper = new Mapper(config);
         try
         {
+            // TODO: ADD mpping for this.
             var subjects = await _context.Subjects
                 .Include(x => x.Lecturer)
                 .Select(x => new GetSubjectDto

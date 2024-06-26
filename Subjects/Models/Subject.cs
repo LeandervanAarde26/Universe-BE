@@ -27,6 +27,8 @@ public class Subject : BaseModel
  public bool Active { get; set; } = false;
  public int ClassRuntime { get; set; } = 120;
  public int ClassRepitions { get; set; } = 8;
+ // Class will run once every 7 days -> once a week;
+ public int ClassDayIntervals { get; set; } = 7;
  public SubjectTypes Type { get; set; }
  public DateTime DateModified { get; set; }
 }

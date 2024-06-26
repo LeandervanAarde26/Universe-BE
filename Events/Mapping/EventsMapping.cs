@@ -3,6 +3,7 @@ using AutoMapper;
 using UniVerServer.Events.Dto;
 using UniVerServer.Events.Models;
 using UniVerServer.Subjects.DTO;
+using UniVerServer.Users.DTO;
 
 namespace UniVerServer.Events.Mapping;
 

@@ -1,6 +1,6 @@
+using UniVerServer.Users.DTO;
+
 namespace UniVerServer.Subjects.DTO;
-
-
 
 public class GetSingleSubjectDto
 {
@@ -18,16 +18,8 @@ public class GetSingleSubjectDto
     public bool Active { get; set; }
     public int ClassRuntime { get; set; } 
     public int ClassRepitions { get; set; }
+    public int ClassDayIntervals { get; set; } = 7;
     public string Type { get; set; }
     public string DateCreated { get; set; }
     public LecturerInformation Lecturer { get; set; }
-}
-
-public class LecturerInformation
-{
-    public Guid LecturerId {get; set;} 
-    public string FullNames {get; set;} 
-    public string Email {get; set;}
-    public string ProfileImage {get; set;} 
-    public bool Active {get; set;}   
 }

@@ -12,7 +12,7 @@ public class UpdateSubjectDto
     public int Year { get; set; }
     public string ColorHex { get; set; } = "#000000";
     public string Image { get; set; } = "http";
-    
+    public int ClassDayIntervals { get; set; } = 7;
     public int ClassRuntime { get; set; } = 120;
     public int ClassRepitions { get; set; } = 8;
     public SubjectTypes Type { get; set; }
