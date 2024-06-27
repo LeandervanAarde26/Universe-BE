@@ -21,11 +21,10 @@
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="7.0.9" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="7.0.4" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+    <PackageReference Include="System.Linq.Dynamic.Core" Version="1.4.2" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Courses\Commands\UpdateCourse\" />
-    <Folder Include="Courses\Commands\UpdateStartDate\" />
     <Folder Include="Migrations\" />
   </ItemGroup>
 

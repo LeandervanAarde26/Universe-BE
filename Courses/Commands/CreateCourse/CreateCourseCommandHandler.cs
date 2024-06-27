@@ -2,6 +2,7 @@ using AutoMapper;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using UniVerServer.Abstractions;
+using UniVerServer.Courses.Extensions;
 using UniVerServer.Courses.Mapping;
 using UniVerServer.Courses.Models;
 using StatusCodes = UniVerServer.Enums.StatusCodes;
@@ -18,6 +19,13 @@ public class CreateCourseCommandHandler(ApplicationDbContext context)
         var mapper = new Mapper(config);
         try
         {
+            if (request.course.StartDate < DateTime.UtcNow.ToUniversalTime())
+            {
+                response = new ResponseDto(default,
+                    $"Cannot create course that 'already started' ", StatusCodes.Forbidden);
+                return response;
+            }
+            
             bool existingCourse = await _context.Courses.AnyAsync(x =>
                 x.SubjectId.Equals(request.course.SubjectId) && x.StartDate.Equals(request.course.StartDate));
             if (existingCourse)
@@ -34,7 +42,9 @@ public class CreateCourseCommandHandler(ApplicationDbContext context)
                     $"Subject ID {request.course.SubjectId} does not exist ", StatusCodes.NotFound);
                 return response; 
             }
-            request.course.CalculateEndDate(subject.ClassDayIntervals, subject.ClassRepitions, request.course.StartDate);
+
+            request.course.SetEndDate(request.course.StartDate.CalculateEndDate(subject.ClassDayIntervals, subject.ClassRepitions)); 
+                
             _context.Courses.Add(mapper.Map<Course>(request.course));
             await _context.SaveChangesAsync(cancellationToken);
             response = new ResponseDto(default, "Course added", StatusCodes.Accepted);

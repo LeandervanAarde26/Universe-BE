@@ -9,6 +9,7 @@ public class CourseMapping : Profile
     public CourseMapping()
     {
         CreateMap<CreateCourseDto, Course>();
-        
+        CreateMap<UpdateCourseDto, Course>();
+
     }
 }
