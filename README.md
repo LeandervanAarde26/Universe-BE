@@ -107,7 +107,8 @@ Distributed under the MIT License. See `LICENSE` for more information.
  - Improve Dependency inversion 
  - Mapping
  - Global trycatch
- - Workflows setup.
+ - Workflows setup. 
+ - Create Lambda function for managing fees every 24 hours.
 
 
 

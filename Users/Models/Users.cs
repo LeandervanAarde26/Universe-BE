@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.Build.Framework;
 using UniVerServer.Abstractions;
+using UniVerServer.Enrollments.Models;
 using UniVerServer.Models;
 
 namespace UniVerServer.Users.Models;
@@ -37,4 +38,6 @@ public class Users : BaseModel
     [Required]
     public string Password { get; set; }
     public DateTime PasswordModifiedDate { get; set; }
+    
+    public ICollection<Enrollment> Enrollments { get; set; }
 }

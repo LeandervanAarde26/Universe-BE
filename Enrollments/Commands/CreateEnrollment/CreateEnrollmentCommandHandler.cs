@@ -18,10 +18,10 @@ public class CreateEnrollmentCommandHandler(ApplicationDbContext context): BaseH
         var mapper = new Mapper(config);
         try
         {
-            bool existingCourse = await _context.Enrollments.AnyAsync(x => x.CourseId.Equals(request.enrollment.CourseId), cancellationToken);
-            if (existingCourse)
+            bool existingEnrollment = await _context.Enrollments.AnyAsync(x => x.CourseId.Equals(request.enrollment.CourseId ) && x.StudentId.Equals(request.enrollment.StudentId), cancellationToken);
+            if (existingEnrollment)
             {
-                response = new ResponseDto(default, $"Cannot re-add course", StatusCodes.Conflict);
+                response = new ResponseDto(default, $"Cannot re-add enrollment", StatusCodes.Conflict);
                 return response;   
             }
 
@@ -33,7 +33,7 @@ public class CreateEnrollmentCommandHandler(ApplicationDbContext context): BaseH
             }
 
             var newEnrollment = mapper.Map<Enrollment>(request.enrollment);
-            _context.Add(newEnrollment);
+            _context.Enrollments.Add(newEnrollment);
            await _context.SaveChangesAsync(cancellationToken);
            response = new ResponseDto(default, $"Students {request.enrollment.StudentId} added to course",
                StatusCodes.Accepted);

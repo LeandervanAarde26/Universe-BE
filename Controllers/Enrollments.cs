@@ -2,8 +2,10 @@
 using Microsoft.AspNetCore.Mvc;
 using UniVerServer.Abstractions;
 using UniVerServer.Enrollments.Commands.CreateEnrollment;
+using UniVerServer.Enrollments.Commands.UpdateGrade;
 using UniVerServer.Enrollments.DTO;
-using UniVerServer.Enrollments.Queries.GetCourseEnrollmentsById;
+using UniVerServer.Enrollments.Queries.GetAllEnrollments;
+using UniVerServer.Enrollments.Queries.GetEnrollmentByCourseId;
 
 namespace UniVerServer.Controllers;
 
@@ -14,7 +16,6 @@ namespace UniVerServer.Controllers;
           private HttpResponseService response = new HttpResponseService();
           
           // CREATE
-          // Create new enrollment
           [HttpPost]
           public async Task<ActionResult<ResponseDto>>
                CreateEnrolment([FromBody] CreateEnrollmentRequestDto enrollment) =>
@@ -26,230 +27,26 @@ namespace UniVerServer.Controllers;
                     GradeType = enrollment.GradeType,
                     Status = enrollment.Status
                })));
-        
-
-
+          
           //READ
-          // Get course enrollments
-          // [HttpGet("{id}")]
-          // public async Task<ActionResult<GetEnrollmentsDto>> GetAllEnrollments(string id) => 
-          // Ok(await mediator.Send(new GetCourseEnrollmentsByIdQuery(Guid.Parse(id))));
+          [HttpGet]
+          public async Task<ActionResult<IEnumerable<GetEnrollmentsDto>>> GetAllEnrollments() =>
+              Ok(await mediator.Send(new GetAllEnrollmentsQuery()));
+          
 
-          //         // GET: api/CourseEnrollments/5
-//         [HttpGet("{id}")]
-//         public async Task<ActionResult<CourseEnrollments>> GetCourseEnrollments(int id)
-//         {
-//           if (_context.Courses == null)
-//           {
-//               return NotFound();
-//           }
-//             var data = await (from enrollment in _context.Courses
-//                               join learner in _context.People
-//                               on enrollment.student_id equals learner.person_system_identifier
-//                               join subject in _context.Subjects
-//                               on enrollment.Subjects equals subject.subject_id
-//                               join lecturer in _context.People
-//                               on subject.lecturer_id equals lecturer.person_id
-//                               join role in _context.Roles
-//                               on lecturer.role equals role.role_id
-//                               select new CourseEnrollmentView
-//                               {
-//                                   student_id = learner.person_id,
-//                                   student_name = learner.first_name + " " + learner.last_name,
-//                                   student_number = learner.person_cell,
-//                                   student_email = learner.person_email,
-//                                   student_credits = learner.person_credits,
-//                                   student_needed_credits = learner.needed_credits,
-//                                   lecturer_id = lecturer.person_id,
-//                                   lecturer_name = lecturer.first_name + " " + lecturer.last_name,
-//                                   lecturer_rate = role.rate,
-//                                   subject_id = subject.subject_id,
-//                                   subject_name = subject.subject_name,
-//                                   subject_code = subject.subject_code,
-//                                   subject_cost = subject.subject_cost,
-//                                   subject_color = subject.subject_color,
-//                                   subject_credits = subject.subject_credits,
-//                                   subject_runtime = subject.subject_class_runtiem,
-//                                   class_amount = subject.subject_class_amount,
-//                                   subject_active = subject.is_active,
-//                                   subject_start = subject.course_start
-//
-//                               }
-//                           ).FirstOrDefaultAsync();
-//
-//             if (data == null)
-//             {
-//                 return NotFound();
-//             }
-//
-//             return Ok(data);
-//         }
-
-
-//         [HttpGet]
-//         public async Task<ActionResult<IEnumerable<SubjectWithEnrollments>>> GetCourses()
-//         {
-//             var data = await (from subject in _context.Subjects
-//                               join lecturer in _context.People
-//                               on subject.lecturer_id equals lecturer.person_id
-//                               join role in _context.Roles
-//                               on lecturer.role equals role.role_id
-//                               join enrollment in _context.Courses
-//                               on subject.subject_id equals enrollment.Subjects into enrollmentsGroup
-//                               from enrollment in enrollmentsGroup.DefaultIfEmpty()
-//                               join learner in _context.People
-//                               on enrollment.student_id equals learner.person_system_identifier into learnersGroup
-//                               from learner in learnersGroup.DefaultIfEmpty()
-//                               select new CourseEnrollmentView
-//                               {
-//                                   student_id = learner != null ? learner.person_id : 0,
-//                                   student_name = learner != null ? learner.first_name + " " + learner.last_name : null,
-//                                   student_number = learner != null ? learner.person_cell : null,
-//                                   student_email = learner != null ? learner.person_email : null,
-//                                   student_credits = learner != null ? learner.person_credits : 0,
-//                                   student_needed_credits = learner != null ? learner.needed_credits : 0,
-//                                   subject_description = subject.subject_description,
-//                                   lecturer_id = lecturer.person_id,
-//                                   lecturer_name = lecturer.first_name + " " + lecturer.last_name,
-//                                   lecturer_rate = role.rate,
-//                                   subject_id = subject.subject_id,
-//                                   subject_name = subject.subject_name,
-//                                   subject_code = subject.subject_code,
-//                                   subject_cost = subject.subject_cost,
-//                                   subject_color = subject.subject_color,
-//                                   subject_credits = subject.subject_credits,
-//                                   subject_runtime = subject.subject_class_runtiem,
-//                                   class_amount = subject.subject_class_amount,
-//                                   subject_active = subject.is_active,
-//                                   subject_start = subject.course_start,
-//                                   enrollment_id = enrollment != null ? enrollment.enrollment_id : 0
-//
-//                               }
-//                             )
-//                             .GroupBy(e => e.subject_name)
-//                             .Select(group => new SubjectWithEnrollments
-//                             {
-//                                 subjectName = group.Key,
-//                                 subjectDescription = group.First().subject_description,
-//                                 lecturer_id = group.First().lecturer_id,
-//                                 lecturer_name = group.First().lecturer_name,
-//                                 subjectId = group.First().subject_id,
-//                                 subject_code = group.First().subject_code,
-//                                 subject_color = group.First().subject_color,
-//                                 subject_active = group.First().subject_active,
-//                                 subject_credits = group.First().subject_credits,
-//                                 enrollments = group.Where(e => e.student_id != 0).Select(e => new Enrollment
-//                                 {
-//                                     student_id = e.student_id,
-//                                     student_name = e.student_name,
-//                                     student_email = e.student_email,
-//                                     enrollment_id=e.enrollment_id,
-//                                     student_credits = e.student_credits,
-//                                 }).ToList()
-//                             })
-//                             .ToListAsync();
-//             if (data == null)
-//             {
-//                 return NotFound();
-//             }
-//             return Ok(data);
-//         }
-
-//         [HttpGet("subject/{id}")]
-//         public async Task<ActionResult<SubjectWithEnrollments>> GetSingleSubjectOverView(int id)
-//         {
-//             var subjectWithEnrollments = await (from subject in _context.Subjects
-//                                                 join lecturer in _context.People
-//                                                 on subject.lecturer_id equals lecturer.person_id
-//                                                 where subject.subject_id == id
-//                                                 select new SingleSubjectView
-//                                                 {
-//                                                     lecturer_id = lecturer.person_id,
-//                                                     lecturer_name = lecturer.first_name + " " + lecturer.last_name,
-//                                                     lecturer_email = lecturer.person_email,
-//                                                     subject_id = subject.subject_id,
-//                                                     subject_name = subject.subject_name,
-//                                                     subject_color = subject.subject_color,
-//                                                     subject_code = subject.subject_code,
-//                                                     subject_credits = subject.subject_credits,
-//                                                     subject_active = subject.is_active,
-//                                                     subject_description = subject.subject_description,
-//                                                 })
-//                                                .FirstOrDefaultAsync();
-//
-//             if (subjectWithEnrollments == null)
-//             {
-//                 return NotFound();
-//             }
-//
-//             var enrollments = await (from enrollment in _context.Courses
-//                                      join learner in _context.People
-//                                      on enrollment.student_id equals learner.person_system_identifier
-//                                      where enrollment.Subjects == id
-//                                      select new Enrollment
-//                                      {
-//                                          student_id = learner.person_id,
-//                                          student_name = learner.first_name,
-//                                          student_email = learner.person_email,
-//                                          student_credits = learner.person_credits,
-//                                          enrollment_id = enrollment.enrollment_id
-//                                      })
-//                                    .ToListAsync();
-//
-//             var sub = new SubjectWithEnrollments
-//             {
-//                 subjectName = subjectWithEnrollments.subject_name,
-//                 subjectDescription = subjectWithEnrollments.subject_description,
-//                 lecturer_id = subjectWithEnrollments.lecturer_id,
-//                 lecturer_name = subjectWithEnrollments.lecturer_name,
-//                 lecturer_email = subjectWithEnrollments.lecturer_email,
-//                 subjectId = subjectWithEnrollments.subject_id,
-//                 subject_code = subjectWithEnrollments.subject_code,
-//                 subject_color = subjectWithEnrollments.subject_color,
-//                 subject_active = subjectWithEnrollments.subject_active,
-//                 subject_credits = subjectWithEnrollments.subject_credits,
-//                 enrollments = enrollments
-//             };
-//
-//             return Ok(sub);
-//         }
-
-
-
+          [HttpGet("{id}")]
+          public async Task<ActionResult<GetEnrollmentsDto>> GetSingleCourseEnrollments(string id) =>
+              Ok(await mediator.Send(new GetEnrollmentByCourseIdQuery(Guid.Parse(id))));
+          
+          
           //UPDATE
+          [HttpPatch("{courseId}")]
+          public async Task<ActionResult<ResponseDto>> UpdateStudentEnrollmentGrade(string courseId,
+               [FromBody] UpdateEnrollmentGradeRequsetDto data) =>
+               response.HandleResponse(await mediator.Send(new UpdateGradeCommand(Guid.Parse(courseId),
+                    new UpdateEnrollmentGradeDto { grade = data.grade, StudentId = Guid.Parse(data.StudentId) })));
+          
 
-          //         // PUT: api/CourseEnrollments/5
-//         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-//         [HttpPut("{id}")]
-//         public async Task<IActionResult> PutCourseEnrollments(int id, CourseEnrollments courseEnrollments)
-//         {
-//             if (id != courseEnrollments.enrollment_id)
-//             {
-//                 return BadRequest();
-//             }
-//
-//             _context.Entry(courseEnrollments).State = EntityState.Modified;
-//
-//
-//             
-//             try
-//             {
-//                 await _context.SaveChangesAsync();
-//             }
-//             catch (DbUpdateConcurrencyException)
-//             {
-//                 if (!CourseEnrollmentsExists(id))
-//                 {
-//                     return NotFound();
-//                 }
-//                 else
-//                 {
-//                     throw;
-//                 }
-//             }
-//
-//             return NoContent();
-//         }
 
 
           //DELETE

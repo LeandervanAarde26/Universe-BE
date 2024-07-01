@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using UniVerServer.Abstractions;
+using UniVerServer.Enrollments.Models;
 using UniVerServer.Subjects.Models;
 
 namespace UniVerServer.Courses.Models;
@@ -16,4 +17,6 @@ public class Course : BaseModel
     public DateTime EndDate { get; set; }
     public bool Active { get; set; } = false;
     public bool AcceptingStudents { get; set; } = false;
+    
+    public ICollection<Enrollment> Enrollments { get; set; }
 }

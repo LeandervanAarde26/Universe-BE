@@ -11,5 +11,5 @@ public class GetEnrollmentsDto
     // course information
     public GetCourseEnrollmentsDto Course { get; set; }
     // student/s information
-    public IEnumerable<StudentEnrollmentDto> Students { get; set; }
+    public ICollection<StudentEnrollmentDto> Students { get; set; }
 }
