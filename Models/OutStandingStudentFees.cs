@@ -12,7 +12,7 @@ namespace UniVerServer.Models
 
         [Required]
         [ForeignKey("person_system_identifier")]
-        public People student_id { get; set; }
+        public Users.Models.Users student_id { get; set; }
 
         [Required]
         public int outstanding_amount { get; set; }

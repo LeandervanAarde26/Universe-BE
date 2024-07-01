@@ -13,14 +13,15 @@ namespace UniVerServer.Models
 
         [ForeignKey("person_system_identifier")]
         [Required]
-        public string student_id { get; set; }
-
-        [Required]
-        public DateTime course_start { get; set; } = DateTime.Now;
+        public string student_id { get; set; }   
 
         [ForeignKey("subject_id")]
         [Required]
-        public Subjects Subjects { get; set; }
+        public int Subjects { get; set; }
 
+        public static explicit operator List<object>(CourseEnrollments? v)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

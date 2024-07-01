@@ -22,403 +22,861 @@ namespace UniVerServer.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("UniVerServer.Models.Address", b =>
+            modelBuilder.Entity("UniVerServer.Courses.Models.Course", b =>
                 {
-                    b.Property<int>("address_id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("uuid");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("address_id"));
-
-                    b.Property<string>("address")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
-
-                    b.Property<string>("address_area")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
-
-                    b.Property<string>("address_city")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
-
-                    b.Property<string>("address_phone")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
-
-                    b.Property<string>("address_province")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
-
-                    b.Property<string>("address_zipcode")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
-
-                    b.HasKey("address_id");
-
-                    b.ToTable("people_address");
-                });
-
-            modelBuilder.Entity("UniVerServer.Models.CourseEnrollments", b =>
-                {
-                    b.Property<int>("enrollment_id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("enrollment_id"));
-
-                    b.Property<DateTime>("course_start")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("student_id")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<int>("subject_id")
-                        .HasColumnType("integer");
-
-                    b.HasKey("enrollment_id");
-
-                    b.HasIndex("subject_id");
-
-                    b.ToTable("course_enrollments");
-                });
-
-            modelBuilder.Entity("UniVerServer.Models.Events", b =>
-                {
-                    b.Property<int>("event_id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("event_id"));
-
-                    b.Property<DateTime>("event_date")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("event_description")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("event_name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<int>("person_system_identifier")
-                        .HasColumnType("integer");
-
-                    b.HasKey("event_id");
-
-                    b.HasIndex("person_system_identifier");
-
-                    b.ToTable("events");
-                });
-
-            modelBuilder.Entity("UniVerServer.Models.MadePayments", b =>
-                {
-                    b.Property<int>("payment_id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("payment_id"));
-
-                    b.Property<int>("payment_amount")
-                        .HasColumnType("integer");
-
-                    b.Property<DateTime>("payment_date")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<int>("person_system_identifier")
-                        .HasColumnType("integer");
-
-                    b.HasKey("payment_id");
-
-                    b.HasIndex("person_system_identifier");
-
-                    b.ToTable("student_payments");
-                });
-
-            modelBuilder.Entity("UniVerServer.Models.OutStandingStudentFees", b =>
-                {
-                    b.Property<int>("fee_id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("fee_id"));
-
-                    b.Property<int>("outstanding_amount")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("person_system_identifier")
-                        .HasColumnType("integer");
-
-                    b.HasKey("fee_id");
-
-                    b.HasIndex("person_system_identifier");
-
-                    b.ToTable("outstanding_student_fees");
-                });
-
-            modelBuilder.Entity("UniVerServer.Models.People", b =>
-                {
-                    b.Property<int>("person_id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("person_id"));
-
-                    b.Property<DateTime>("added_date")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<int>("address_id")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("first_name")
-                        .IsRequired()
-                        .HasMaxLength(60)
-                        .HasColumnType("character varying(60)");
-
-                    b.Property<string>("last_name")
-                        .IsRequired()
-                        .HasMaxLength(60)
-                        .HasColumnType("character varying(60)");
-
-                    b.Property<bool>("person_active")
+                    b.Property<bool>("AcceptingStudents")
                         .HasColumnType("boolean");
 
-                    b.Property<int>("person_credits")
-                        .HasColumnType("integer");
+                    b.Property<bool>("Active")
+                        .HasColumnType("boolean");
 
-                    b.Property<string>("person_email")
-                        .IsRequired()
-                        .HasMaxLength(80)
-                        .HasColumnType("character varying(80)");
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("person_password")
+                    b.Property<DateTime>("EndDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Identifier")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("person_system_identifier")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("character varying(20)");
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("timestamp with time zone");
 
-                    b.Property<int>("role_id")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("SubjectId")
+                        .HasColumnType("uuid");
 
-                    b.HasKey("person_id");
+                    b.HasKey("Id");
 
-                    b.HasIndex("address_id");
+                    b.HasIndex("SubjectId");
 
-                    b.HasIndex("role_id");
+                    b.ToTable("Courses");
 
-                    b.ToTable("people");
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("f8a259ab-d2f3-482e-9074-842b4a097e27"),
+                            AcceptingStudents = false,
+                            Active = false,
+                            DateCreated = new DateTime(2024, 6, 28, 11, 22, 55, 916, DateTimeKind.Utc).AddTicks(2730),
+                            EndDate = new DateTime(2024, 10, 26, 11, 22, 55, 916, DateTimeKind.Utc).AddTicks(2730),
+                            Identifier = "VOID",
+                            StartDate = new DateTime(2024, 9, 28, 11, 22, 55, 916, DateTimeKind.Utc).AddTicks(2730),
+                            SubjectId = new Guid("28384e02-4ac9-4098-89b7-405c465c730e")
+                        },
+                        new
+                        {
+                            Id = new Guid("6c058d67-4d10-4fa6-8d6a-4f8b8c5a3a5e"),
+                            AcceptingStudents = false,
+                            Active = false,
+                            DateCreated = new DateTime(2024, 6, 28, 11, 22, 55, 916, DateTimeKind.Utc).AddTicks(2740),
+                            EndDate = new DateTime(2025, 1, 26, 11, 22, 55, 916, DateTimeKind.Utc).AddTicks(2750),
+                            Identifier = "VOID",
+                            StartDate = new DateTime(2024, 9, 28, 11, 22, 55, 916, DateTimeKind.Utc).AddTicks(2740),
+                            SubjectId = new Guid("2c5240e9-d233-45bb-8d9b-8d6e709b2937")
+                        },
+                        new
+                        {
+                            Id = new Guid("9fcbf95d-89a4-4e19-a828-3baf4aa75ec0"),
+                            AcceptingStudents = false,
+                            Active = false,
+                            DateCreated = new DateTime(2024, 6, 28, 11, 22, 55, 916, DateTimeKind.Utc).AddTicks(2750),
+                            EndDate = new DateTime(2024, 12, 26, 11, 22, 55, 916, DateTimeKind.Utc).AddTicks(2750),
+                            Identifier = "VOID",
+                            StartDate = new DateTime(2024, 9, 28, 11, 22, 55, 916, DateTimeKind.Utc).AddTicks(2750),
+                            SubjectId = new Guid("2ebd49a2-8d97-4885-832b-8b2f950cbbd3")
+                        },
+                        new
+                        {
+                            Id = new Guid("d3a2f2f0-8e7e-42e1-9f70-61f2a8c0b5ea"),
+                            AcceptingStudents = false,
+                            Active = false,
+                            DateCreated = new DateTime(2024, 6, 28, 11, 22, 55, 916, DateTimeKind.Utc).AddTicks(2760),
+                            EndDate = new DateTime(2024, 12, 26, 11, 22, 55, 916, DateTimeKind.Utc).AddTicks(2760),
+                            Identifier = "VOID",
+                            StartDate = new DateTime(2024, 8, 28, 11, 22, 55, 916, DateTimeKind.Utc).AddTicks(2760),
+                            SubjectId = new Guid("2ebc8d73-d02a-4c97-990a-6793dd0c7386")
+                        },
+                        new
+                        {
+                            Id = new Guid("adff5e28-7a2d-4f71-8c1b-0b6d59a82390"),
+                            AcceptingStudents = false,
+                            Active = false,
+                            DateCreated = new DateTime(2024, 6, 28, 11, 22, 55, 916, DateTimeKind.Utc).AddTicks(2770),
+                            EndDate = new DateTime(2025, 1, 26, 11, 22, 55, 916, DateTimeKind.Utc).AddTicks(2770),
+                            Identifier = "VOID",
+                            StartDate = new DateTime(2024, 9, 28, 11, 22, 55, 916, DateTimeKind.Utc).AddTicks(2770),
+                            SubjectId = new Guid("2ebd49a2-8d97-4885-832b-8b2f950cbbd3")
+                        },
+                        new
+                        {
+                            Id = new Guid("7a3b56c6-1090-4f14-973f-b9b9d4b707cb"),
+                            AcceptingStudents = false,
+                            Active = false,
+                            DateCreated = new DateTime(2024, 6, 28, 11, 22, 55, 916, DateTimeKind.Utc).AddTicks(2770),
+                            EndDate = new DateTime(2024, 12, 26, 11, 22, 55, 916, DateTimeKind.Utc).AddTicks(2780),
+                            Identifier = "VOID",
+                            StartDate = new DateTime(2024, 6, 28, 11, 22, 55, 916, DateTimeKind.Utc).AddTicks(2770),
+                            SubjectId = new Guid("37d7ded2-6d83-4b49-ab75-f0bf5209589f")
+                        });
                 });
 
-            modelBuilder.Entity("UniVerServer.Models.Roles", b =>
+            modelBuilder.Entity("UniVerServer.Enrollments.Models.Enrollment", b =>
                 {
-                    b.Property<int>("role_id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("CourseId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<decimal>("Grade")
+                        .HasColumnType("numeric");
+
+                    b.Property<int>("GradeType")
                         .HasColumnType("integer");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("role_id"));
+                    b.Property<string>("Identifier")
+                        .IsRequired()
+                        .HasColumnType("text");
 
-                    b.Property<bool>("can_access")
+                    b.Property<DateTime>("Modified")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid>("StudentId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CourseId");
+
+                    b.HasIndex("StudentId");
+
+                    b.ToTable("Enrollments");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("0ae32b37-a1d6-40b7-9d07-e4c3ece96c10"),
+                            CourseId = new Guid("f8a259ab-d2f3-482e-9074-842b4a097e27"),
+                            DateCreated = new DateTime(2024, 6, 28, 11, 22, 55, 916, DateTimeKind.Utc).AddTicks(2850),
+                            Grade = 0.00m,
+                            GradeType = 3,
+                            Identifier = "VOID",
+                            Modified = new DateTime(2024, 6, 28, 11, 22, 55, 916, DateTimeKind.Utc).AddTicks(2850),
+                            Status = 1,
+                            StudentId = new Guid("14d52b1e-f5b3-4750-b327-56ddadbd1f78")
+                        },
+                        new
+                        {
+                            Id = new Guid("feb3111d-abff-447e-b0b8-2591cd878b04"),
+                            CourseId = new Guid("6c058d67-4d10-4fa6-8d6a-4f8b8c5a3a5e"),
+                            DateCreated = new DateTime(2024, 6, 28, 11, 22, 55, 916, DateTimeKind.Utc).AddTicks(2860),
+                            Grade = 0.00m,
+                            GradeType = 3,
+                            Identifier = "VOID",
+                            Modified = new DateTime(2024, 6, 28, 11, 22, 55, 916, DateTimeKind.Utc).AddTicks(2860),
+                            Status = 1,
+                            StudentId = new Guid("14d52b1e-f5b3-4750-b327-56ddadbd1f78")
+                        },
+                        new
+                        {
+                            Id = new Guid("a42cead6-a288-425f-903c-092e89b3326f"),
+                            CourseId = new Guid("9fcbf95d-89a4-4e19-a828-3baf4aa75ec0"),
+                            DateCreated = new DateTime(2024, 6, 28, 11, 22, 55, 916, DateTimeKind.Utc).AddTicks(2870),
+                            Grade = 0.00m,
+                            GradeType = 3,
+                            Identifier = "VOID",
+                            Modified = new DateTime(2024, 6, 28, 11, 22, 55, 916, DateTimeKind.Utc).AddTicks(2870),
+                            Status = 1,
+                            StudentId = new Guid("14d52b1e-f5b3-4750-b327-56ddadbd1f78")
+                        },
+                        new
+                        {
+                            Id = new Guid("ad9b12db-4f66-4ced-b4c4-33da2d1ba43c"),
+                            CourseId = new Guid("d3a2f2f0-8e7e-42e1-9f70-61f2a8c0b5ea"),
+                            DateCreated = new DateTime(2024, 6, 28, 11, 22, 55, 916, DateTimeKind.Utc).AddTicks(2870),
+                            Grade = 0.00m,
+                            GradeType = 3,
+                            Identifier = "VOID",
+                            Modified = new DateTime(2024, 6, 28, 11, 22, 55, 916, DateTimeKind.Utc).AddTicks(2870),
+                            Status = 1,
+                            StudentId = new Guid("14d52b1e-f5b3-4750-b327-56ddadbd1f78")
+                        },
+                        new
+                        {
+                            Id = new Guid("417dd886-4c89-474c-be39-52e8158a5878"),
+                            CourseId = new Guid("adff5e28-7a2d-4f71-8c1b-0b6d59a82390"),
+                            DateCreated = new DateTime(2024, 6, 28, 11, 22, 55, 916, DateTimeKind.Utc).AddTicks(2880),
+                            Grade = 0.00m,
+                            GradeType = 3,
+                            Identifier = "VOID",
+                            Modified = new DateTime(2024, 6, 28, 11, 22, 55, 916, DateTimeKind.Utc).AddTicks(2880),
+                            Status = 1,
+                            StudentId = new Guid("2881e5ba-daad-41f9-92f2-9d67dcc0bd00")
+                        });
+                });
+
+            modelBuilder.Entity("UniVerServer.Events.Models.Event", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Identifier")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("OrganiserId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("School")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OrganiserId");
+
+                    b.ToTable("Events");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("3f1a17e5-1c8e-4f6b-a5f7-27c5e9d6a41d"),
+                            Date = new DateTime(2024, 6, 28, 11, 22, 55, 916, DateTimeKind.Utc).AddTicks(2580),
+                            DateCreated = new DateTime(2024, 6, 28, 11, 22, 55, 916, DateTimeKind.Utc).AddTicks(2580),
+                            Description = "Come join us at our open day and explore our winter programs and activities.",
+                            Identifier = "VOID",
+                            Name = "Open Day - Winter",
+                            OrganiserId = new Guid("59332d00-80a2-446c-afca-00a3160c0764"),
+                            School = "CREATIVE TECH",
+                            Type = 3
+                        },
+                        new
+                        {
+                            Id = new Guid("a2b92fe1-5918-42f4-957a-0e57c7b3e38b"),
+                            Date = new DateTime(2024, 6, 28, 11, 22, 55, 916, DateTimeKind.Utc).AddTicks(2650),
+                            DateCreated = new DateTime(2024, 6, 28, 11, 22, 55, 916, DateTimeKind.Utc).AddTicks(2650),
+                            Description = "Come join us at our open day and see what we have planned for the spring semester.",
+                            Identifier = "VOID",
+                            Name = "Open Day - Spring",
+                            OrganiserId = new Guid("59332d00-80a2-446c-afca-00a3160c0764"),
+                            School = "CREATIVE TECH",
+                            Type = 3
+                        },
+                        new
+                        {
+                            Id = new Guid("5d0e2f6c-8d20-4b0a-bf65-77e4ec12b179"),
+                            Date = new DateTime(2024, 6, 28, 11, 22, 55, 916, DateTimeKind.Utc).AddTicks(2650),
+                            DateCreated = new DateTime(2024, 6, 28, 11, 22, 55, 916, DateTimeKind.Utc).AddTicks(2650),
+                            Description = "Come join us at our open day and learn more about our summer courses and events.",
+                            Identifier = "VOID",
+                            Name = "Open Day - Summer",
+                            OrganiserId = new Guid("59332d00-80a2-446c-afca-00a3160c0764"),
+                            School = "CREATIVE TECH",
+                            Type = 3
+                        },
+                        new
+                        {
+                            Id = new Guid("c0840d57-4d73-4f7c-afe6-68b79bc01660"),
+                            Date = new DateTime(2024, 9, 28, 11, 22, 55, 916, DateTimeKind.Utc).AddTicks(2660),
+                            DateCreated = new DateTime(2024, 6, 28, 11, 22, 55, 916, DateTimeKind.Utc).AddTicks(2660),
+                            Description = "Come join us at our open day and discover our autumn curriculum and programs.",
+                            Identifier = "VOID",
+                            Name = "Open Day - Autumn",
+                            OrganiserId = new Guid("59332d00-80a2-446c-afca-00a3160c0764"),
+                            School = "CREATIVE TECH",
+                            Type = 3
+                        },
+                        new
+                        {
+                            Id = new Guid("e5fe9368-1f62-4d5d-bf98-3c8d12a8764b"),
+                            Date = new DateTime(2024, 9, 28, 11, 22, 55, 916, DateTimeKind.Utc).AddTicks(2660),
+                            DateCreated = new DateTime(2024, 6, 28, 11, 22, 55, 916, DateTimeKind.Utc).AddTicks(2660),
+                            Description = "Come join us at our open day and start the new year with exciting courses and opportunities.",
+                            Identifier = "VOID",
+                            Name = "Open Day - New Year",
+                            OrganiserId = new Guid("59332d00-80a2-446c-afca-00a3160c0764"),
+                            School = "CREATIVE TECH",
+                            Type = 3
+                        },
+                        new
+                        {
+                            Id = new Guid("b12a9fb8-42cf-4d0a-8a2d-d980dd9ff1e1"),
+                            Date = new DateTime(2024, 7, 28, 11, 22, 55, 916, DateTimeKind.Utc).AddTicks(2670),
+                            DateCreated = new DateTime(2024, 6, 28, 11, 22, 55, 916, DateTimeKind.Utc).AddTicks(2670),
+                            Description = "Come join us at our open day and see what we have in store for the mid-year term.",
+                            Identifier = "VOID",
+                            Name = "Open Day - Mid-Year",
+                            OrganiserId = new Guid("59332d00-80a2-446c-afca-00a3160c0764"),
+                            School = "CREATIVE TECH",
+                            Type = 3
+                        });
+                });
+
+            modelBuilder.Entity("UniVerServer.Roles.Models.Roles", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<bool>("CanAccess")
                         .HasColumnType("boolean");
 
-                    b.Property<string>("role_name")
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<decimal>("HourlyRate")
+                        .HasColumnType("numeric");
+
+                    b.Property<string>("Identifier")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(30)
                         .HasColumnType("character varying(30)");
 
-                    b.HasKey("role_id");
+                    b.Property<bool>("PaidRole")
+                        .HasColumnType("boolean");
 
-                    b.ToTable("people_roles");
+                    b.HasKey("Id");
+
+                    b.ToTable("Roles");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("58d25d4c-3b3a-4f52-b282-48e0f458fb79"),
+                            CanAccess = false,
+                            DateCreated = new DateTime(2024, 6, 28, 11, 22, 55, 916, DateTimeKind.Utc).AddTicks(2260),
+                            HourlyRate = 0.00m,
+                            Identifier = "R1",
+                            Name = "Degree",
+                            PaidRole = false
+                        },
+                        new
+                        {
+                            Id = new Guid("68b4d362-9271-4f9f-aa7b-6a9b1953dc3c"),
+                            CanAccess = false,
+                            DateCreated = new DateTime(2024, 6, 28, 11, 22, 55, 916, DateTimeKind.Utc).AddTicks(2270),
+                            HourlyRate = 20.00m,
+                            Identifier = "R2",
+                            Name = "Lecturer",
+                            PaidRole = true
+                        },
+                        new
+                        {
+                            Id = new Guid("a1b2c3d4-e5f6-7a89-b0c1-2d3e4f567890"),
+                            CanAccess = true,
+                            DateCreated = new DateTime(2024, 6, 28, 11, 22, 55, 916, DateTimeKind.Utc).AddTicks(2270),
+                            HourlyRate = 50.00m,
+                            Identifier = "R3",
+                            Name = "Admin",
+                            PaidRole = false
+                        },
+                        new
+                        {
+                            Id = new Guid("a9e3c834-7182-4b3a-80e2-b28a9a7bce42"),
+                            CanAccess = false,
+                            DateCreated = new DateTime(2024, 6, 28, 11, 22, 55, 916, DateTimeKind.Utc).AddTicks(2270),
+                            HourlyRate = 0.00m,
+                            Identifier = "R4",
+                            Name = "Certificate",
+                            PaidRole = false
+                        });
                 });
 
-            modelBuilder.Entity("UniVerServer.Models.StudentCourses", b =>
+            modelBuilder.Entity("UniVerServer.Subjects.Models.Subject", b =>
                 {
-                    b.Property<string>("grade_id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<bool>("Active")
+                        .HasColumnType("boolean");
+
+                    b.Property<int>("ClassDayIntervals")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("ClassRepitions")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("ClassRuntime")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("ColorHex")
+                        .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("facilitator_id")
+                    b.Property<decimal>("Cost")
+                        .HasColumnType("numeric");
+
+                    b.Property<int>("Credits")
                         .HasColumnType("integer");
 
-                    b.Property<int>("grade")
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("DateModified")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Identifier")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Image")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("LecturerId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("Type")
                         .HasColumnType("integer");
 
-                    b.Property<int>("student_id")
+                    b.Property<int>("Year")
                         .HasColumnType("integer");
 
-                    b.Property<int>("subject_id")
-                        .HasColumnType("integer");
+                    b.HasKey("Id");
 
-                    b.HasKey("grade_id");
+                    b.HasIndex("LecturerId");
 
-                    b.HasIndex("facilitator_id");
+                    b.ToTable("Subjects");
 
-                    b.HasIndex("student_id");
-
-                    b.HasIndex("subject_id");
-
-                    b.ToTable("student_grades");
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("28384e02-4ac9-4098-89b7-405c465c730e"),
+                            Active = true,
+                            ClassDayIntervals = 7,
+                            ClassRepitions = 8,
+                            ClassRuntime = 120,
+                            ColorHex = "#000000",
+                            Cost = 13000.00m,
+                            Credits = 60,
+                            DateCreated = new DateTime(2024, 6, 28, 11, 22, 55, 916, DateTimeKind.Utc).AddTicks(2500),
+                            DateModified = new DateTime(2024, 6, 28, 11, 22, 55, 916, DateTimeKind.Utc).AddTicks(2500),
+                            Description = "Delve into the world of programming websites with Interactive Development blah blah blah",
+                            Identifier = "IDV100",
+                            Image = "http://example.com/interactive-development.jpg",
+                            LecturerId = new Guid("59332d00-80a2-446c-afca-00a3160c0764"),
+                            Name = "Interactive Development",
+                            Type = 2,
+                            Year = 1
+                        },
+                        new
+                        {
+                            Id = new Guid("2c5240e9-d233-45bb-8d9b-8d6e709b2937"),
+                            Active = true,
+                            ClassDayIntervals = 14,
+                            ClassRepitions = 10,
+                            ClassRuntime = 150,
+                            ColorHex = "#FF5733",
+                            Cost = 15000.00m,
+                            Credits = 70,
+                            DateCreated = new DateTime(2024, 6, 28, 11, 22, 55, 916, DateTimeKind.Utc).AddTicks(2510),
+                            DateModified = new DateTime(2024, 6, 28, 11, 22, 55, 916, DateTimeKind.Utc).AddTicks(2510),
+                            Description = "Learn about the fundamental data structures and algorithms used in computer science blah blah blah",
+                            Identifier = "DSA200",
+                            Image = "http://example.com/data-structures.jpg",
+                            LecturerId = new Guid("59332d00-80a2-446c-afca-00a3160c0764"),
+                            Name = "Data Structures and Algorithms",
+                            Type = 2,
+                            Year = 2
+                        },
+                        new
+                        {
+                            Id = new Guid("2ebc8d73-d02a-4c97-990a-6793dd0c7386"),
+                            Active = true,
+                            ClassDayIntervals = 10,
+                            ClassRepitions = 12,
+                            ClassRuntime = 180,
+                            ColorHex = "#33FF57",
+                            Cost = 17000.00m,
+                            Credits = 80,
+                            DateCreated = new DateTime(2024, 6, 28, 11, 22, 55, 916, DateTimeKind.Utc).AddTicks(2510),
+                            DateModified = new DateTime(2024, 6, 28, 11, 22, 55, 916, DateTimeKind.Utc).AddTicks(2510),
+                            Description = "Explore the concepts and applications of Artificial Intelligence in various fields blah blah blah",
+                            Identifier = "AI304",
+                            Image = "http://example.com/ai.jpg",
+                            LecturerId = new Guid("59332d00-80a2-446c-afca-00a3160c0764"),
+                            Name = "Artificial Intelligence",
+                            Type = 1,
+                            Year = 3
+                        },
+                        new
+                        {
+                            Id = new Guid("2ebd49a2-8d97-4885-832b-8b2f950cbbd3"),
+                            Active = true,
+                            ClassDayIntervals = 12,
+                            ClassRepitions = 9,
+                            ClassRuntime = 130,
+                            ColorHex = "#3357FF",
+                            Cost = 14000.00m,
+                            Credits = 65,
+                            DateCreated = new DateTime(2024, 6, 28, 11, 22, 55, 916, DateTimeKind.Utc).AddTicks(2520),
+                            DateModified = new DateTime(2024, 6, 28, 11, 22, 55, 916, DateTimeKind.Utc).AddTicks(2520),
+                            Description = "Understand the principles of database design and management blah blah blah",
+                            Identifier = "DMS210",
+                            Image = "http://example.com/dbms.jpg",
+                            LecturerId = new Guid("4cfdf887-baf3-4847-a68a-18e7117beddc"),
+                            Name = "Database Management Systems",
+                            Type = 2,
+                            Year = 2
+                        },
+                        new
+                        {
+                            Id = new Guid("37d7ded2-6d83-4b49-ab75-f0bf5209589f"),
+                            Active = true,
+                            ClassDayIntervals = 9,
+                            ClassRepitions = 11,
+                            ClassRuntime = 160,
+                            ColorHex = "#FF33A5",
+                            Cost = 16000.00m,
+                            Credits = 75,
+                            DateCreated = new DateTime(2024, 6, 28, 11, 22, 55, 916, DateTimeKind.Utc).AddTicks(2520),
+                            DateModified = new DateTime(2024, 6, 28, 11, 22, 55, 916, DateTimeKind.Utc).AddTicks(2520),
+                            Description = "Gain insights into the software development lifecycle and methodologies blah blah blah",
+                            Identifier = "SE300",
+                            Image = "http://example.com/software-engineering.jpg",
+                            LecturerId = new Guid("4cfdf887-baf3-4847-a68a-18e7117beddc"),
+                            Name = "Software Engineering",
+                            Type = 2,
+                            Year = 3
+                        },
+                        new
+                        {
+                            Id = new Guid("39fe9dbe-592b-440c-8c80-686f5dd47327"),
+                            Active = true,
+                            ClassDayIntervals = 8,
+                            ClassRepitions = 7,
+                            ClassRuntime = 110,
+                            ColorHex = "#33FFB2",
+                            Cost = 12000.00m,
+                            Credits = 55,
+                            DateCreated = new DateTime(2024, 6, 28, 11, 22, 55, 916, DateTimeKind.Utc).AddTicks(2520),
+                            DateModified = new DateTime(2024, 6, 28, 11, 22, 55, 916, DateTimeKind.Utc).AddTicks(2520),
+                            Description = "Learn the fundamentals of computer networking and protocols blah blah blah",
+                            Identifier = "CNS200",
+                            Image = "http://example.com/networks.jpg",
+                            LecturerId = new Guid("4cfdf887-baf3-4847-a68a-18e7117beddc"),
+                            Name = "Computer Networks",
+                            Type = 2,
+                            Year = 1
+                        },
+                        new
+                        {
+                            Id = new Guid("45a5b291-98f8-4876-860a-99b918a1d24f"),
+                            Active = true,
+                            ClassDayIntervals = 6,
+                            ClassRepitions = 14,
+                            ClassRuntime = 200,
+                            ColorHex = "#FF9933",
+                            Cost = 18000.00m,
+                            Credits = 85,
+                            DateCreated = new DateTime(2024, 6, 28, 11, 22, 55, 916, DateTimeKind.Utc).AddTicks(2530),
+                            DateModified = new DateTime(2024, 6, 28, 11, 22, 55, 916, DateTimeKind.Utc).AddTicks(2530),
+                            Description = "Understand the key concepts and practices in cybersecurity blah blah blah",
+                            Identifier = "CS303",
+                            Image = "http://example.com/cybersecurity.jpg",
+                            LecturerId = new Guid("59332d00-80a2-446c-afca-00a3160c0764"),
+                            Name = "Cybersecurity",
+                            Type = 1,
+                            Year = 3
+                        });
                 });
 
-            modelBuilder.Entity("UniVerServer.Models.Subjects", b =>
+            modelBuilder.Entity("UniVerServer.Users.Models.Users", b =>
                 {
-                    b.Property<int>("subject_id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("uuid");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("subject_id"));
+                    b.Property<bool>("Active")
+                        .HasColumnType("boolean");
 
-                    b.Property<int>("person_id")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("subjectImage")
+                    b.Property<string>("ContactNumber")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("subject_class_amount")
+                    b.Property<int>("Credits")
                         .HasColumnType("integer");
 
-                    b.Property<int>("subject_class_runtiem")
-                        .HasColumnType("integer");
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("subject_code")
+                    b.Property<string>("FirstNames")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("subject_color")
+                    b.Property<string>("Identifier")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("subject_cost")
+                    b.Property<string>("IdentityNumber")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("IssuedEmail")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("LastNames")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("ModifiedDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("PasswordModifiedDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("PersonalEmail")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("ProfileImage")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("RequiredCredits")
                         .HasColumnType("integer");
 
-                    b.Property<int>("subject_credits")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("RoleId")
+                        .HasColumnType("uuid");
 
-                    b.Property<string>("subject_description")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.HasKey("Id");
 
-                    b.Property<string>("subject_name")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.HasIndex("RoleId");
 
-                    b.HasKey("subject_id");
+                    b.ToTable("Users");
 
-                    b.HasIndex("person_id");
-
-                    b.ToTable("subjects");
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("14d52b1e-f5b3-4750-b327-56ddadbd1f78"),
+                            Active = true,
+                            ContactNumber = "0825678132",
+                            Credits = 0,
+                            DateCreated = new DateTime(2024, 6, 28, 11, 22, 55, 916, DateTimeKind.Utc).AddTicks(2380),
+                            FirstNames = "Leander",
+                            Identifier = "200211",
+                            IdentityNumber = "0103265065088",
+                            IssuedEmail = "200211@virtualwindow.co.za",
+                            LastNames = "van Aarde",
+                            ModifiedDate = new DateTime(2024, 6, 28, 11, 22, 55, 916, DateTimeKind.Utc).AddTicks(2380),
+                            Password = "Password2",
+                            PasswordModifiedDate = new DateTime(2024, 6, 28, 11, 22, 55, 916, DateTimeKind.Utc).AddTicks(2380),
+                            PersonalEmail = "Leander.vaonline@gmail.com",
+                            ProfileImage = "http://example.com/leander1.jpg",
+                            RequiredCredits = 360,
+                            RoleId = new Guid("58d25d4c-3b3a-4f52-b282-48e0f458fb79")
+                        },
+                        new
+                        {
+                            Id = new Guid("2881e5ba-daad-41f9-92f2-9d67dcc0bd00"),
+                            Active = true,
+                            ContactNumber = "0834567890",
+                            Credits = 50,
+                            DateCreated = new DateTime(2024, 6, 28, 11, 22, 55, 916, DateTimeKind.Utc).AddTicks(2380),
+                            FirstNames = "Alex",
+                            Identifier = "210312",
+                            IdentityNumber = "0204157890123",
+                            IssuedEmail = "210312@virtualwindow.co.za",
+                            LastNames = "Petterson",
+                            ModifiedDate = new DateTime(2024, 6, 28, 11, 22, 55, 916, DateTimeKind.Utc).AddTicks(2380),
+                            Password = "Password2",
+                            PasswordModifiedDate = new DateTime(2024, 6, 28, 11, 22, 55, 916, DateTimeKind.Utc).AddTicks(2380),
+                            PersonalEmail = "alex.online@gmail.com",
+                            ProfileImage = "http://example.com/alex1.jpg",
+                            RequiredCredits = 400,
+                            RoleId = new Guid("58d25d4c-3b3a-4f52-b282-48e0f458fb79")
+                        },
+                        new
+                        {
+                            Id = new Guid("497223a1-720a-408e-8a07-cfa7e48655b3"),
+                            Active = true,
+                            ContactNumber = "0845678901",
+                            Credits = 100,
+                            DateCreated = new DateTime(2024, 6, 28, 11, 22, 55, 916, DateTimeKind.Utc).AddTicks(2390),
+                            FirstNames = "Jamie",
+                            Identifier = "220513",
+                            IdentityNumber = "0305278901234",
+                            IssuedEmail = "220513@virtualwindow.co.za",
+                            LastNames = "Oliver",
+                            ModifiedDate = new DateTime(2024, 6, 28, 11, 22, 55, 916, DateTimeKind.Utc).AddTicks(2380),
+                            Password = "Password2",
+                            PasswordModifiedDate = new DateTime(2024, 6, 28, 11, 22, 55, 916, DateTimeKind.Utc).AddTicks(2390),
+                            PersonalEmail = "jamie.online@gmail.com",
+                            ProfileImage = "http://example.com/jamie1.jpg",
+                            RequiredCredits = 500,
+                            RoleId = new Guid("58d25d4c-3b3a-4f52-b282-48e0f458fb79")
+                        },
+                        new
+                        {
+                            Id = new Guid("49b27cdd-b59f-4a26-80a4-6f7a1c1b2fd7"),
+                            Active = true,
+                            ContactNumber = "0856789012",
+                            Credits = 360,
+                            DateCreated = new DateTime(2024, 6, 28, 11, 22, 55, 916, DateTimeKind.Utc).AddTicks(2390),
+                            FirstNames = "Taylor",
+                            Identifier = "230614",
+                            IdentityNumber = "0406389012345",
+                            IssuedEmail = "taylor.230614@virtualwindow.co.za",
+                            LastNames = "Swiftee",
+                            ModifiedDate = new DateTime(2024, 6, 28, 11, 22, 55, 916, DateTimeKind.Utc).AddTicks(2390),
+                            Password = "Password2",
+                            PasswordModifiedDate = new DateTime(2024, 6, 28, 11, 22, 55, 916, DateTimeKind.Utc).AddTicks(2390),
+                            PersonalEmail = "taylor.online@gmail.com",
+                            ProfileImage = "http://example.com/taylor1.jpg",
+                            RequiredCredits = 360,
+                            RoleId = new Guid("68b4d362-9271-4f9f-aa7b-6a9b1953dc3c")
+                        },
+                        new
+                        {
+                            Id = new Guid("4cfdf887-baf3-4847-a68a-18e7117beddc"),
+                            Active = true,
+                            ContactNumber = "0867890123",
+                            Credits = 360,
+                            DateCreated = new DateTime(2024, 6, 28, 11, 22, 55, 916, DateTimeKind.Utc).AddTicks(2390),
+                            FirstNames = "Morgan",
+                            Identifier = "240715",
+                            IdentityNumber = "0507490123456",
+                            IssuedEmail = "morgan.240715@virtualwindow.co.za",
+                            LastNames = "Freeman",
+                            ModifiedDate = new DateTime(2024, 6, 28, 11, 22, 55, 916, DateTimeKind.Utc).AddTicks(2390),
+                            Password = "Password2",
+                            PasswordModifiedDate = new DateTime(2024, 6, 28, 11, 22, 55, 916, DateTimeKind.Utc).AddTicks(2390),
+                            PersonalEmail = "morgan.online@gmail.com",
+                            ProfileImage = "http://example.com/morgan1.jpg",
+                            RequiredCredits = 360,
+                            RoleId = new Guid("68b4d362-9271-4f9f-aa7b-6a9b1953dc3c")
+                        },
+                        new
+                        {
+                            Id = new Guid("59332d00-80a2-446c-afca-00a3160c0764"),
+                            Active = true,
+                            ContactNumber = "0878901234",
+                            Credits = 360,
+                            DateCreated = new DateTime(2024, 6, 28, 11, 22, 55, 916, DateTimeKind.Utc).AddTicks(2400),
+                            FirstNames = "Jordan",
+                            Identifier = "250816",
+                            IdentityNumber = "0608501234567",
+                            IssuedEmail = "jordan.250816@virtualwindow.co.za",
+                            LastNames = "Michael",
+                            ModifiedDate = new DateTime(2024, 6, 28, 11, 22, 55, 916, DateTimeKind.Utc).AddTicks(2400),
+                            Password = "Password2",
+                            PasswordModifiedDate = new DateTime(2024, 6, 28, 11, 22, 55, 916, DateTimeKind.Utc).AddTicks(2400),
+                            PersonalEmail = "jordan.online@gmail.com",
+                            ProfileImage = "http://example.com/jordan1.jpg",
+                            RequiredCredits = 360,
+                            RoleId = new Guid("68b4d362-9271-4f9f-aa7b-6a9b1953dc3c")
+                        });
                 });
 
-            modelBuilder.Entity("UniVerServer.Models.CourseEnrollments", b =>
+            modelBuilder.Entity("UniVerServer.Courses.Models.Course", b =>
                 {
-                    b.HasOne("UniVerServer.Models.Subjects", "Subjects")
+                    b.HasOne("UniVerServer.Subjects.Models.Subject", "Subject")
                         .WithMany()
-                        .HasForeignKey("subject_id")
+                        .HasForeignKey("SubjectId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Subjects");
+                    b.Navigation("Subject");
                 });
 
-            modelBuilder.Entity("UniVerServer.Models.Events", b =>
+            modelBuilder.Entity("UniVerServer.Enrollments.Models.Enrollment", b =>
                 {
-                    b.HasOne("UniVerServer.Models.People", "staff_organiser")
+                    b.HasOne("UniVerServer.Courses.Models.Course", "Course")
                         .WithMany()
-                        .HasForeignKey("person_system_identifier")
+                        .HasForeignKey("CourseId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("staff_organiser");
+                    b.HasOne("UniVerServer.Users.Models.Users", "Student")
+                        .WithMany()
+                        .HasForeignKey("StudentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Course");
+
+                    b.Navigation("Student");
                 });
 
-            modelBuilder.Entity("UniVerServer.Models.MadePayments", b =>
+            modelBuilder.Entity("UniVerServer.Events.Models.Event", b =>
                 {
-                    b.HasOne("UniVerServer.Models.People", "student_id")
+                    b.HasOne("UniVerServer.Users.Models.Users", "Organiser")
                         .WithMany()
-                        .HasForeignKey("person_system_identifier")
+                        .HasForeignKey("OrganiserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("student_id");
+                    b.Navigation("Organiser");
                 });
 
-            modelBuilder.Entity("UniVerServer.Models.OutStandingStudentFees", b =>
+            modelBuilder.Entity("UniVerServer.Subjects.Models.Subject", b =>
                 {
-                    b.HasOne("UniVerServer.Models.People", "student_id")
+                    b.HasOne("UniVerServer.Users.Models.Users", "Lecturer")
                         .WithMany()
-                        .HasForeignKey("person_system_identifier")
+                        .HasForeignKey("LecturerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("student_id");
+                    b.Navigation("Lecturer");
                 });
 
-            modelBuilder.Entity("UniVerServer.Models.People", b =>
+            modelBuilder.Entity("UniVerServer.Users.Models.Users", b =>
                 {
-                    b.HasOne("UniVerServer.Models.Address", "Address")
+                    b.HasOne("UniVerServer.Roles.Models.Roles", "Role")
                         .WithMany()
-                        .HasForeignKey("address_id")
+                        .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("UniVerServer.Models.Roles", "role")
-                        .WithMany()
-                        .HasForeignKey("role_id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Address");
-
-                    b.Navigation("role");
-                });
-
-            modelBuilder.Entity("UniVerServer.Models.StudentCourses", b =>
-                {
-                    b.HasOne("UniVerServer.Models.People", "facilitator")
-                        .WithMany()
-                        .HasForeignKey("facilitator_id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("UniVerServer.Models.People", "student")
-                        .WithMany()
-                        .HasForeignKey("student_id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("UniVerServer.Models.Subjects", "subject")
-                        .WithMany()
-                        .HasForeignKey("subject_id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("facilitator");
-
-                    b.Navigation("student");
-
-                    b.Navigation("subject");
-                });
-
-            modelBuilder.Entity("UniVerServer.Models.Subjects", b =>
-                {
-                    b.HasOne("UniVerServer.Models.People", "lecturer_id")
-                        .WithMany()
-                        .HasForeignKey("person_id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("lecturer_id");
+                    b.Navigation("Role");
                 });
 #pragma warning restore 612, 618
         }
