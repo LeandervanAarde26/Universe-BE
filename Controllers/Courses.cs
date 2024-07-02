@@ -1,4 +1,3 @@
-using System.Collections;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using UniVerServer.Abstractions;
@@ -18,6 +17,10 @@ using UniVerServer.Courses.Queries.GetCourses;
 using UniVerServer.Courses.Queries.GetCoursesAcceptingStudents;
 
 namespace UniVerServer.Controllers;
+/*
+ TODO:
+    FIX MAPPING!!!
+ */
 
 [Route("api/[controller]")]
 [ApiController]
@@ -95,9 +98,4 @@ public class Courses(IMediator mediator) : BaseController(mediator)
         response.HandleResponse(await mediator.Send(new PurgeCourseCommand(Guid.Parse(id))));
 }
 
-/*
- TODO:
 
-    AUTH MIDDLEWARE 
-    FIX MAPPING!!!
- */

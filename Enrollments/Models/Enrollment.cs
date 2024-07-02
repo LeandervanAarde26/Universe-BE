@@ -14,4 +14,6 @@ public class Enrollment : BaseModel
     public decimal Grade { get; set; }
     public GradeType GradeType { get; set; }
     public DateTime Modified { get; set; }
+
+    public bool ActiveEnrollment { get; set; } = false;
 }
