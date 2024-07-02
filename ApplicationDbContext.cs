@@ -9,7 +9,6 @@ using UniVerServer.Enrollments.Models;
 using UniVerServer.Enrollments.Seed;
 using UniVerServer.Events.Models;
 using UniVerServer.Events.Seed;
-using UniVerServer.Models;
 using UniVerServer.Roles.Seed;
 using UniVerServer.Seed;
 using UniVerServer.Subjects.Models;
