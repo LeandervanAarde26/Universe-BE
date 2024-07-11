@@ -25,6 +25,7 @@ public class GetCoursesQueryHandler(ApplicationDbContext context): BaseHandler(c
                     // Subject information
                     Subject = new SubjectInCourseDto
                     {
+                        Id = x.SubjectId,
                         SubjectName = x.Subject.Name,
                         SubjectCredits = x.Subject.Credits,
                         SubjectYear = x.Subject.Year,

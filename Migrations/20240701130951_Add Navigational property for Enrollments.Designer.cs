@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using UniVerServer;
@@ -11,9 +12,11 @@ using UniVerServer;
 namespace UniVerServer.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240701130951_Add Navigational property for Enrollments")]
+    partial class AddNavigationalpropertyforEnrollments
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -62,10 +65,10 @@ namespace UniVerServer.Migrations
                             Id = new Guid("f8a259ab-d2f3-482e-9074-842b4a097e27"),
                             AcceptingStudents = false,
                             Active = false,
-                            DateCreated = new DateTime(2024, 7, 2, 7, 0, 34, 841, DateTimeKind.Utc).AddTicks(8630),
-                            EndDate = new DateTime(2024, 12, 31, 7, 0, 34, 841, DateTimeKind.Utc).AddTicks(8640),
+                            DateCreated = new DateTime(2024, 7, 1, 13, 9, 51, 718, DateTimeKind.Utc).AddTicks(7550),
+                            EndDate = new DateTime(2024, 10, 29, 13, 9, 51, 718, DateTimeKind.Utc).AddTicks(7560),
                             Identifier = "VOID",
-                            StartDate = new DateTime(2024, 10, 2, 7, 0, 34, 841, DateTimeKind.Utc).AddTicks(8640),
+                            StartDate = new DateTime(2024, 7, 1, 13, 9, 51, 718, DateTimeKind.Utc).AddTicks(7550),
                             SubjectId = new Guid("28384e02-4ac9-4098-89b7-405c465c730e")
                         },
                         new
@@ -73,10 +76,10 @@ namespace UniVerServer.Migrations
                             Id = new Guid("6c058d67-4d10-4fa6-8d6a-4f8b8c5a3a5e"),
                             AcceptingStudents = false,
                             Active = false,
-                            DateCreated = new DateTime(2024, 7, 2, 7, 0, 34, 841, DateTimeKind.Utc).AddTicks(8650),
-                            EndDate = new DateTime(2024, 10, 30, 7, 0, 34, 841, DateTimeKind.Utc).AddTicks(8650),
+                            DateCreated = new DateTime(2024, 7, 1, 13, 9, 51, 718, DateTimeKind.Utc).AddTicks(7560),
+                            EndDate = new DateTime(2024, 11, 29, 13, 9, 51, 718, DateTimeKind.Utc).AddTicks(7570),
                             Identifier = "VOID",
-                            StartDate = new DateTime(2024, 10, 2, 7, 0, 34, 841, DateTimeKind.Utc).AddTicks(8650),
+                            StartDate = new DateTime(2024, 10, 1, 13, 9, 51, 718, DateTimeKind.Utc).AddTicks(7570),
                             SubjectId = new Guid("2c5240e9-d233-45bb-8d9b-8d6e709b2937")
                         },
                         new
@@ -84,10 +87,10 @@ namespace UniVerServer.Migrations
                             Id = new Guid("9fcbf95d-89a4-4e19-a828-3baf4aa75ec0"),
                             AcceptingStudents = false,
                             Active = false,
-                            DateCreated = new DateTime(2024, 7, 2, 7, 0, 34, 841, DateTimeKind.Utc).AddTicks(8650),
-                            EndDate = new DateTime(2024, 10, 30, 7, 0, 34, 841, DateTimeKind.Utc).AddTicks(8660),
+                            DateCreated = new DateTime(2024, 7, 1, 13, 9, 51, 718, DateTimeKind.Utc).AddTicks(7570),
+                            EndDate = new DateTime(2025, 1, 29, 13, 9, 51, 718, DateTimeKind.Utc).AddTicks(7580),
                             Identifier = "VOID",
-                            StartDate = new DateTime(2024, 7, 2, 7, 0, 34, 841, DateTimeKind.Utc).AddTicks(8660),
+                            StartDate = new DateTime(2024, 7, 1, 13, 9, 51, 718, DateTimeKind.Utc).AddTicks(7570),
                             SubjectId = new Guid("2ebd49a2-8d97-4885-832b-8b2f950cbbd3")
                         },
                         new
@@ -95,10 +98,10 @@ namespace UniVerServer.Migrations
                             Id = new Guid("d3a2f2f0-8e7e-42e1-9f70-61f2a8c0b5ea"),
                             AcceptingStudents = false,
                             Active = false,
-                            DateCreated = new DateTime(2024, 7, 2, 7, 0, 34, 841, DateTimeKind.Utc).AddTicks(8660),
-                            EndDate = new DateTime(2024, 10, 30, 7, 0, 34, 841, DateTimeKind.Utc).AddTicks(8670),
+                            DateCreated = new DateTime(2024, 7, 1, 13, 9, 51, 718, DateTimeKind.Utc).AddTicks(7580),
+                            EndDate = new DateTime(2025, 1, 29, 13, 9, 51, 718, DateTimeKind.Utc).AddTicks(7580),
                             Identifier = "VOID",
-                            StartDate = new DateTime(2024, 9, 2, 7, 0, 34, 841, DateTimeKind.Utc).AddTicks(8660),
+                            StartDate = new DateTime(2024, 9, 1, 13, 9, 51, 718, DateTimeKind.Utc).AddTicks(7580),
                             SubjectId = new Guid("2ebc8d73-d02a-4c97-990a-6793dd0c7386")
                         },
                         new
@@ -106,10 +109,10 @@ namespace UniVerServer.Migrations
                             Id = new Guid("adff5e28-7a2d-4f71-8c1b-0b6d59a82390"),
                             AcceptingStudents = false,
                             Active = false,
-                            DateCreated = new DateTime(2024, 7, 2, 7, 0, 34, 841, DateTimeKind.Utc).AddTicks(8670),
-                            EndDate = new DateTime(2024, 10, 30, 7, 0, 34, 841, DateTimeKind.Utc).AddTicks(8670),
+                            DateCreated = new DateTime(2024, 7, 1, 13, 9, 51, 718, DateTimeKind.Utc).AddTicks(7590),
+                            EndDate = new DateTime(2024, 12, 30, 13, 9, 51, 718, DateTimeKind.Utc).AddTicks(7590),
                             Identifier = "VOID",
-                            StartDate = new DateTime(2024, 10, 2, 7, 0, 34, 841, DateTimeKind.Utc).AddTicks(8670),
+                            StartDate = new DateTime(2024, 8, 1, 13, 9, 51, 718, DateTimeKind.Utc).AddTicks(7590),
                             SubjectId = new Guid("2ebd49a2-8d97-4885-832b-8b2f950cbbd3")
                         },
                         new
@@ -117,10 +120,10 @@ namespace UniVerServer.Migrations
                             Id = new Guid("7a3b56c6-1090-4f14-973f-b9b9d4b707cb"),
                             AcceptingStudents = false,
                             Active = false,
-                            DateCreated = new DateTime(2024, 7, 2, 7, 0, 34, 841, DateTimeKind.Utc).AddTicks(8680),
-                            EndDate = new DateTime(2025, 1, 30, 7, 0, 34, 841, DateTimeKind.Utc).AddTicks(8680),
+                            DateCreated = new DateTime(2024, 7, 1, 13, 9, 51, 718, DateTimeKind.Utc).AddTicks(7590),
+                            EndDate = new DateTime(2024, 12, 30, 13, 9, 51, 718, DateTimeKind.Utc).AddTicks(7600),
                             Identifier = "VOID",
-                            StartDate = new DateTime(2024, 9, 2, 7, 0, 34, 841, DateTimeKind.Utc).AddTicks(8680),
+                            StartDate = new DateTime(2024, 9, 1, 13, 9, 51, 718, DateTimeKind.Utc).AddTicks(7600),
                             SubjectId = new Guid("37d7ded2-6d83-4b49-ab75-f0bf5209589f")
                         });
                 });
@@ -130,9 +133,6 @@ namespace UniVerServer.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
-
-                    b.Property<bool>("ActiveEnrollment")
-                        .HasColumnType("boolean");
 
                     b.Property<Guid>("CourseId")
                         .HasColumnType("uuid");
@@ -170,66 +170,61 @@ namespace UniVerServer.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("ecfeac10-df89-4493-9e92-1cdf58974681"),
-                            ActiveEnrollment = false,
+                            Id = new Guid("7b14087d-b77a-45c1-a058-d3c6881cad8f"),
                             CourseId = new Guid("f8a259ab-d2f3-482e-9074-842b4a097e27"),
-                            DateCreated = new DateTime(2024, 7, 2, 7, 0, 34, 841, DateTimeKind.Utc).AddTicks(8740),
+                            DateCreated = new DateTime(2024, 7, 1, 13, 9, 51, 718, DateTimeKind.Utc).AddTicks(7660),
                             Grade = 0.00m,
                             GradeType = 3,
                             Identifier = "VOID",
-                            Modified = new DateTime(2024, 7, 2, 7, 0, 34, 841, DateTimeKind.Utc).AddTicks(8740),
+                            Modified = new DateTime(2024, 7, 1, 13, 9, 51, 718, DateTimeKind.Utc).AddTicks(7660),
                             Status = 1,
                             StudentId = new Guid("14d52b1e-f5b3-4750-b327-56ddadbd1f78")
                         },
                         new
                         {
-                            Id = new Guid("2e21fea4-a805-4983-960f-8bdbcc5a8f30"),
-                            ActiveEnrollment = false,
+                            Id = new Guid("4a99476f-5e3f-433d-8b2c-3c981e4b7fe8"),
                             CourseId = new Guid("6c058d67-4d10-4fa6-8d6a-4f8b8c5a3a5e"),
-                            DateCreated = new DateTime(2024, 7, 2, 7, 0, 34, 841, DateTimeKind.Utc).AddTicks(8750),
+                            DateCreated = new DateTime(2024, 7, 1, 13, 9, 51, 718, DateTimeKind.Utc).AddTicks(7670),
                             Grade = 0.00m,
                             GradeType = 3,
                             Identifier = "VOID",
-                            Modified = new DateTime(2024, 7, 2, 7, 0, 34, 841, DateTimeKind.Utc).AddTicks(8750),
+                            Modified = new DateTime(2024, 7, 1, 13, 9, 51, 718, DateTimeKind.Utc).AddTicks(7670),
                             Status = 1,
                             StudentId = new Guid("14d52b1e-f5b3-4750-b327-56ddadbd1f78")
                         },
                         new
                         {
-                            Id = new Guid("193ed8a8-fce2-40dd-9aee-dadd4a5d7f85"),
-                            ActiveEnrollment = false,
+                            Id = new Guid("68cb58ab-8dd3-48e5-a3b9-333c63b5ee2e"),
                             CourseId = new Guid("9fcbf95d-89a4-4e19-a828-3baf4aa75ec0"),
-                            DateCreated = new DateTime(2024, 7, 2, 7, 0, 34, 841, DateTimeKind.Utc).AddTicks(8750),
+                            DateCreated = new DateTime(2024, 7, 1, 13, 9, 51, 718, DateTimeKind.Utc).AddTicks(7670),
                             Grade = 0.00m,
                             GradeType = 3,
                             Identifier = "VOID",
-                            Modified = new DateTime(2024, 7, 2, 7, 0, 34, 841, DateTimeKind.Utc).AddTicks(8750),
+                            Modified = new DateTime(2024, 7, 1, 13, 9, 51, 718, DateTimeKind.Utc).AddTicks(7670),
                             Status = 1,
                             StudentId = new Guid("14d52b1e-f5b3-4750-b327-56ddadbd1f78")
                         },
                         new
                         {
-                            Id = new Guid("56d3990a-9898-4b24-9d64-1e25bba49990"),
-                            ActiveEnrollment = false,
+                            Id = new Guid("867556a3-71b2-4433-b708-98ed32f39ee5"),
                             CourseId = new Guid("d3a2f2f0-8e7e-42e1-9f70-61f2a8c0b5ea"),
-                            DateCreated = new DateTime(2024, 7, 2, 7, 0, 34, 841, DateTimeKind.Utc).AddTicks(8760),
+                            DateCreated = new DateTime(2024, 7, 1, 13, 9, 51, 718, DateTimeKind.Utc).AddTicks(7680),
                             Grade = 0.00m,
                             GradeType = 3,
                             Identifier = "VOID",
-                            Modified = new DateTime(2024, 7, 2, 7, 0, 34, 841, DateTimeKind.Utc).AddTicks(8760),
+                            Modified = new DateTime(2024, 7, 1, 13, 9, 51, 718, DateTimeKind.Utc).AddTicks(7680),
                             Status = 1,
                             StudentId = new Guid("14d52b1e-f5b3-4750-b327-56ddadbd1f78")
                         },
                         new
                         {
-                            Id = new Guid("2f506fcd-39f6-44d0-b751-31c89c336bfd"),
-                            ActiveEnrollment = false,
+                            Id = new Guid("c260b6f1-5ae7-4066-90e1-1fc6696f0d38"),
                             CourseId = new Guid("adff5e28-7a2d-4f71-8c1b-0b6d59a82390"),
-                            DateCreated = new DateTime(2024, 7, 2, 7, 0, 34, 841, DateTimeKind.Utc).AddTicks(8760),
+                            DateCreated = new DateTime(2024, 7, 1, 13, 9, 51, 718, DateTimeKind.Utc).AddTicks(7680),
                             Grade = 0.00m,
                             GradeType = 3,
                             Identifier = "VOID",
-                            Modified = new DateTime(2024, 7, 2, 7, 0, 34, 841, DateTimeKind.Utc).AddTicks(8760),
+                            Modified = new DateTime(2024, 7, 1, 13, 9, 51, 718, DateTimeKind.Utc).AddTicks(7680),
                             Status = 1,
                             StudentId = new Guid("2881e5ba-daad-41f9-92f2-9d67dcc0bd00")
                         });
@@ -279,8 +274,8 @@ namespace UniVerServer.Migrations
                         new
                         {
                             Id = new Guid("3f1a17e5-1c8e-4f6b-a5f7-27c5e9d6a41d"),
-                            Date = new DateTime(2024, 7, 2, 7, 0, 34, 841, DateTimeKind.Utc).AddTicks(8500),
-                            DateCreated = new DateTime(2024, 7, 2, 7, 0, 34, 841, DateTimeKind.Utc).AddTicks(8500),
+                            Date = new DateTime(2024, 9, 1, 13, 9, 51, 718, DateTimeKind.Utc).AddTicks(7390),
+                            DateCreated = new DateTime(2024, 7, 1, 13, 9, 51, 718, DateTimeKind.Utc).AddTicks(7390),
                             Description = "Come join us at our open day and explore our winter programs and activities.",
                             Identifier = "VOID",
                             Name = "Open Day - Winter",
@@ -291,8 +286,8 @@ namespace UniVerServer.Migrations
                         new
                         {
                             Id = new Guid("a2b92fe1-5918-42f4-957a-0e57c7b3e38b"),
-                            Date = new DateTime(2024, 10, 2, 7, 0, 34, 841, DateTimeKind.Utc).AddTicks(8560),
-                            DateCreated = new DateTime(2024, 7, 2, 7, 0, 34, 841, DateTimeKind.Utc).AddTicks(8550),
+                            Date = new DateTime(2024, 7, 1, 13, 9, 51, 718, DateTimeKind.Utc).AddTicks(7460),
+                            DateCreated = new DateTime(2024, 7, 1, 13, 9, 51, 718, DateTimeKind.Utc).AddTicks(7460),
                             Description = "Come join us at our open day and see what we have planned for the spring semester.",
                             Identifier = "VOID",
                             Name = "Open Day - Spring",
@@ -303,8 +298,8 @@ namespace UniVerServer.Migrations
                         new
                         {
                             Id = new Guid("5d0e2f6c-8d20-4b0a-bf65-77e4ec12b179"),
-                            Date = new DateTime(2024, 7, 2, 7, 0, 34, 841, DateTimeKind.Utc).AddTicks(8560),
-                            DateCreated = new DateTime(2024, 7, 2, 7, 0, 34, 841, DateTimeKind.Utc).AddTicks(8560),
+                            Date = new DateTime(2024, 10, 1, 13, 9, 51, 718, DateTimeKind.Utc).AddTicks(7460),
+                            DateCreated = new DateTime(2024, 7, 1, 13, 9, 51, 718, DateTimeKind.Utc).AddTicks(7460),
                             Description = "Come join us at our open day and learn more about our summer courses and events.",
                             Identifier = "VOID",
                             Name = "Open Day - Summer",
@@ -315,8 +310,8 @@ namespace UniVerServer.Migrations
                         new
                         {
                             Id = new Guid("c0840d57-4d73-4f7c-afe6-68b79bc01660"),
-                            Date = new DateTime(2024, 9, 2, 7, 0, 34, 841, DateTimeKind.Utc).AddTicks(8570),
-                            DateCreated = new DateTime(2024, 7, 2, 7, 0, 34, 841, DateTimeKind.Utc).AddTicks(8570),
+                            Date = new DateTime(2024, 8, 1, 13, 9, 51, 718, DateTimeKind.Utc).AddTicks(7470),
+                            DateCreated = new DateTime(2024, 7, 1, 13, 9, 51, 718, DateTimeKind.Utc).AddTicks(7470),
                             Description = "Come join us at our open day and discover our autumn curriculum and programs.",
                             Identifier = "VOID",
                             Name = "Open Day - Autumn",
@@ -327,8 +322,8 @@ namespace UniVerServer.Migrations
                         new
                         {
                             Id = new Guid("e5fe9368-1f62-4d5d-bf98-3c8d12a8764b"),
-                            Date = new DateTime(2024, 10, 2, 7, 0, 34, 841, DateTimeKind.Utc).AddTicks(8570),
-                            DateCreated = new DateTime(2024, 7, 2, 7, 0, 34, 841, DateTimeKind.Utc).AddTicks(8570),
+                            Date = new DateTime(2024, 7, 1, 13, 9, 51, 718, DateTimeKind.Utc).AddTicks(7470),
+                            DateCreated = new DateTime(2024, 7, 1, 13, 9, 51, 718, DateTimeKind.Utc).AddTicks(7470),
                             Description = "Come join us at our open day and start the new year with exciting courses and opportunities.",
                             Identifier = "VOID",
                             Name = "Open Day - New Year",
@@ -339,8 +334,8 @@ namespace UniVerServer.Migrations
                         new
                         {
                             Id = new Guid("b12a9fb8-42cf-4d0a-8a2d-d980dd9ff1e1"),
-                            Date = new DateTime(2024, 8, 2, 7, 0, 34, 841, DateTimeKind.Utc).AddTicks(8580),
-                            DateCreated = new DateTime(2024, 7, 2, 7, 0, 34, 841, DateTimeKind.Utc).AddTicks(8580),
+                            Date = new DateTime(2024, 9, 1, 13, 9, 51, 718, DateTimeKind.Utc).AddTicks(7490),
+                            DateCreated = new DateTime(2024, 7, 1, 13, 9, 51, 718, DateTimeKind.Utc).AddTicks(7480),
                             Description = "Come join us at our open day and see what we have in store for the mid-year term.",
                             Identifier = "VOID",
                             Name = "Open Day - Mid-Year",
@@ -386,7 +381,7 @@ namespace UniVerServer.Migrations
                         {
                             Id = new Guid("58d25d4c-3b3a-4f52-b282-48e0f458fb79"),
                             CanAccess = false,
-                            DateCreated = new DateTime(2024, 7, 2, 7, 0, 34, 841, DateTimeKind.Utc).AddTicks(8240),
+                            DateCreated = new DateTime(2024, 7, 1, 13, 9, 51, 718, DateTimeKind.Utc).AddTicks(7110),
                             HourlyRate = 0.00m,
                             Identifier = "R1",
                             Name = "Degree",
@@ -396,7 +391,7 @@ namespace UniVerServer.Migrations
                         {
                             Id = new Guid("68b4d362-9271-4f9f-aa7b-6a9b1953dc3c"),
                             CanAccess = false,
-                            DateCreated = new DateTime(2024, 7, 2, 7, 0, 34, 841, DateTimeKind.Utc).AddTicks(8250),
+                            DateCreated = new DateTime(2024, 7, 1, 13, 9, 51, 718, DateTimeKind.Utc).AddTicks(7120),
                             HourlyRate = 20.00m,
                             Identifier = "R2",
                             Name = "Lecturer",
@@ -406,7 +401,7 @@ namespace UniVerServer.Migrations
                         {
                             Id = new Guid("a1b2c3d4-e5f6-7a89-b0c1-2d3e4f567890"),
                             CanAccess = true,
-                            DateCreated = new DateTime(2024, 7, 2, 7, 0, 34, 841, DateTimeKind.Utc).AddTicks(8250),
+                            DateCreated = new DateTime(2024, 7, 1, 13, 9, 51, 718, DateTimeKind.Utc).AddTicks(7120),
                             HourlyRate = 50.00m,
                             Identifier = "R3",
                             Name = "Admin",
@@ -416,7 +411,7 @@ namespace UniVerServer.Migrations
                         {
                             Id = new Guid("a9e3c834-7182-4b3a-80e2-b28a9a7bce42"),
                             CanAccess = false,
-                            DateCreated = new DateTime(2024, 7, 2, 7, 0, 34, 841, DateTimeKind.Utc).AddTicks(8250),
+                            DateCreated = new DateTime(2024, 7, 1, 13, 9, 51, 718, DateTimeKind.Utc).AddTicks(7120),
                             HourlyRate = 0.00m,
                             Identifier = "R4",
                             Name = "Certificate",
@@ -500,8 +495,8 @@ namespace UniVerServer.Migrations
                             ColorHex = "#000000",
                             Cost = 13000.00m,
                             Credits = 60,
-                            DateCreated = new DateTime(2024, 7, 2, 7, 0, 34, 841, DateTimeKind.Utc).AddTicks(8420),
-                            DateModified = new DateTime(2024, 7, 2, 7, 0, 34, 841, DateTimeKind.Utc).AddTicks(8420),
+                            DateCreated = new DateTime(2024, 7, 1, 13, 9, 51, 718, DateTimeKind.Utc).AddTicks(7320),
+                            DateModified = new DateTime(2024, 7, 1, 13, 9, 51, 718, DateTimeKind.Utc).AddTicks(7320),
                             Description = "Delve into the world of programming websites with Interactive Development blah blah blah",
                             Identifier = "IDV100",
                             Image = "http://example.com/interactive-development.jpg",
@@ -520,8 +515,8 @@ namespace UniVerServer.Migrations
                             ColorHex = "#FF5733",
                             Cost = 15000.00m,
                             Credits = 70,
-                            DateCreated = new DateTime(2024, 7, 2, 7, 0, 34, 841, DateTimeKind.Utc).AddTicks(8430),
-                            DateModified = new DateTime(2024, 7, 2, 7, 0, 34, 841, DateTimeKind.Utc).AddTicks(8430),
+                            DateCreated = new DateTime(2024, 7, 1, 13, 9, 51, 718, DateTimeKind.Utc).AddTicks(7330),
+                            DateModified = new DateTime(2024, 7, 1, 13, 9, 51, 718, DateTimeKind.Utc).AddTicks(7330),
                             Description = "Learn about the fundamental data structures and algorithms used in computer science blah blah blah",
                             Identifier = "DSA200",
                             Image = "http://example.com/data-structures.jpg",
@@ -540,8 +535,8 @@ namespace UniVerServer.Migrations
                             ColorHex = "#33FF57",
                             Cost = 17000.00m,
                             Credits = 80,
-                            DateCreated = new DateTime(2024, 7, 2, 7, 0, 34, 841, DateTimeKind.Utc).AddTicks(8430),
-                            DateModified = new DateTime(2024, 7, 2, 7, 0, 34, 841, DateTimeKind.Utc).AddTicks(8430),
+                            DateCreated = new DateTime(2024, 7, 1, 13, 9, 51, 718, DateTimeKind.Utc).AddTicks(7330),
+                            DateModified = new DateTime(2024, 7, 1, 13, 9, 51, 718, DateTimeKind.Utc).AddTicks(7330),
                             Description = "Explore the concepts and applications of Artificial Intelligence in various fields blah blah blah",
                             Identifier = "AI304",
                             Image = "http://example.com/ai.jpg",
@@ -560,8 +555,8 @@ namespace UniVerServer.Migrations
                             ColorHex = "#3357FF",
                             Cost = 14000.00m,
                             Credits = 65,
-                            DateCreated = new DateTime(2024, 7, 2, 7, 0, 34, 841, DateTimeKind.Utc).AddTicks(8440),
-                            DateModified = new DateTime(2024, 7, 2, 7, 0, 34, 841, DateTimeKind.Utc).AddTicks(8440),
+                            DateCreated = new DateTime(2024, 7, 1, 13, 9, 51, 718, DateTimeKind.Utc).AddTicks(7330),
+                            DateModified = new DateTime(2024, 7, 1, 13, 9, 51, 718, DateTimeKind.Utc).AddTicks(7330),
                             Description = "Understand the principles of database design and management blah blah blah",
                             Identifier = "DMS210",
                             Image = "http://example.com/dbms.jpg",
@@ -580,8 +575,8 @@ namespace UniVerServer.Migrations
                             ColorHex = "#FF33A5",
                             Cost = 16000.00m,
                             Credits = 75,
-                            DateCreated = new DateTime(2024, 7, 2, 7, 0, 34, 841, DateTimeKind.Utc).AddTicks(8440),
-                            DateModified = new DateTime(2024, 7, 2, 7, 0, 34, 841, DateTimeKind.Utc).AddTicks(8440),
+                            DateCreated = new DateTime(2024, 7, 1, 13, 9, 51, 718, DateTimeKind.Utc).AddTicks(7340),
+                            DateModified = new DateTime(2024, 7, 1, 13, 9, 51, 718, DateTimeKind.Utc).AddTicks(7340),
                             Description = "Gain insights into the software development lifecycle and methodologies blah blah blah",
                             Identifier = "SE300",
                             Image = "http://example.com/software-engineering.jpg",
@@ -600,8 +595,8 @@ namespace UniVerServer.Migrations
                             ColorHex = "#33FFB2",
                             Cost = 12000.00m,
                             Credits = 55,
-                            DateCreated = new DateTime(2024, 7, 2, 7, 0, 34, 841, DateTimeKind.Utc).AddTicks(8440),
-                            DateModified = new DateTime(2024, 7, 2, 7, 0, 34, 841, DateTimeKind.Utc).AddTicks(8440),
+                            DateCreated = new DateTime(2024, 7, 1, 13, 9, 51, 718, DateTimeKind.Utc).AddTicks(7340),
+                            DateModified = new DateTime(2024, 7, 1, 13, 9, 51, 718, DateTimeKind.Utc).AddTicks(7340),
                             Description = "Learn the fundamentals of computer networking and protocols blah blah blah",
                             Identifier = "CNS200",
                             Image = "http://example.com/networks.jpg",
@@ -620,8 +615,8 @@ namespace UniVerServer.Migrations
                             ColorHex = "#FF9933",
                             Cost = 18000.00m,
                             Credits = 85,
-                            DateCreated = new DateTime(2024, 7, 2, 7, 0, 34, 841, DateTimeKind.Utc).AddTicks(8450),
-                            DateModified = new DateTime(2024, 7, 2, 7, 0, 34, 841, DateTimeKind.Utc).AddTicks(8450),
+                            DateCreated = new DateTime(2024, 7, 1, 13, 9, 51, 718, DateTimeKind.Utc).AddTicks(7340),
+                            DateModified = new DateTime(2024, 7, 1, 13, 9, 51, 718, DateTimeKind.Utc).AddTicks(7340),
                             Description = "Understand the key concepts and practices in cybersecurity blah blah blah",
                             Identifier = "CS303",
                             Image = "http://example.com/cybersecurity.jpg",
@@ -708,15 +703,15 @@ namespace UniVerServer.Migrations
                             Active = true,
                             ContactNumber = "0825678132",
                             Credits = 0,
-                            DateCreated = new DateTime(2024, 7, 2, 7, 0, 34, 841, DateTimeKind.Utc).AddTicks(8350),
+                            DateCreated = new DateTime(2024, 7, 1, 13, 9, 51, 718, DateTimeKind.Utc).AddTicks(7240),
                             FirstNames = "Leander",
                             Identifier = "200211",
                             IdentityNumber = "0103265065088",
                             IssuedEmail = "200211@virtualwindow.co.za",
                             LastNames = "van Aarde",
-                            ModifiedDate = new DateTime(2024, 7, 2, 7, 0, 34, 841, DateTimeKind.Utc).AddTicks(8350),
+                            ModifiedDate = new DateTime(2024, 7, 1, 13, 9, 51, 718, DateTimeKind.Utc).AddTicks(7240),
                             Password = "Password2",
-                            PasswordModifiedDate = new DateTime(2024, 7, 2, 7, 0, 34, 841, DateTimeKind.Utc).AddTicks(8350),
+                            PasswordModifiedDate = new DateTime(2024, 7, 1, 13, 9, 51, 718, DateTimeKind.Utc).AddTicks(7240),
                             PersonalEmail = "Leander.vaonline@gmail.com",
                             ProfileImage = "http://example.com/leander1.jpg",
                             RequiredCredits = 360,
@@ -728,15 +723,15 @@ namespace UniVerServer.Migrations
                             Active = true,
                             ContactNumber = "0834567890",
                             Credits = 50,
-                            DateCreated = new DateTime(2024, 7, 2, 7, 0, 34, 841, DateTimeKind.Utc).AddTicks(8350),
+                            DateCreated = new DateTime(2024, 7, 1, 13, 9, 51, 718, DateTimeKind.Utc).AddTicks(7240),
                             FirstNames = "Alex",
                             Identifier = "210312",
                             IdentityNumber = "0204157890123",
                             IssuedEmail = "210312@virtualwindow.co.za",
                             LastNames = "Petterson",
-                            ModifiedDate = new DateTime(2024, 7, 2, 7, 0, 34, 841, DateTimeKind.Utc).AddTicks(8350),
+                            ModifiedDate = new DateTime(2024, 7, 1, 13, 9, 51, 718, DateTimeKind.Utc).AddTicks(7240),
                             Password = "Password2",
-                            PasswordModifiedDate = new DateTime(2024, 7, 2, 7, 0, 34, 841, DateTimeKind.Utc).AddTicks(8350),
+                            PasswordModifiedDate = new DateTime(2024, 7, 1, 13, 9, 51, 718, DateTimeKind.Utc).AddTicks(7240),
                             PersonalEmail = "alex.online@gmail.com",
                             ProfileImage = "http://example.com/alex1.jpg",
                             RequiredCredits = 400,
@@ -748,15 +743,15 @@ namespace UniVerServer.Migrations
                             Active = true,
                             ContactNumber = "0845678901",
                             Credits = 100,
-                            DateCreated = new DateTime(2024, 7, 2, 7, 0, 34, 841, DateTimeKind.Utc).AddTicks(8360),
+                            DateCreated = new DateTime(2024, 7, 1, 13, 9, 51, 718, DateTimeKind.Utc).AddTicks(7250),
                             FirstNames = "Jamie",
                             Identifier = "220513",
                             IdentityNumber = "0305278901234",
                             IssuedEmail = "220513@virtualwindow.co.za",
                             LastNames = "Oliver",
-                            ModifiedDate = new DateTime(2024, 7, 2, 7, 0, 34, 841, DateTimeKind.Utc).AddTicks(8360),
+                            ModifiedDate = new DateTime(2024, 7, 1, 13, 9, 51, 718, DateTimeKind.Utc).AddTicks(7240),
                             Password = "Password2",
-                            PasswordModifiedDate = new DateTime(2024, 7, 2, 7, 0, 34, 841, DateTimeKind.Utc).AddTicks(8360),
+                            PasswordModifiedDate = new DateTime(2024, 7, 1, 13, 9, 51, 718, DateTimeKind.Utc).AddTicks(7250),
                             PersonalEmail = "jamie.online@gmail.com",
                             ProfileImage = "http://example.com/jamie1.jpg",
                             RequiredCredits = 500,
@@ -768,15 +763,15 @@ namespace UniVerServer.Migrations
                             Active = true,
                             ContactNumber = "0856789012",
                             Credits = 360,
-                            DateCreated = new DateTime(2024, 7, 2, 7, 0, 34, 841, DateTimeKind.Utc).AddTicks(8360),
+                            DateCreated = new DateTime(2024, 7, 1, 13, 9, 51, 718, DateTimeKind.Utc).AddTicks(7250),
                             FirstNames = "Taylor",
                             Identifier = "230614",
                             IdentityNumber = "0406389012345",
                             IssuedEmail = "taylor.230614@virtualwindow.co.za",
                             LastNames = "Swiftee",
-                            ModifiedDate = new DateTime(2024, 7, 2, 7, 0, 34, 841, DateTimeKind.Utc).AddTicks(8360),
+                            ModifiedDate = new DateTime(2024, 7, 1, 13, 9, 51, 718, DateTimeKind.Utc).AddTicks(7250),
                             Password = "Password2",
-                            PasswordModifiedDate = new DateTime(2024, 7, 2, 7, 0, 34, 841, DateTimeKind.Utc).AddTicks(8360),
+                            PasswordModifiedDate = new DateTime(2024, 7, 1, 13, 9, 51, 718, DateTimeKind.Utc).AddTicks(7250),
                             PersonalEmail = "taylor.online@gmail.com",
                             ProfileImage = "http://example.com/taylor1.jpg",
                             RequiredCredits = 360,
@@ -788,15 +783,15 @@ namespace UniVerServer.Migrations
                             Active = true,
                             ContactNumber = "0867890123",
                             Credits = 360,
-                            DateCreated = new DateTime(2024, 7, 2, 7, 0, 34, 841, DateTimeKind.Utc).AddTicks(8360),
+                            DateCreated = new DateTime(2024, 7, 1, 13, 9, 51, 718, DateTimeKind.Utc).AddTicks(7250),
                             FirstNames = "Morgan",
                             Identifier = "240715",
                             IdentityNumber = "0507490123456",
                             IssuedEmail = "morgan.240715@virtualwindow.co.za",
                             LastNames = "Freeman",
-                            ModifiedDate = new DateTime(2024, 7, 2, 7, 0, 34, 841, DateTimeKind.Utc).AddTicks(8360),
+                            ModifiedDate = new DateTime(2024, 7, 1, 13, 9, 51, 718, DateTimeKind.Utc).AddTicks(7250),
                             Password = "Password2",
-                            PasswordModifiedDate = new DateTime(2024, 7, 2, 7, 0, 34, 841, DateTimeKind.Utc).AddTicks(8360),
+                            PasswordModifiedDate = new DateTime(2024, 7, 1, 13, 9, 51, 718, DateTimeKind.Utc).AddTicks(7250),
                             PersonalEmail = "morgan.online@gmail.com",
                             ProfileImage = "http://example.com/morgan1.jpg",
                             RequiredCredits = 360,
@@ -808,15 +803,15 @@ namespace UniVerServer.Migrations
                             Active = true,
                             ContactNumber = "0878901234",
                             Credits = 360,
-                            DateCreated = new DateTime(2024, 7, 2, 7, 0, 34, 841, DateTimeKind.Utc).AddTicks(8370),
+                            DateCreated = new DateTime(2024, 7, 1, 13, 9, 51, 718, DateTimeKind.Utc).AddTicks(7260),
                             FirstNames = "Jordan",
                             Identifier = "250816",
                             IdentityNumber = "0608501234567",
                             IssuedEmail = "jordan.250816@virtualwindow.co.za",
                             LastNames = "Michael",
-                            ModifiedDate = new DateTime(2024, 7, 2, 7, 0, 34, 841, DateTimeKind.Utc).AddTicks(8370),
+                            ModifiedDate = new DateTime(2024, 7, 1, 13, 9, 51, 718, DateTimeKind.Utc).AddTicks(7260),
                             Password = "Password2",
-                            PasswordModifiedDate = new DateTime(2024, 7, 2, 7, 0, 34, 841, DateTimeKind.Utc).AddTicks(8370),
+                            PasswordModifiedDate = new DateTime(2024, 7, 1, 13, 9, 51, 718, DateTimeKind.Utc).AddTicks(7260),
                             PersonalEmail = "jordan.online@gmail.com",
                             ProfileImage = "http://example.com/jordan1.jpg",
                             RequiredCredits = 360,

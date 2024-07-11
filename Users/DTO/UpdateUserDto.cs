@@ -1,4 +1,3 @@
-using UniVerServer.Models;
 
 namespace UniVerServer.Users.DTO;
 

@@ -1,7 +1,6 @@
 using Isopoh.Cryptography.Argon2;
 using Microsoft.Build.Framework;
 using UniVerServer.Extensions;
-using UniVerServer.Models;
 
 namespace UniVerServer.Users.DTO;
 

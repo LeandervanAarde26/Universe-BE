@@ -3,7 +3,6 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using UniVerServer.Abstractions;
 using UniVerServer.Extensions;
-using UniVerServer.Models;
 using UniVerServer.Users.DTO;
 using UniVerServer.Users.Mapping;
 using StatusCodes = UniVerServer.Enums.StatusCodes;
