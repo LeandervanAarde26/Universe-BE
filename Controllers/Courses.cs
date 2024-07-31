@@ -64,6 +64,7 @@ public class Courses(IMediator mediator) : BaseController(mediator)
     public async Task<ActionResult<IEnumerable<GetCoursesDto>>> GetCourseEndingMonth(string date) =>
         Ok(await mediator.Send(new GetCourseEndingMonthQuery(DateTime.Parse(date).ToUniversalTime())));
     
+    //lollos
     [HttpGet("CourseLecturer/{id}")]
     public async Task<ActionResult<IEnumerable<GetCoursesDto>>> GetCourseByLecturer(string id) =>
         Ok(await mediator.Send(new GetCourseByLecturerQuery(Guid.Parse(id))));
