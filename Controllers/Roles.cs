@@ -42,6 +42,7 @@ public class Roles(IMediator mediator): BaseController(mediator)
             response.HandleResponse(await mediator.Send(new UpdateRoleRateCommand(Guid.Parse(id), rate)));
         
         // DELETE
+        // TESTING THIS
         [HttpDelete("Purge/{id}")]
         public async Task<ActionResult<ResponseDto>> PurgeRole(string id) =>
             response.HandleResponse(await mediator.Send(new PurgeRoleCommand(Guid.Parse(id))));
